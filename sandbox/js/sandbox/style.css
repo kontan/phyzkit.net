@@ -1,0 +1,25 @@
+.sandbox_container{
+    /* positioning  */
+    position: absolute;
+    
+    /* 最大化を元に戻すときに困るので、とりあえず calc でのセンタリングはやめる
+    top:  -webkit-calc(49% - 240px); /* 50% にすると1ピクセルずれる？ 
+    top:     -moz-calc(50% - 240px);
+    left: -webkit-calc(49% - 400px);
+    left:    -moz-calc(50% - 400px);
+    */
+    
+    
+    left: 49%;
+    top: 49%;
+    margin-top:  -240px;    /* For centering */
+    margin-left: -400px;    /* For centering */
+
+    /* Sizing */
+    width: 800px;
+    height: 480px;
+ 
+    /* Appearance */
+    overflow: hidden;
+    border: solid 1px black;
+}

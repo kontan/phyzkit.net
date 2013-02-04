@@ -1,0 +1,500 @@
+*{
+    margin: 0px;
+    padding: 0px;
+    cursor: default;
+    vertical-align: middle;
+}
+
+html{
+    width:  100%;
+    height: 100%;
+    overflow: hidden
+}
+
+body{
+    width:  100%;
+    height: 100%;
+    overflow: hidden
+    -moz-user-select: none;
+    -webkit-user-select: none;
+}
+
+h3{
+    font-weight: bold;
+    border-bottom: solid 1px white;
+    margin: 8px;
+    font-size: medium;
+}
+
+input{
+    background-color: transparent;
+    border: 1px solid gray;
+    color: white;
+    -moz-user-select:    auto; /* Firefox だと -moz-user-select でも input ができる。*/
+    -webkit-user-select: auto; /* WebKkit だと -webkit-user-select: none; にすると input も入力できなくなる。*/
+}
+
+
+
+table{
+    
+}
+
+tbody{
+    overflow: hidden;
+    /* display: block; */
+    padding-right: 12px;
+}
+
+td{
+    white-space: nowrap;
+    padding: 4px;
+    
+}
+
+input[type="number"]{
+    width: 7em;
+}
+
+
+/******* Menu *************************************************/
+
+.sandbox_menubar{
+    position: absolute;
+    top:      0px;
+    left:     0px;
+    right: 0px;
+    padding:   4px;
+    margin:    0px;
+    background-color: rgba(0, 0, 0, 0.7);
+    box-shadow: 0px 0px 6px #000;    
+    pointer-events: auto;
+}
+
+.button{
+    /* Pisitioning */
+    position: relative;
+    float: left;
+    
+    /* Sizing */
+    margin: 3px 3px 3px 3px;
+    padding: 0.5em;
+    
+    /* Appearance */
+    color: lightgrey;
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+    cursor: pointer;
+    overflow: hidden;
+    text-align: center;
+    font-size: x-small;
+    display: block;
+    text-decoration: none;
+    background-size: cover;  
+    
+    /* Behavior */
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    pointer-events: visible;
+}
+
+.button:hover{
+    color: white;
+    text-shadow: 0px 0px 12px #0f0;   
+    box-shadow: 0px 0px 5px #fff;    
+}
+
+/******* Menu Button **************************************/
+
+.icon_button{
+    width: 18px;
+    height: 18px;
+}
+
+.menu_button{
+    background-image: url(config.png);    
+}
+
+/***** Tool buttons ********************************************************/
+
+.screen_shot_link{
+    color: white;
+    text-decoration: none;
+}
+
+.tool_box_row{
+    position: relative;
+    width: 100%;
+    height: 2em;
+    display: block;
+    
+    pointer-events: none;
+}
+
+.tool_button{
+    width: 6em;
+    height: 1em;
+}
+
+.button:active{
+    box-shadow: 1px 1px 6px #000;
+    /* background-color: rgba(64, 64, 64, 0.7); */
+    background-color: PowderBlue;
+}
+
+.action_button{
+}
+
+
+.tool_image{
+    width:  24px;
+    height: 24px;
+}
+
+.tool{
+    /* -webkit-appearance: none; */
+
+    display: block;
+    background-size: cover;
+}
+
+
+.tool_select{
+    background-image: url(select.svg);
+}
+
+.tool_active{
+    background-color: PowderBlue;
+}
+
+
+
+.tool_hand{
+    background-image: url(hand.svg);
+}
+
+.tool_move{
+    background-image: url(rotate.svg);
+}
+
+.tool_delete{
+    background-image: url(delete.png);
+}
+
+
+
+.tool_rotation{
+    background-image: url(rotate.svg);
+}
+
+.tool_scaling{
+    background-image: url(scale.svg);
+}
+
+.tool_property{
+    background-image: url(property.png);
+}
+
+
+.tool_joint{
+    background-image: url(joint.svg);
+}
+
+
+
+/***** Status bar *****/
+
+.status_bar{
+    /* Positioning */
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+    padding: 8px;
+    
+    /* Appearance */
+    color: white;
+    background-color: rgba(0, 0, 0, 0.7);
+    font-size: small;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    cursor: default;
+    pointer-events: none;
+    box-shadow: 0px 0px 6px #000;    
+}
+
+/****** Dialog Layer ******/
+
+.dialog_layer{
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width:  100%;
+    height: 100%;
+}
+
+
+/******** Settings *******/
+
+.setting_div{
+    height: -webkit-calc(100% - 80px);
+}
+
+tbody.setting_tbody{
+    height: 100%;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+table.setting_table{
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    padding: 8px;
+    max-width: 12em;
+    border-radius: 4px;
+    box-shadow: 0px 0px 8px #fff;
+}
+input.setting_number{
+    width: 16em;
+}
+
+
+/****** Serialization Dialog *****/
+
+.dialog_background{
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    bottom: 0px;
+    right: 0px;
+    display: none;
+    background-color: rgba(0, 0, 0, 0.7);
+    padding: 30px;
+    color: white;
+    font-family: monospace;
+}
+
+.dialog_inner_background{
+    background-color: transparent;
+    width: -webkit-calc(100% - 120px);
+    padding: 0.5em;
+}
+
+.serialized_world_textarea{
+    position: absolute;
+    top: 30px;
+    bottom: 60px;
+    left: 30px;
+    right: 30px;
+    display: block;
+}
+
+.serialized_world_textarea_close{
+    position: absolute;
+    bottom: 16px;
+    right: 30px;
+}
+
+.textarea_script_pad{
+    width:  520px;
+    width:  -webkit-calc(100% - 120px);
+    width:     -moz-calc(100% - 120px);
+    width:          calc(100% - 120px);
+    height: 360px;
+    height: -webkit-calc(100% - 120px - 80px);
+    height:    -moz-calc(100% - 120px - 80px);
+    height:         calc(100% - 120px - 80px);
+    display: block;
+    font-family: monospace;
+    -webkit-user-select: auto;
+}
+
+.textarea_script_console{
+    width:  520px;
+    width:  -webkit-calc(100% - 120px);
+    width:     -moz-calc(100% - 120px);
+    width:          calc(100% - 120px);
+    height: 80px;
+    display: block;
+}
+
+/***** Body Property Dialog *****/
+
+.property_dialog_spacer{
+
+    display: none;
+    pointer-events: none;
+}
+
+.property_content{
+    position: absolute;
+    top: 50px;
+    right:   2px;
+    
+    color: white;
+    font-family: monospace;
+    text-align: right;
+    
+    
+    background-color: rgba(0, 0, 0, 0.7);
+    border-radius: 8px;
+    pointer-events: auto;
+}
+
+.property_auto_toggle{
+}
+
+.property_dialog_inner{
+    padding: 6px;
+    text-align: left;
+}
+
+.property_title{
+    padding: 4px;
+}
+
+.property_scrollpane{
+    width: 100%;
+    /* max-height: 80%; */  
+    overflow-y: scroll;
+    overflow-x: hidden;
+    
+}
+
+.property_label{
+    text-align: right;
+}
+
+.property_body_name{
+    width: 100px;
+}
+
+.fixture_info{
+    background-color: rgba(255, 255, 255, 0.2);
+    color: white;
+}
+
+.fixture_property{
+    border-left: solid 5px rgba(255, 255, 255, 0.4);
+    border-radius: 10px; 
+    padding: 4px;
+    margin-top: 10px;
+}
+
+/***** manual ****/
+
+#open_manual{
+    position: absolute;
+    text-align: right;
+    width: 5em;
+    left:  -webkit-calc(100% - 2em - 5em);
+    left:     -moz-calc(100% - 2em - 5em);
+    left:          calc(100% - 2em - 5em);
+    padding: 1em;
+    background-color: white;
+}
+
+
+.menu_inner_pane{
+    background-color: rgba(0, 0, 0, 0.7);
+    margin: 20px;
+    padding: 8px;
+    max-width: 12em;
+    border-radius: 4px;
+    box-shadow: 0px 0px 8px #fff;
+}
+
+.menu_item{
+    color: white;
+    border: solid 1px transparent;
+    
+}
+.menu_item:hover{
+    background-color: rgba(100, 100, 100, 0.7);
+    border-radius: 4px;
+    text-shadow: 0px 0px 12px #0f0;    
+}
+
+
+/****** Object List *****************/
+
+.object_list_table{
+}
+
+.object_list_tbody{
+    width: 100%;
+    padding-right: 4px;
+}
+
+.object_list_row{
+    /* display: block; block にするとテーブルの列がズレる？ */ 
+    border: solid 1px transparent;
+    margin: 2px;
+    padding: 2px;
+}
+
+.object_list_row:hover{
+    border: solid 1px silver;
+}
+
+
+.object_list_name{
+    border: solid 1px transparent;
+}
+.object_list_name:hover{
+    border: solid 1px silver;
+}
+
+.object_list_item{
+    border: solid 1px transparent;
+}
+
+.object_list_item:hover{
+    border: solid 1px silver;
+}
+
+.object_selected{
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.object_fixture{
+    
+}
+
+
+.shape_polygon:before{
+    content: "◆";
+}
+.shape_circle:before{
+    content: "●";
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.edit_div_label{
+    width: 8em;
+    text-align: right;
+    margin: 4px;
+}
+
+
+
+
+
+
+
+
+
+
+
