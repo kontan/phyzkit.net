@@ -1,22 +1,41 @@
-<!DOCTYPE HTML>
-<html>
+<!DOCTYPE html>
+<html lang="ja">
     <head>
-        <meta charset="UTF-8">
+        <meta charset="utf-8">
+
+        <!-- Twitter Cards -->
         <meta name="twitter:card"         content="summary">
         <meta name="twitter:site"         content="@KDKTN">
         <meta name="twitter:url"          content="http://phyzkit.net/typescript/">
         <meta name="twitter:title"        content="TypeScript クイックガイド - phyzkit.net">
         <meta name="twitter:description"  content="現在 JavaScript を使用している開発者が、より大規模な Web アプリケーションの開発にも適した新しい言語 TypeScript に素早く移行できるように書かれたチュートリアルです。">
         <meta name="twitter:image"        content="http://phyzkit.net/typescript/logo_small.png">
-        <title>TypeScript クイックガイド - phyzkit.net</title>
-        <link rel="STYLESHEET" href="style.css" type="text/css">
-        <script type="text/javascript" src="jquery-1.8.2.js"></script>
-        <script type="text/javascript" src="indexer.js"></script>
-        <script type="text/javascript" src="footer.js"></script>
-        
-        
-        <script type="text/javascript">
 
+        <title>TypeScript クイックガイド - phyzkit.net</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="">
+        <meta name="author" content="">
+
+        <!-- Le styles -->
+        <link href="../bootstrap/css/bootstrap.css" rel="stylesheet">
+        <link href="../bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+
+        <!-- Google Code Prettify -->
+        <link href="../google-code-prettify/prettify.css" rel="stylesheet">
+        <script type="text/javascript" src="../google-code-prettify/prettify.js"></script>
+        <link href="style2.css" rel="stylesheet">
+
+        <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+        <!--[if lt IE 9]>
+        <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+        <![endif]-->
+
+        <!-- indexer -->
+        <script type="text/javascript" src="jquery-1.8.2.js"></script>
+        <script type="text/javascript" src="indexer2.js"></script>
+
+        <!-- Google Analytics -->
+        <script type="text/javascript">
           var _gaq = _gaq || [];
           _gaq.push(['_setAccount', 'UA-28131600-1']);
           _gaq.push(['_trackPageview']);
@@ -26,285 +45,334 @@
             ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
             var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
           })();
-
         </script>
-        
-        
     </head>
-    <body>
-        <p><a href="../">Top</a> > TypeScript クイックガイド</p>
-        <div class="inner_pane">
-            <a href="https://twitter.com/share" class="twitter-share-button">Tweet</a>
-            <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="http://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
-            <h1>TypeScript クイックガイド</h1>
-            <p><a href="http://www.typescriptlang.org/" target="_blank">プログラミング言語 TypeScript</a> のチュートリアルです。
-            現在 JavaScript を利用して開発している開発者が、スムーズに TypeScript へと移行するために必要な情報を解説しています。</p>
-            
-            <p>本稿を読み進めるためには、おおまかに以下の項目についての知識が必要です：</p>
-            <ul>
-                <li>JavaScript</li>
-                <li>静的型付け</li>
-                <li>クラスベースオブジェクト指向</li>
-            </ul>
-            <p>JavaScript に加えて Java や C#, C++ のような言語からひとつを使用したことがあれば、
-                事前の知識としては十分です。
-            冗長になるのを避けるため JavaScript と共通する内容に関する説明は意図的に省いており、
-            その代わり TypeScript で新たに導入される言語仕様についてはなるべく網羅するようにしています。
-            </p>
-            <p>現時点での仕様の最新版は<a href="http://www.typescriptlang.org/Content/TypeScript%20Language%20Specification.pdf" target="_blank">こちら</a>です。
-            本稿中にも仕様書の該当する位置が示されていますので、必要に応じて参照してください。
-            文中のサンプルコードも一部は言語仕様からの引用です。
-            本稿の正確性については一切無保証です。正確な言語仕様については仕様書を確認してください。
-            また、本稿のすべての所見は筆者個人の主観によるもので、Microsoft の見解とは一切関係ありません。</p>
 
-            <div class="menu"></div>
-            
-            <section>
-                <h2>概要</h2>
-                <p>（能書きが長いですので、TypeScript つかうぞーっていうモチベーションがすでにある方はこの章は読み飛ばしてくださって結構です。）</p>
-                <p>現在、ほぼすべての Web ブラウザには JavaScript が搭載され動的なページの構築に使われていますが、
-                Web ページがより高度化、複雑化するにつれ JavaScript の機能の限界が明らかになってきました(See also: <a href="http://www.haskell.org/haskellwiki/The_JavaScript_Problem">The JavaScript Problem</a>)。
-                より大きく複雑なアプリケーションの開発に耐えられるように
-                JavaScript をさらに発展させようとする試みは今も進められていますが、互換性の維持や各ソフトウェアベンダの利害関係の調整により遅々として進まず、
-                最近まで JavaScript による貧弱なプログラミング環境での開発が強いられているこの状況が改善される見込みはありませんでした。
-                CoffeeScript, Google Dart, JSX などの<a href="https://github.com/jashkenas/coffee-script/wiki/List-of-languages-that-compile-to-JS">多くの言語</a>も提案されてきたものの、
-                いずれも一長一短あり根本的な解決とはなっていませんでした。
-                </p>
-                <p>
-                JavaScript が抱える多数の問題とそれを取り巻く現状に対して、TypeScript は他のどの言語よりも現実的なアプローチでの解決手段を提供します。
-                TypeScript で書かれたソースコードは TypeScript コンパイラによって JavaScript へと変換され、
-                Web ブラウザや node.js など JavaScript が実行可能な環境で利用で使用されます。
-                TypeScript には以下の様な長所があります。
-                </p>
-                    <dl>
-                        <dt>静的型付け</dt>
-                        <dd>コンパイル時に型チェックされ、堅牢で変化に強く可読性の高いプログラムの記述が可能です。型注釈が省略された識別子は、型推論により自動的に型注釈が補完されるなど、記述性も確保しています。
-                            静的な型付けが導入されたことにより、さらにインテリセンスのようなコーディングサポート、クラス名や変数名の変更などの自動的なリファクタリング、ドキュメントの自動生成、
-                            クラス名からその定義へのジャンプなど、動的な型付けでは不可能だった多数の機能が実現可能になります。</dd>
-                        <dt>ほぼ同じ構造の JavaScript へと変換される</dt>
-                        <dd>出力される JavaScript コードは元の TypeScript コードの構造をほぼそのまま保っており、出力されたコードから元のコードとの対応を把握するのは容易です。
-                        このため、同じような JavaScript を出力するタイプの言語でも Dart や JSX のような多数最適化を施すタイプの言語に比べ、出力後の JavaScript をデバッグするのが容易になっています。
-                        Source Map などの手段も提案されてはいますが、ときには JavaScript のレベルでデバッグすることも必要な場合があるため、構造を保つのは実用的には重要なポイントです。
-                        また、どうしても必要なら出力後の JavaScript を修正することも難しくありません。
-                        </dd>
-                        <dt>標準化されたコードを生成できる</dt>
-                        <dd>JavaScript にはモジュールやクラスを始め多数の機能が欠けているため、しばしばプログラマは独自の機構でこれらを実現しようとしがちですが、
-                        統一されない規約は可読性を大きく低下させ、安易な工夫は思わぬ落とし穴を生むことがあります。
-                        TypeScript のクラスやモジュールを利用することによって、洗練されたクラスやモジュールのような機構の恩恵を JavaScript でも安全に享受することができます。</dd>
-                        <dt>JavaScript との高い相互運用性</dt>
-                        <dd>構文は基本的に JavaScript のスーパーセットであり、
-                        既存の JavaScript をほとんど修正なく TypeScript として使用することも可能であるなど、現在のブラウザ環境と非常に高い親和性をもちます。
-                        静的に型付けチェックされという点以外はあらゆる API は JavaScript そのままですし、データ型もまったく同じです。
-                        既存の JavaScript コードに対して定義ファイルを記述することで、最低限の作業で TypeScript から安全に JavaScript を呼び出すことができます。
-                        また、JQuery のような著名なライブラリに対してはすでに宣言ソースファイルが提供されており、JQuery のノウハウをそのまま生かしつつ、
-                        最初から TypeScript による静的型付けの恩恵を受けることができます。
+    <body data-spy="scroll" data-target=".bs-docs-sidebar">
+        <!-- Navbar -->
+        <div class="navbar navbar-inverse navbar-fixed-top">
+            <div class="navbar-inner">
+                <div class="container">
+                    <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="brand" href="./index.html">Bootstrap</a>
+                    <div class="nav-collapse collapse">
+                        <ul class="nav">
+                            <li class=""><a href="../index.html">Home</a></li>
+                        </ul>
+                        <ul class="nav">
+                            <li class=""><a href="#">Page Top</a></li>
+                        </ul>
+                        <ul class="nav">
+                            <li class=""><a href="index_old.html">Old Version</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-                        <p>『まだバージョン 1.0 が出ていないので標準ライブラリなどに大きな変更がありそうだ。TypeScript に手を出すのはまだ早いのではないか』というコメントも見かけたのですが、TypeScript 独自の標準ライブラリというものは存在しません。すべては JavaScript そのまんまです。確かに今後ジェネリクスが導入される予定なので API はジェネリックな定義に変更されるとは思われますが、標準ライブラリの機能について TypeScript が何らかの変更を加えることは一切ありません。</p>
-                        </dd>
-                        <dt>学習の容易さ</dt>
-                        <dd>言語仕様の大半は JavaScript のスーパーセットなので、すでに JavaScript を知っていれば学習は非常に容易です。
-                        構文の多くは EcmaScript6 を先取りした仕様なので、すでにある程度 EcmaScript6 の動向を追っている人にとっては
-                        違和感のない構文ばかりだと思います。
-                        無名関数や引数プロパティ宣言などのシンタックスシュガーはよく洗練されたものばかりで、可読性も高いです。
-                        データ型は JavaScript とほぼ同じであり、HTML DOM などの使い方も JavaScript から使った時とほぼ同じですから
-                        迷うことはありません。</dd>
-                        <dt>導入の容易さ</dt>
-                        <dd>Node.js が提供するパッケージシステムで容易にインストールできます。
-                        また、すでに TypeScript コンパイラはセルフホスティングされており、ブラウザ内で TypeScript をコンパイルするようなことも実現されているなど、
-                        とてもポータブルです。
-                        JavaScript で実行できることから、コンパイラは OS を問わず使用することができます。</dd>
-                        <dt>自由なライセンス</dt>
-                        <dd>TypeScript コンパイラは Apache License で提供されています。</dd>
-                    </dl>
-                    その一方で欠点や解決できない問題としては、次のようなものが挙げられます。
-                    <dl>
-                        <dt>JavaScript の知識が必要</dt>
-                        <dd>SourceMap によって TypeScript ソースコードでのデバッグも可能ですが、Source Map のでみで完全にデバッグできるとは限りません。
-                        SourceMap でうまくいかない場合は、デバッグも JavaScript のレベルで行わざるをえなくなります。
-                        発表間もない言語なので、ブラウザオブジェクトの使い方などについては JavaScript におけるノウハウをそのまま流用することになります。
-                        よく言えば『JavaScript の知識を流用できる』といえますが、悪いくいえば『結局 JavaScript の知識は必要』ということです。
-                        </dd>
-                        <dt>最適化はされない</dt>
-                        <dd>JSX や Haxe のような最適化を多数施すシステムと異なり、TypeScript コンパイラはまったく最適化をしません。実行効率は JavaScript より低下こそしませんが、向上もしません。
-                            最適化しないオプションさえあればいいので、TypeScript も最適化ができるようになっていていいとは思いますが……。</dd>
-                        <dt>this や typeof の欠陥を克服できない</dt>
-                        <dd>JavaScript の this キーワードは文脈によるため、コールバックで this が直感的に機能しないなどの問題がありましたが、
-                        TypeScript がほぼ等価な JavaScript を生成するという仕組みを取る以上、TypeScript がこのような欠陥を根本的に解決できるわけではありません(
-                        ラムダ式だけで this の意味を変えるという姑息な工夫はしています)。
-                        int や char のようなプリミティブ型がない貧弱な型システムや標準ライブラリも JavaScript と同じですし、
-                        typeof がいまいち役に立たないのも JavaScript そのままだったりします。
-                        この辺りは JavaScript との相互運用性を優先した妥協の結果だといえます。
-                        </dd>
-                        <dt>言語仕様が貧弱</dt>
-                        <dd>近く導入する予定はあるようですが、現在のところジェネクリクス(Generics)のような重要な機能が欠けています。
-                        readonly や const に関してはまったく未定のようで、開発者たちからは getter を使ったら？みたいな提案もされているものの、
-                        筆者としては readonly は getter で置き換えられるような機能ではないと思います(readonly の導入に前向きでないのは、
-                        ECMAScript 6 の型システムと互換性がとれなくなるから、というのが理由のようです)。
-                        クラスの public なプロパティは外からでも書き換え放題で、つまり public な『メソッド』を外から実装を差し替えるようなことも可能であるなど、
-                        他のクラスベースオブジェクト指向言語では当たり前の安全性は TypeScript ではいまいち不足しています。
-                        それでも、JavaScript をそのまま書くより遥かにマシではありますけれど。
-                        </dd>
-                        <dt>コンパイラが不安定</dt>
-                        <dd>筆者にとっての TypeScript 最大の不安材料はコレです。現時点 (0.8.2) だと、
-                        かなり頻繁にコンパイラがクラッシュしたり無言で何も吐かずに終了したりといった事態に遭遇します。
-                        まあ現在のコンパイラはプレビューの段階なので不安定なのは当たり前で、今すぐ実際に使おうとしている筆者のようなユーザはいくらなんでも気が早すぎではあります。
-                        あくまでプレビュー版だということを考慮に入れて、割りきって使いましょう。また、コンパイラの安定性については間違いなく今後改善されていくので、辛抱強く待つのがよいと思います。
-                        </dd>    
-                    </dl>
-                <p>スクリプティングの理想を体現しようとする Dart などに比べると、TypeScript は妥協に妥協を積み重ねたひどく平凡な言語に見えるかもしれません。
-                しかし Web クライアントサイドというのは非常に特殊な環境であり、何より現実主義を貫いた TypeScript のようなアプローチでなければこの現状を打破することは難しいのではないのでしょうか。
-                今後、中規模以上の開発を行う上で TypeScript はなくてはならないものとなると思います。 
-                </p>
+        <!-- Floating Menu -->
+        <header class="jumbotron subhead" id="overview">
+            <div class="container">
+                <h1>TypeScript Quick Guide</h1>
+                <p class="lead">Starts from JavaScript, Ends with JavaScript.</p>
+            </div>
+        </header>
 
+        <div class="container">
+            <div class="row">
+                <div class="span3 bs-docs-sidebar menu">
+                    <!--
+                    <ul class="nav nav-list bs-docs-sidenav">
+                        <li><a href="#typography"><i class="icon-chevron-right"></i> Typography</a></li>
+                        <li><a href="#code"><i class="icon-chevron-right"></i> Code</a></li>
+                        <li><a href="#tables"><i class="icon-chevron-right"></i> Tables</a></li>
+                        <li><a href="#forms"><i class="icon-chevron-right"></i> Forms</a></li>
+                        <li><a href="#buttons"><i class="icon-chevron-right"></i> Buttons</a></li>
+                        <li><a href="#images"><i class="icon-chevron-right"></i> Images</a></li>
+                        <li><a href="#icons"><i class="icon-chevron-right"></i> Icons by Glyphicons</a></li>
+                    </ul>
+                    -->
+                </div>
+                
+                <div class="span9">
+                    <div style="margin:16px;">
+                        <a href="https://twitter.com/share" class="twitter-share-button">Tweet</a>
+                        <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="http://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+                    </div>
 
-            </section>
-            
-            <section>
-                <h2>コンパイラの使用</h2>
+                    <h2>TypeScript クイックガイド</h2>
 
-                <p>TypeScript をコンパイルするには、おおまかに次の３つの方法があります。</p>
+                    <p><a href="http://www.typescriptlang.org/" target="_blank">プログラミング言語 TypeScript</a> のチュートリアルです。
+                    現在 JavaScript を利用して開発している開発者が、スムーズに TypeScript へと移行するために必要な情報を解説しています。</p>
+                    
+                    <p>本稿を読み進めるためには、おおまかに以下の項目についての知識が必要です：</p>
+                    <ul>
+                        <li>JavaScript</li>
+                        <li>静的型付け</li>
+                        <li>クラスベースオブジェクト指向</li>
+                    </ul>
+                    <p>JavaScript に加えて Java や C#, C++ のような言語からひとつを使用したことがあれば、事前の知識としては十分です。
+                    冗長になるのを避けるため、JavaScript と共通する内容やオブジェクト指向一般についての説明は意図的に省いていますが、
+                    その代わり TypeScript で新たに導入される言語仕様についてはなるべく網羅するようにしています。
+                    </p>
+                    <p>現時点での仕様の最新版は<a href="http://www.typescriptlang.org/Content/TypeScript%20Language%20Specification.pdf" target="_blank">こちら</a>です。
+                    本稿中にも仕様書の該当する位置が示されていますので、必要に応じて参照してください。
+                    文中のサンプルコードも一部は言語仕様からの引用です。
+                    本稿の正確性については一切無保証です。正確な言語仕様については仕様書を確認してください。
+                    また、本稿のすべての所見は筆者個人の主観によるもので、Microsoft の見解とは一切関係ありません。</p>
+                   
+                    <section>
+                        <h2>概要</h2>
+                        <p>（能書きが長いですので、TypeScript つかうぞーっていうモチベーションがすでにある方はこの章は読み飛ばしてくださって結構です。）</p>
+                        <p>現在、ほぼすべての Web ブラウザには JavaScript が搭載され動的なページの構築に使われていますが、
+                        Web ページがより高度化、複雑化するにつれ JavaScript の機能の限界が明らかになってきました(See also: <a href="http://www.haskell.org/haskellwiki/The_JavaScript_Problem">The JavaScript Problem</a>)。
+                        より大きく複雑なアプリケーションの開発に耐えられるように
+                        JavaScript をさらに発展させようとする試みは今も進められていますが、互換性の維持や各ソフトウェアベンダの利害関係の調整により遅々として進まず、
+                        最近まで JavaScript による貧弱なプログラミング環境での開発が強いられているこの状況が改善される見込みはありませんでした。
+                        CoffeeScript, Google Dart, JSX などの<a href="https://github.com/jashkenas/coffee-script/wiki/List-of-languages-that-compile-to-JS">多くの言語</a>も提案されてきたものの、
+                        いずれも一長一短あり根本的な解決とはなっていませんでした。
+                        </p>
+                        <p>
+                        JavaScript が抱える多数の問題とそれを取り巻く現状に対して、TypeScript は他のどの言語よりも現実的なアプローチでの解決手段を提供します。
+                        TypeScript で書かれたソースコードは TypeScript コンパイラによって JavaScript へと変換され、
+                        Web ブラウザや node.js など JavaScript が実行可能な環境で利用で使用されます。
+                        TypeScript には以下の様な長所があります。
+                        </p>
+                            <dl>
+                                <dt>静的型付け</dt>
+                                <dd>コンパイル時に型チェックされ、堅牢で変化に強く可読性の高いプログラムの記述が可能です。型注釈が省略された識別子は、型推論により自動的に型注釈が補完されるなど、記述性も確保しています。
+                                    静的な型付けが導入されたことにより、さらにインテリセンスのようなコーディングサポート、クラス名や変数名の変更などの自動的なリファクタリング、ドキュメントの自動生成、
+                                    クラス名からその定義へのジャンプなど、動的な型付けでは不可能だった多数の機能が実現可能になります。</dd>
+                                <dt>ほぼ同じ構造の JavaScript へと変換される</dt>
+                                <dd>出力される JavaScript コードは元の TypeScript コードの構造をほぼそのまま保っており、出力されたコードから元のコードとの対応を把握するのは容易です。
+                                このため、出力後の JavaScript をデバッグするのが容易になっています。
+                                Source Map などの手段も提案されてはいますが、ときには JavaScript のレベルでデバッグすることも必要な場合があるため、構造を保つのは実用的には重要なポイントです。
+                                また、どうしても必要なら出力後の JavaScript を修正することも難しくありません。
+                                </dd>
+                                <dt>標準化されたコードを生成できる</dt>
+                                <dd>JavaScript にはモジュールやクラスを始め多数の機能が欠けているため、しばしばプログラマは独自の機構でこれらを実現しようとしがちですが、
+                                統一されない規約は可読性を大きく低下させ、安易な工夫は思わぬ落とし穴を生むことがあります。
+                                TypeScript のクラスやモジュールを利用することによって、洗練されたクラスやモジュールのような機構の恩恵を JavaScript でも安全に享受することができます。</dd>
+                                <dt>JavaScript との高い相互運用性</dt>
+                                <dd>構文は基本的に JavaScript のスーパーセットであり、
+                                既存の JavaScript をほとんど修正なく TypeScript として使用することも可能であるなど、現在のブラウザ環境と非常に高い親和性をもちます。
+                                静的に型付けチェックされという点以外はあらゆる API は JavaScript そのままですし、データ型もまったく同じです。
+                                既存の JavaScript コードに対して定義ファイルを記述することで、最低限の作業で TypeScript から安全に JavaScript を呼び出すことができます。
+                                また、JQuery のような著名なライブラリに対してはすでに宣言ソースファイルが提供されており、JQuery のノウハウをそのまま生かしつつ、
+                                最初から TypeScript による静的型付けの恩恵を受けることができます。
 
-                <h3>Playground</h3>
-                <p>ブラウザ上で TypeScript のコンパイルと実行を試すことができる <a href="http://www.typescriptlang.org/Playground/">Playground</a> が公開されています。
-                ちょっとしたコードを試すにはこれが一番お手軽でしょう。入力されたコードはリアルタイムでコンパイルされ、コンパイル後の JavaScript が即座に確認できます。
-                ソースコードはトークンに応じて色分けされ、変数にカーソルを合わせるとその型が表示されたり、なんとインテリセンスも効いたりします。
-                とても良くできているので、TypeScript に慣れるにはまずは Playground でいろいろ試してみるのがいいでしょう。
-                </p>
+                                <p>『まだバージョン 1.0 が出ていないので標準ライブラリなどに大きな変更がありそうだ。TypeScript に手を出すのはまだ早いのではないか』というコメントも見かけたのですが、TypeScript 独自の標準ライブラリというものは存在しません。すべては JavaScript そのまんまです。確かに今後ジェネリクスが導入される予定なので API はジェネリックな定義に変更されるとは思われますが、標準ライブラリの機能について TypeScript が何らかの変更を加えることは一切ありません。</p>
+                                </dd>
+                                <dt>学習の容易さ</dt>
+                                <dd>言語仕様の大半は JavaScript のスーパーセットなので、すでに JavaScript を知っていれば、あとはいくらかの差分を学ぶだけで TypeScript を習得できます。
+                                構文の多くは EcmaScript6 を先取りした仕様なので、すでにある程度 EcmaScript6 の動向を追っている人にとっては違和感のない構文ばかりだと思います。
+                                データ型は JavaScript とほぼ同じであり、HTML DOM などの使い方も JavaScript から使った時とほぼ同じですから迷うことはありません。</dd>
+                                <dt>導入の容易さ</dt>
+                                <dd>Node.js が提供するパッケージシステムで容易にインストールできます。
+                                また、すでに TypeScript コンパイラはセルフホスティングされており、ブラウザ内で TypeScript をコンパイルするようなことも実現されているなど、
+                                とてもポータブルです。
+                                JavaScript で実行できることから、コンパイラは OS を問わず使用することができます。</dd>
+                                <dt>自由なライセンス</dt>
+                                <dd>TypeScript コンパイラは Apache License で提供されています。</dd>
+                            </dl>
+                            その一方で欠点や解決できない問題としては、次のようなものが挙げられます。
+                            <dl>
+                                <dt>JavaScript の知識が必要</dt>
+                                <dd>SourceMap によって TypeScript ソースコードでのデバッグも可能ですが、Source Map のでみで完全にデバッグできるとは限りません。
+                                SourceMap でうまくいかない場合は、デバッグも JavaScript のレベルで行わざるをえなくなります。
+                                発表間もない言語なので書籍はもちろんチュートリアルテキストも少なく、
+                                ブラウザオブジェクトの使い方などについては JavaScript におけるノウハウをそのまま流用することになります。
+                                よく言えば『JavaScript の知識を流用できる』といえますが、悪いくいえば『結局 JavaScript の知識は必要』ということです。
+                                </dd>
+                                <dt>最適化はされない</dt>
+                                <dd>JSX や Haxe のような最適化を多数施すシステムと異なり、TypeScript コンパイラはまったく最適化をしません。従って、実行効率は JavaScript より低下こそしませんが、向上もしません。
+                                    最適化しないオプションさえあればいいので、TypeScript も最適化ができるようになっていていいとは思いますが……。</dd>
+                                <dt>this や typeof の欠陥を克服できない</dt>
+                                <dd>JavaScript の this キーワードは文脈によるため、コールバックで this が直感的に機能しないなどの問題がありましたが、
+                                TypeScript がほぼ等価な JavaScript を生成するという仕組みを取る以上、TypeScript がこのような欠陥を根本的に解決できるわけではありません(
+                                ラムダ式だけで this の意味を変えるという姑息な工夫はしています)。
+                                int や char のようなプリミティブ型がない貧弱な型システムや標準ライブラリも JavaScript と同じですし、
+                                typeof がいまいち役に立たないのも JavaScript そのままだったりします。
+                                この辺りは JavaScript との相互運用性を優先した妥協の結果だといえます。
+                                </dd>
+                                <dt>言語仕様が貧弱</dt>
+                                <dd>近く導入する予定はあるようですが、現在のところジェネクリクスのような重要な機能が欠けています。
+                                readonly や const に関してはまったく未定のようで、開発者たちからは getter を使ったら？みたいな提案もされているものの、
+                                筆者としては readonly は getter で置き換えられるような機能ではないと思います(readonly の導入に前向きでないのは、
+                                ECMAScript 6 の型システムと互換性がとれなくなるから、というのが理由のようです)。
+                                クラスの public なプロパティは外からでも書き換え放題で、つまり public な『メソッド』を外から実装を差し替えるようなことも可能であるなど、
+                                他のクラスベースオブジェクト指向言語では当たり前の安全性は TypeScript ではいまいち不足しています。
+                                それでも、JavaScript をそのまま書くより遥かにマシではありますけれど。
+                                </dd>
+                                <dt>コンパイラが不安定</dt>
+                                <dd>筆者にとっての TypeScript 最大の不安材料はコレです。現時点 (0.8.2) だと、
+                                かなり頻繁にコンパイラがクラッシュしたり無言で何も吐かずに終了したりといった事態に遭遇します。
+                                まあ現在のコンパイラはプレビューの段階なので不安定なのは当たり前で、今すぐ実際に使おうとしている筆者のようなユーザはいくらなんでも気が早すぎではあります。
+                                あくまでプレビュー版だということを考慮に入れて、割りきって使いましょう。また、コンパイラの安定性については間違いなく今後改善されていくので、辛抱強く待つのがよいと思います。
+                                </dd>    
+                            </dl>
+                        
+                    </section>
+                    
+                    <section>
+                        <h2>コンパイラの使用</h2>
 
-                <h3>tsc</h3>
-                <p>Playground も楽しいですが、本格的なアプリケーションを書くにはちゃんとローカルで動くコンパイラが必要です。
-                TypeScript のコンパイラは node.js に付属するパッケージマネージャ npm を利用して簡単にインストールすることができます。
-                まずは <a href="http://nodejs.org/">http://nodejs.org/</a> から node.js をインストールします。
-                node.js がインストールできたら、メニューから node.js のシェルを起動して、</p>
-                <pre class="sh">>npm install -g typescript</pre>
-                <p>を入力するだけで、TypeScript のコンパイラ tsc がインストールされます。試しに HelloWorld を書いてみましょう。
-                テキストエディタで次のようなコードを書いて保存します(これは <a href="http://www.typescriptlang.org/Playground/">playground</a> のサンプルコードの一部です)。</p>
-                <pre class="ts">module Greeting{
-        export class Hello{
-            constructor(private text : string){
-            }
-            say() : void{
-                console.log(this.text);
-            }
+                        <p>TypeScript をコンパイルするには、おおまかに次の３つの方法があります。</p>
+
+                        <h3>Playground</h3>
+                        <p>ブラウザ上で TypeScript のコンパイルと実行を試すことができる <a href="http://www.typescriptlang.org/Playground/">Playground</a> が公開されています。
+                        ちょっとしたコードを試すにはこれが一番お手軽でしょう。入力されたコードはリアルタイムでコンパイルされ、コンパイル後の JavaScript が即座に確認できます。
+                        ソースコードはトークンに応じて色分けされ、変数にカーソルを合わせるとその型が表示されたり、なんとインテリセンスも効いたりします。
+                        とても良くできているので、TypeScript に慣れるにはまずは Playground でいろいろ試してみるのがいいでしょう。
+                        </p>
+
+                        <h3>tsc</h3>
+                        <p>Playground も楽しいですが、本格的なアプリケーションを書くにはちゃんとローカルで動くコンパイラが必要です。
+                        TypeScript のコンパイラは node.js に付属するパッケージマネージャ npm を利用して簡単にインストールすることができます。
+                        まずは <a href="http://nodejs.org/">http://nodejs.org/</a> から node.js をインストールします。
+                        node.js がインストールできたら、メニューから node.js のシェルを起動して、</p>
+                        <pre class="prettyprint linenums lang-bash">>npm install -g typescript</pre>
+                        <p>を入力するだけで、TypeScript のコンパイラ tsc がインストールされます。試しに HelloWorld を書いてみましょう。
+                        テキストエディタで次のようなコードを書いて保存します(これは <a href="http://www.typescriptlang.org/Playground/">playground</a> のサンプルコードの一部です)。</p>
+<pre class="prettyprint linenums">
+module Greeting{
+    export class Hello{
+        constructor(private text : string){
+        }
+        say() : void{
+            console.log(this.text);
         }
     }
+}
 
-    var hello : Greeting.Hello = new Greeting.Hello("Hello, World!");
-    hello.say();
-    </pre>
-                <p>ソースコードのあるディレクトリに移動して、次のようなコマンドでコンパイルします。</p>
-                <pre class="sh">>tsc hello.ts</pre>
-                <p>コンパイルできたら、.ts と同名で .js が生成されたのがわかると思います。中を確認してみると、次のようなファイルになっています。</p>
-                <pre class="js">var Greeting;
-    (function (Greeting) {
-        var Hello = (function () {
-            function Hello(text) {
-                this.text = text;
-            }
-            Hello.prototype.say = function () {
-                console.log(this.text);
-            };
-            return Hello;
-        })();
-        Greeting.Hello = Hello;    
-    })(Greeting || (Greeting = {}));
+var hello : Greeting.Hello = new Greeting.Hello("Hello, World!");
+hello.say();
+</pre>
+                        <p>ソースコードのあるディレクトリに移動して、次のようなコマンドでコンパイルします。</p>
+                        <pre class="prettyprint linenums lang-bash">>tsc hello.ts</pre>
+                        <p>コンパイルできたら、.ts と同名で .js が生成されたのがわかると思います。中を確認してみると、次のようなファイルになっています。</p>
+<pre class="prettyprint linenums">
+var Greeting;
+(function (Greeting) {
+    var Hello = (function () {
+        function Hello(text) {
+            this.text = text;
+        }
+        Hello.prototype.say = function () {
+            console.log(this.text);
+        };
+        return Hello;
+    })();
+    Greeting.Hello = Hello;    
+})(Greeting || (Greeting = {}));
 
-    var hello = new Greeting.Hello("Hello, World!");
-    hello.say();
-    </pre>
-                <p>.ts と比較すると、それぞれの要素がどのように変換されたのかわかると思います。
-                これはただの JavaScript ですから、ブラウザで実行することももちろん可能です。
-                tsc はブラウザで実行するための HTML まで補完するシステムではありませんから、自分で適当に書きましょう。</p>
-                <pre class="js">&lt;script type="text/javascript" src="hello.js"&gt;&lt;/script&gt;</pre>
-                <p>これを HTML として保存し、ブラウザで読みこめば実行です。ブラウザのコンソールで次のような出力が得られるでしょう。</p>
-                <pre class="sh">Hello, World!</pre>
-                <p>まずはブラウザで実行してみましたが、tsc は node.js の環境で動作するツールでもあり、コンパイルと同時に node.js 環境で実行することも可能です。
-                コンパイルと同時に node.js で実行するには、-e もしくは --exec オプションを付加します。
-                </p>
-                <pre class="sh">>tsc -e hello.ts
-    Hello, World!</pre>
-                <p>また、オプションとして @filename を渡すと、filename で指定したテキストファイルをコンパイルオプションとして読み込んでコンパイルすることができます。
-                多数のファイルを同時にコンパイルするときにはこちらのほうが便利でしょう。
-                そのほかのコンパイルオプションについては、</p>
-                <pre class="sh">>tsc -h</pre>
-                <p>を実行して閲覧できるヘルプを参照してください。</p>
+var hello = new Greeting.Hello("Hello, World!");
+hello.say();
+</pre>
+                        <p>.ts と比較すると、それぞれの要素がどのように変換されたのかわかると思います。
+                        これはただの JavaScript ですから、ブラウザで実行することももちろん可能です。
+                        tsc はブラウザで実行するための HTML まで補完するシステムではありませんから、自分で適当に書きましょう。</p>
+                        <pre class="prettyprint linenums">&lt;script type="text/javascript" src="hello.js"&gt;&lt;/script&gt;</pre>
+                        <p>これを HTML として保存し、ブラウザで読みこめば実行です。ブラウザのコンソールで次のような出力が得られるでしょう。</p>
+                        <pre class="prettyprint linenums lang-bash">Hello, World!</pre>
+                        <p>まずはブラウザで実行してみましたが、tsc は node.js の環境で動作するツールでもあり、コンパイルと同時に node.js 環境で実行することも可能です。
+                        コンパイルと同時に node.js で実行するには、-e もしくは --exec オプションを付加します。
+                        </p>
+<pre class="prettyprint linenums lang-bash">
+&gt;tsc -e hello.ts
+Hello, World!
+</pre>
+                        <p>また、オプションとして @filename を渡すと、filename で指定したテキストファイルをコンパイルオプションとして読み込んでコンパイルすることができます。
+                        多数のファイルを同時にコンパイルするときにはこちらのほうが便利でしょう。
+                        そのほかのコンパイルオプションについては、</p>
+                        <pre class="prettyprint linenums lang-bash">>tsc -h</pre>
+                        <p>を実行して閲覧できるヘルプを参照してください。</p>
 
-                <h3>Visual Studio プラグイン</h3>
-                <p>Visual Studio で TypeScript の開発が可能になるプラグインも提供されています。統合開発環境のサポートが欲しい人はこれがいいでしょう。
-                    変数名にカーソルを合わせると型や jsdoc スタイルのインラインドキュメントが表示されたり、Internet Exploler と連携してデバッグを行ったり、
-                    名前変更のような基本的なリファクタリング機能もあります。
-                    
-                </p>
-            </section>
-            
-            
-            <section>
-                <h2>言語仕様</h2>
-                <p>基本的には JavaScript と共通する仕様の説明は省略し、異なる要素を中心に解説していきます。</p>
-                <p>なお、以下のサンプルコードで、
-                <span style="border:solid 4px rgba(0,0,200,0.4); margin:4px;">TypeScript のコードは青の枠</span>、
-                <span style="border:solid 4px rgba(0,200,0,0.4); margin:4px;">JavaScript のコードは緑の枠</span>で囲って示してあります。</p>
-                
-                <h3>単純な型</h3>
-                <h4>プリミティブ型</h4>
-                <p>TypeScript のデータ型は概ね JavaScript のものと同じです。プリミティブ型として、<dfn>Number</dfn>、<dfn>Boolean</dfn>、<dfn>String</dfn>、<dfn>Null</dfn>、<dfn>Undefined</dfn> が使用可能です(3.2 Primitive Types)。
-                これらのデータ型は、JavaScript のデータ型とそのまま対応しており、リテラルもまったく同じように書きます。また、ソースコード中ではこれらの型をそれぞれ <dfn>number</dfn>, <dfn>bool</dfn>, <dfn>string</dfn> というキーワードで参照できます。
-                また、Null, Undefined については、これらの値は JavaScript と同様にそれぞれ <dfn>null</dfn>, <dfn>undefined</dfn> というリテラルで参照できます。Null や Undefined を型に持つ変数を定義することはできません。</p>
-                
-                <h4>Any</h4>
-                <p>JavaScript の変数の型に対応するものとして、<dfn>Any</dfn>が存在します。Any はコード中では<dfn>any</dfn>として参照できます。
-                any である式はどんなプロパティにアクセスしてもコンパイルエラーになりませんし、
-                any な変数に何を代入してもコンパイルエラーにならないので、
-                JavaScript の通常の変数と同じように扱うことができます。
-                ただし Any を使うと TypeScript の静的な型チェックのメリットが失われてしますので、濫用すべきではないでしょう。
-                any は既存の JavaScript コードを移植するようなときに便利なことがあります。</p>
-                
-                <h4>Void</h4>
-                <p><dfn>Void</dfn> は関数の返り値がないことを示す型です。関数の返り値がないとき、代わりに<dfn>void</dfn>を書きます。
-                void の変数を定義するようなことはできません。</p>
-                
-                <h3>変数の型注釈</h3>
-                <p>TypeScript の型注釈は、ECMAScript4 や ActionScript における型注釈と似たような構文になっています。
-                変数の型を示すには、その変数を宣言するときに変数のすぐ後ろにコロンと型を書きます。</p>
-                <pre class="ts">var name : string = "Jorn";</pre>
-                <p>型注釈を省略した場合、<dfn>型推論</dfn>によって変数の型が決定されます。したがって、先程のコードで型注釈を省略しても、
-                変数 name には文字列が代入されていることから name の型は string であると推論されます。</p>
-                <p>TypeScript はほぼ JavaScript のスーパーセットになっていますが、すべての JavaScript ソースコードが同じようにコンパイルが通るわけではありません（Wikipedia にあらゆる既存のソースコードが TypeScript としてコンパイルが通る、というような記述がありましたが、さすがにそこまでではないです）。
-                以下のコードでは型推論によって name は string 、age は number と推論され、その結果 name に age を代入してもコンパイルエラーになります。</p>
-                <pre class="ts">var name = "john";
+                        <h3>Visual Studio プラグイン</h3>
+                        <p>Visual Studio で TypeScript の開発が可能になるプラグインも提供されています。統合開発環境のサポートが欲しい人はこれがいいでしょう。
+                            変数名にカーソルを合わせると型や jsdoc スタイルのインラインドキュメントが表示されたり、Internet Exploler と連携してデバッグを行ったり、
+                            名前変更のような基本的なリファクタリング機能もあります。
+                            
+                        </p>
+                    </section>
+
+
+
+                    <section>
+                        <h2>言語仕様</h2>
+                        
+                        <h3>単純な型</h3>
+                        <h4>プリミティブ型</h4>
+                        <p>TypeScript のデータ型は概ね JavaScript のものと同じです。プリミティブ型として、<dfn>Number</dfn>、<dfn>Boolean</dfn>、<dfn>String</dfn>、<dfn>Null</dfn>、<dfn>Undefined</dfn> が使用可能です(3.2 Primitive Types)。
+                        これらのデータ型は、JavaScript のデータ型とそのまま対応しており、リテラルもまったく同じように書きます。また、ソースコード中ではこれらの型をそれぞれ <dfn>number</dfn>, <dfn>bool</dfn>, <dfn>string</dfn> というキーワードで参照できます。
+                        また、Null, Undefined については、これらの値は JavaScript と同様にそれぞれ <dfn>null</dfn>, <dfn>undefined</dfn> というリテラルで参照できます。Null や Undefined を型に持つ変数を定義することはできません。</p>
+                        
+                        <h4>Any</h4>
+                        <p>JavaScript の変数の型に対応するものとして、<dfn>Any</dfn>が存在します。Any はコード中では<dfn>any</dfn>として参照できます。
+                        any である式はどんなプロパティにアクセスしてもコンパイルエラーになりませんし、
+                        any な変数に何を代入してもコンパイルエラーにならないので、
+                        JavaScript の通常の変数と同じように扱うことができます。
+                        ただし Any を使うと TypeScript の静的な型チェックのメリットが失われてしますので、濫用すべきではないでしょう。
+                        any は既存の JavaScript コードを移植するようなときに便利なことがあります。</p>
+                        
+                        <h4>Void</h4>
+                        <p><dfn>Void</dfn> は関数の返り値がないことを示す型です。関数の返り値がないとき、代わりに<dfn>void</dfn>を書きます。
+                        void の変数を定義するようなことはできません。</p>
+                        
+                        <h3>変数の型注釈</h3>
+                        <p>TypeScript の型注釈は、ECMAScript4 や ActionScript における型注釈と似たような構文になっています。
+                        変数の型を示すには、その変数を宣言するときに変数のすぐ後ろにコロンと型を書きます。</p>
+                        <pre class="prettyprint linenums">var name : string = "Jorn";</pre>
+                        <p>型注釈を省略した場合、<dfn>型推論</dfn>によって変数の型が決定されます。したがって、先程のコードで型注釈を省略しても、
+                        変数 name には文字列が代入されていることから name の型は string であると推論され、name:string と型注釈がつけられたのと同じになります。</p>
+                        <p>TypeScript はほぼ JavaScript のスーパーセットになっていますが、すべての JavaScript ソースコードが同じようにコンパイルが通るわけではありません（Wikipedia にあらゆる既存のソースコードが TypeScript としてコンパイルが通る、というような記述がありましたが、さすがにそこまでではないです）。
+                        以下のコードでは型推論によって name は string 、age は number と推論され、その結果 name に age を代入してもコンパイルエラーになります。</p>
+<pre class="prettyprint linenums">
+var name = "john";
 var age = 30;
-name = age;　// Cannot convert 'number' to 'string'</pre>
-                <p>普段から型を意識してコーディングしている人は、JavaScript でもこんなことは滅多にしないとは思います。</p>
+name = age;　// Cannot convert 'number' to 'string'
+</pre>
+                        <p>普段から型を意識してコーディングしている人は、JavaScript でもこんなことは滅多にしないとは思います。</p>
 
-                <p>ただし、型推論に頼りすぎるのも禁物です。TypeScript には Any があり、コードによっては変数や関数の返り値の型が Any と推論されてしまうことがあるからです。
-                <pre class="ts">var hoge;
+                        <p>型推論は便利ですが、万能ではありません。型推論がうまくいかない場合は、変数や関数の返り値の型が Any と推論されてしまうことがあります。
+<pre class="prettyprint linenums">
+var hoge;
 hoge = "100";
 var num:number = hoge;  // No Error...
 </pre>
-                <p>上記のコードで、変数 hoge は "100" が代入されているので hoge:string と推論されるかと思いきや、hoge:any となっているようです。
-                したがって num:number に代入しても何もエラーが出ないのです(というか、こういうコードでちゃんとエラーが出る Haskell の型推論がすごすぎるとも言えますが)。TypeScript の型推論はまだそれほど強力ではありませんし、本質的に型推論と相性の悪い関数のオーバーロードのような機能もあります。
-                少々面倒ではありますが、可能な限り型注釈は与えておきましょう。型注釈はコードの可読性を高めるためにも大変有効です。</p>
-                
-                <h3>関数</h3>
-                
-                <h4>関数型リテラル</h4>
-                <p>TypeScript は静的型付けなので、関数の型も明示的に書く方法があります。関数の型は次のように 丸括弧で囲んだ引数のあとに => と返り値の型を書き、これを<dfn>関数型リテラル</dfn>(Function Type Literals)といいます(3.5.5 Function Type Literals)。</p>
-                <pre class="ts">(arg1 : argType1, arg1 : argType1, ...) => returnType </pre>
-                <p>これは後に説明するオブジェクト型リテラルで次のように書いても同じです。</p>
-                <pre class="ts">{ (arg1 : argType1, arg1 : argType1, ...) : returnType; } </pre>
-                <p>この関数の型は、型を書くところならどこにでも書くことができます。たとえば、HTMLElement の onclick は MouseEvent を引数にとるような関数でなければなりませんが、
-                onclick は次のように定義されています。</p>
-                <pre class="ts">interface HTMLElement{
+                        <p>上記のコードで、変数 hoge は "100" が代入されているので hoge:string と推論されるかと思いきや、hoge:any となっているようです。
+                        このため、 num:number に代入しても何もエラーが出ません。
+                        TypeScript の型推論はまだそれほど強力ではありませんし、原理的に型推論と相性の悪い、関数のオーバーロードのような機能もあります。
+                        型注釈はコードの可読性を高めるためにも大変有効ですから、少々面倒でも可能な限り型注釈は与えておくのをお勧めします。</p>
+
+                        <p>型注釈の型の部分には、number のような単純な型名やクラス名、インターフェイス名のほかに、
+                        <dfn>型リテラル</dfn>(Type Literal)を書くことができます。型リテラルには関数型リテラル、コンストラクタ型リテラル、オブジェクト型リテラルといった種類がありますが、
+                        これらについては各節で順次紹介していきます。</p>
+                        
+                        <h3>関数</h3>
+                        
+                        <h4>関数型リテラル</h4>
+                        <p>TypeScript は静的型付けなので、関数の型も明示的に書く方法があります。関数の型は次のように 丸括弧で囲んだ引数のあとに => と返り値の型を書き、これを<dfn>関数型リテラル</dfn>(Function Type Literals)といいます(3.5.5 Function Type Literals)。</p>
+                        <pre class="prettyprint linenums">(arg1 : argType1, arg1 : argType1, ...) => returnType </pre>
+                        <p>この関数型リテラルは、型を書くところならどこにでも書くことができます。たとえば、HTMLElement の onclick は MouseEvent を引数にとるような関数でなければなりませんが、
+                        onclick は次のように定義されています。</p>
+<pre class="prettyprint linenums">
+interface HTMLElement{
     ...
     onclick : <strong>(ev:MouseEvent) => any</strong>;
     ...
-}</pre>
-                <p>もちろん、変数や引数を関数の型で型注釈を加えたり、後に紹介する型表明（ようするにキャスト）で使ったりすることももちろん可能です。</p>
+}
+</pre>
+                        <p>もちろん、変数や引数を関数の型で型注釈を加えたり、後に紹介する型表明（ようするにキャスト）で使ったりすることももちろん可能です。</p>
 
-                <p>また、これらの関数の型をもつようなオブジェクトは JavaScript の　Function インターフェイスのオブジェクトでもあります。
-                Function インターフェイスには apply や call のようなプロパティが定義されていますので、apply や call も JavaScript と同じように呼び出すことができます。</p>
+                        <p>また、これらの関数の型をもつようなオブジェクトは JavaScript の　Function インターフェイスのオブジェクトでもあります。
+                        Function インターフェイスには apply や call のようなプロパティが定義されていますので、apply や call も JavaScript と同じように呼び出すことができます。</p>
 
-<pre class="ts">
+<pre class="prettyprint linenums">
 var hoge : ()=>void = function(){
     ...
 }
@@ -314,53 +382,59 @@ piyo.apply(null);           // ()=>void な式に対して apply も呼べる
 </pre>
 
 
-                <h4>省略可能な引数</h4>                
-                <p>省略可能な引数には、引数の直後に ? を書きます。たとえば、String.indexOf の第２引数は省略可能なので、
-                indexOf は次のように定義されています。</p>
-                <pre class="ts">indexOf(searchString: string, position<strong>?</strong>: number): number;</pre>
-                <p>また、省略可能な引数には省略した場合のデフォルト値を、　= を使って次のように与えることができます。</p>
+                        <h4>省略可能な引数</h4>                
+                        <p>省略可能な引数には、引数の直後に ? を書きます。たとえば、String.indexOf の第２引数は省略可能なので、
+                        indexOf は次のように定義されています。</p>
+                        <pre class="prettyprint linenums">indexOf(searchString: string, position<strong>?</strong>: number): number;</pre>
+                        <p>また、省略可能な引数には省略した場合のデフォルト値を、　= を使って次のように与えることができます。</p>
 
-                <pre class="ts">indexOf(searchString: string, position<strong>?</strong>: number = 0): number;</pre>
+                        <pre class="prettyprint linenums">indexOf(searchString: string, position<strong>?</strong>: number = 0): number;</pre>
 
-                <p>デフォルト値を指定しなかった場合は、JavaScript で引数が不足していた場合と同じように undefined になります。
-                また、省略可能な引数のあとには通常の引数を書くことはできません。このあたりは他の言語と同じです。</p>
+                        <p>デフォルト値を指定しなかった場合は、JavaScript で引数が不足していた場合と同じように undefined になります。
+                        また、省略可能な引数のあとには通常の引数を書くことはできません。このあたりは他の言語と同じです。</p>
 
-                <h4>可変長引数</h4>
-                <p>可変長引数は、その引数の識別子の前に ... を書くことで表します。その場合、その変数は複数の値を受け取るわけですから、その型は配列型になります。また、可変長引数はその関数の引数のうち、最後に位置しなければなりません。可変長引数については仕様書にもまだあまり詳しく書かれていませんが、コンパイラ本体のソースコードや JQuery などの外部ライブラリ用の定義ファイルなどでもすでにあちこちで使われているようです。たとえば、JQuery の append は次のように定義されています。</p>
+                        <h4>可変長引数</h4>
+                        <p>可変長引数は、その引数の識別子の前に ... を書くことで表します。その場合、その変数は複数の値を受け取るわけですから、その型は配列型になります。また、可変長引数はその関数の引数のうち、最後に位置しなければなりません。可変長引数については仕様書にもまだあまり詳しく書かれていませんが、コンパイラ本体のソースコードや JQuery などの外部ライブラリ用の定義ファイルなどでもすでにあちこちで使われているようです。たとえば、JQuery の append は次のように定義されています。</p>
 
-                <pre class="ts">append(...content: any[]): JQuery;</pre>
+                        <pre class="prettyprint linenums">append(...content: any[]): JQuery;</pre>
 
-                <h4>function 文における型注釈</h4>
-                <p>function 式を使用して関数を定義する場合は先述のように注釈をつければよいですが、
-                function 文で関数を定義する場合にも型注釈をつけることができます。function 文への型注釈は、
-                仮引数にはそれぞれ変数と同じようにコロンと型を書き、返り値の型を括弧のあとに書きます。
-                例えば、string を受け取って number を返す parseNumber なら、次のようになります。</p>
-                <pre class="ts">function parseNumber(str : string) : number {
+                        <h4>function 文における型注釈</h4>
+                        <p>変数やプロパティに型注釈をつける場合は、先ほど説明したように関数型リテラルを使えばよいですが、
+                        function 文で関数を定義する場合にも型注釈をつけることができます。function 文への型注釈は、
+                        仮引数にはそれぞれ変数と同じようにコロンと型を書き、返り値の型を括弧のあとに書きます。
+                        例えば、string を受け取って number を返す parseNumber なら、次のようになります。</p>
+<pre class="prettyprint linenums">
+function parseNumber(str : string) : number {
     ... 
-}</pre>
-                <p>これは以下のように function 式を使って書いても全く同じです。</p>
-                <pre class="ts">var parseNumber : (str : string) => number = function (str){
+}
+</pre>
+                        <p>これは以下のように function 式と関数型リテラルを使って定義した場合とまったく同じです。</p>
+<pre class="prettyprint linenums">
+var parseNumber : (str : string) => number = function (str){
     ... 
-}</pre>
-                <p>function 式の方にも型注釈をつけることができるので、冗長ですが以下のように書いても同様です。</p>
-                <pre class="ts">var parseNumber : (str : string) => number = function (str : string) : number{
+}
+</pre>
+                        <p>もちろん function 式の方にも型注釈をつけることができるので、冗長ですが以下のように書いても同様です。</p>
+<pre class="prettyprint linenums">
+var parseNumber : (str : string) => number = function (str : string) : number{
     ... 
-}</pre>
+}
+</pre>
+                        <p>省略可能な引数や引数のデフォルト値、可変長引数の書き方も、関数型リテラルと同様です。</p>
+                        
+                                        
+                        <h4>関数のオーバーロード</h4>
+                        <p>TypeScript では関数のオーバーロードが可能です( 6.3 Function Overloads )。
+                        といっても関数名のマングリングが行われるわけでもなく、関数本体はあくまで単一です。
+                        同名の関数のシグニチャを引数の型を変えて複数定義することができ、コンパイル時には適合するシグニチャが検索されて型チェックが解決されます。
+                        その関数の本体は、それぞれのシグニチャに対応するように、型が異なっている部分の引数の型を any や Object などのそれらの型を抽象できる型にします。
+                        引数の型によって実装を切り替えるようなことはできませんが、表面的にはオーバーロードしているように見えます。オーバーロードはクラスのコンストラクタでも可能です。</p>
 
-                
-                                
-                <h4>関数のオーバーロード</h4>
-                <p>TypeScript では関数のオーバーロードが可能です( 6.3 Function Overloads )。
-                といっても関数名のマングリングが行われるわけでもなく、関数本体はあくまで単一です。
-                同名の関数のシグニチャを引数の型を変えて複数定義することができ、コンパイル時には適合するシグニチャが検索されて型チェックが解決されます。
-                その関数の本体は、それぞれのシグニチャに対応するように、型が異なっている部分の引数の型を any や Object などのそれらの型を抽象できる型にします。
-                引数の型によって実装を切り替えるようなことはできませんが、表面的にはオーバーロードしているように見えます。オーバーロードはクラスのコンストラクタでも可能です。</p>
+                        <p>たいていの場合は関数本体では引数で渡されたオブジェクトの実際の型を判定する必要があると思いますが、JavaScript と同じように typeof や instanceof を使って調べればOKです。<strong>typeof(null) が "object" だったりする悪習は脈々と受け継がれている</strong>ので気をつけましょう。
+                        たとえば、ベクトルか二つの数をとって新たなベクトルオブジェクトを返すような関数　createVector をオーバーロードで定義すると、つぎのようになります。
+                        </p>
 
-                <p>たいていの場合は関数本体では引数で渡されたオブジェクトの実際の型を判定する必要があると思いますが、JavaScript と同じように typeof や instanceof を使って調べればOKです。<strong>typeof(null) が "object" だったりする悪習は脈々と受け継がれている</strong>ので気をつけましょう。
-                たとえば、ベクトルか二つの数をとって新たなベクトルオブジェクトを返すような関数　createVector をオーバーロードで定義すると、つぎのようになります。
-                </p>
-
-                <pre class="ts">
+<pre class="prettyprint linenums">
 function createVector(v:Vector2):Vector2;             // ベクトル一つを渡すときのシグニチャ    
 function createVector(x:number, y:number):Vector2;    // ふたつの数を渡すときのシグニチャ
 function createVector(a:any, b?:number):Vector2{      // 関数本体は createVector のシグニチャには含まれない。
@@ -379,58 +453,62 @@ var v:Vector2 = createVector(new Vector2(10, 20));  // Vector2 を渡すと (v:V
 var u:Vector2 = createVector(10, 20);               // number ふたつだと (x:number, y:number) が選択される
 var w:Vector2 = createVector("10", "20");           // ("10", "20") に適合するものはないので、コンパイルエラー
 </pre>            
-                <p>本体の定義で、引数はどのシグニチャが選択されても対応できるような型にしておかなければなりません。
-                引数 a は Vector2 か number のどちらかなので、どちらにも対応できるよう a:any としておきます(どちらでも受け取れればいいので、a:Object とすることも可能です)。
-                引数 b は渡されない(undefined になる)か number を渡されるかなので、b?:number でいいでしょう。</p>
+                        <p>本体の定義で、引数はどのシグニチャが選択されても対応できるような型にしておかなければなりません。
+                        引数 a は Vector2 か number のどちらかなので、どちらにも対応できるよう a:any としておきます(どちらでも受け取れればいいので、a:Object とすることも可能です)。
+                        引数 b は渡されない(undefined になる)か number を渡されるかなので、b?:number でいいでしょう。</p>
 
-                <p>このように function 文でオーバーロードされた関数を定義することもできますが、他にも『オブジェクト型リテラル』を使ってオーバーロードする方法があります。
-                オブジェクト型リテラルを使うとオーバーロードされた関数の型を示すようなこともできますが、オブジェクト型リテラルについて詳しくは後述します。</p>
-                
-                <h4>アロー関数式</h4>
-                <p>アロー関数式 (Arrow Function Expressions) はいわゆる無名関数の構文ですが、JavaScript の function 式による構文に比べてシンプルに書けるようになっています。</p>
-                <pre class="ts"> (arg0 : arg1Type, arg1 : arg1Type, ... ) => { statment0; statement1; ... }</pre>
-                <p>これは次のように単に function 式として出力されます。</p>
-                <pre class="js"> function(arg0, arg1, ... ){ statment0; statement1; ... }</pre>
-                
-                <p>まず関数の引数をカンマで区切って並べ、それをかっこで囲んだのが引数部です。そのあとに => 、関数本体と続けます。
-                引数がひとつの場合はカッコを省略することができたり、関数本体がひとつの文の場合は中括弧と return を省略することができます。
-                以下の４つの式は、いずれも同じ関数リテラルを表しています (4.9.2 Arrow Function Expressions)。</p>
-                <pre class="ts">(x) => { return Math.sin(x); }
+                        <p>このように function 文でオーバーロードされた関数を定義することもできますが、他にも『オブジェクト型リテラル』を使ってオーバーロードする方法があります。
+                        オブジェクト型リテラルを使うとオーバーロードされた関数の型を示すようなこともできますが、オブジェクト型リテラルについて詳しくは後述します。</p>
+                        
+                        <h4>アロー関数式</h4>
+                        <p>アロー関数式 (Arrow Function Expressions) はいわゆる無名関数の構文ですが、JavaScript の function 式による構文に比べてシンプルに書けるようになっています。</p>
+                        <pre class="prettyprint linenums"> (arg0 : arg1Type, arg1 : arg1Type, ... ) => { statment0; statement1; ... }</pre>
+                        <p>これは次のように単に function 式として出力されます。</p>
+                        <pre class="prettyprint linenums"> function(arg0, arg1, ... ){ statment0; statement1; ... }</pre>
+                        
+                        <p>まず関数の引数をカンマで区切って並べ、それをかっこで囲んだのが引数部です。そのあとに => 、関数本体と続けます。
+                        引数がひとつの場合はカッコを省略することができたり、関数本体がひとつの文の場合は中括弧と return を省略することができます。
+                        以下の４つの式は、いずれも同じ関数リテラルを表しています (4.9.2 Arrow Function Expressions)。</p>
+<pre class="prettyprint linenums">
+(x) => { return Math.sin(x); }
 (x) => Math.sin(x)
 x => { return Math.sin(x); }
-x => Math.sin(x)</pre>
-                <p>実はアロー関数式は function 式とはまったく同じではなく、後に説明するように アロー関数式と function 式とは this の扱いが異なりますから注意しましょう。</p>
-                
+x => Math.sin(x)
+</pre>
+                        <p>実はアロー関数式は function 式とはまったく同じではなく、後に説明するように アロー関数式と function 式とは this の扱いが異なりますから注意しましょう。</p>
+                        
 
-                <h3>配列</h3>
-                <p>配列の型を書くには、型のあとに [] を置きます。</p>
-    <pre class="ts">var seasons : string[] = ["spring", "summer", "fall", "winter"];</pre>            
-                <p>将来的にはジェネリクスが導入され、<span class="var">T </span>[] は Array&lt;<span class="var">T </span>&gt;の別名になるようです。
-                現在のところ、lib.d.ts にある interface Array の定義では _element という型が特別に要素の型として解釈されるようになっています。</p>
+                        <h3>配列</h3>
+                        <p>配列の型を書くには、型のあとに [] を置きます。</p>
+                        <pre class="prettyprint linenums">var seasons : string[] = ["spring", "summer", "fall", "winter"];</pre>            
+                        <p>将来的にはジェネリクスが導入され、<span class="var">T </span>[] は Array&lt;<span class="var">T </span>&gt;の別名になるようです。
+                        現在のところ、lib.d.ts にある interface Array の定義では _element という型が特別に要素の型として解釈されるようになっています。</p>
 
-                
-                <h3>オブジェクト型リテラル</h3>
-                <p>あるオブジェクトがどんなプロパティをもっているか、
-                関数として呼び出せるか、配列のようにインデックスで参照できるか、コンストラクタとして new できるかなどは、
-                オブジェクト型リテラル (Object Type Literal)を使用して表現できます。(3.5.3 Object Type Literals)。
-                オブジェクト型リテラルは型リテラルの一種で、以降に説明するいくつかのシグニチャのセットを { } でまとめたものです。              このオブジェクト型リテラルは、変数の型注釈や関数の返り値の型など、型を書くところならどこにでも書くことができます。
-                </p>
+                        
+                        <h3>オブジェクト型リテラル</h3>
+                        <p>あるオブジェクトがどんなプロパティをもっているか、
+                        関数として呼び出せるか、配列のようにインデックスで参照できるか、コンストラクタとして new できるかなどは、
+                        <dfn>オブジェクト型リテラル</dfn> (Object Type Literal)を使用して表現できます。(3.5.3 Object Type Literals)。
+                        オブジェクト型リテラルは型リテラルの一種で、以降に説明するいくつかのシグニチャのセットを { } でまとめたものです。              このオブジェクト型リテラルは、変数の型注釈や関数の返り値の型など、型を書くところならどこにでも書くことができます。
+                        </p>
 
-                <h4>プロパティシグニチャ</h4>
-                <p>その型のオブジェクトが少なくとも持っているプロパティを定義するには、　</p>
-                <pre class="ts">プロパティ名: 型　</pre>
-                <p>という形式の<dfn>プロパティシグニチャ</dfn>を使います。
-                例えば、少なくとも position:Vector2, paint:()=>void　という 2 つのプロパティをもつオブジェクトの型は、</p>
-                <pre class="ts">{ 
+                        <h4>プロパティシグニチャ</h4>
+                        <p>その型のオブジェクトが少なくとも持っているプロパティを定義するには、　</p>
+                        <pre class="prettyprint linenums">プロパティ名: 型　</pre>
+                        <p>という形式の<dfn>プロパティシグニチャ</dfn>を使います。
+                        例えば、少なくとも position:Vector2, paint:()=>void　という 2 つのプロパティをもつオブジェクトの型は、</p>
+<pre class="prettyprint linenums">
+{ 
     position: Vector2; 
     paint: ()=>void;
-} </pre>
-                <p>と書きます。
-                また、このような型をもつオブジェクトに対しては、型で定義された position や paint というプロパティにのみアクセスでき、
-                そのような型の変数には　position:Vector2 や paint:()=>void を持つようなオブジェクトを代入できます。
-                次のコードでは少なくとも position:Vector2 と paint:()=>void をプロパティとして持つようなオブジェクトを代入できる object2d という変数を定義しています。 
-                </p>
-                <pre class="ts">var object2d: { position: Vector2; paint: ()=>void; };
+}
+</pre>
+                        <p>と書きます。
+                        また、このような型をもつオブジェクトに対しては、型で定義された position や paint というプロパティにのみアクセスでき、
+                        そのような型の変数には　position:Vector2 や paint:()=>void を持つようなオブジェクトを代入できます。
+                        次のコードでは少なくとも position:Vector2 と paint:()=>void をプロパティとして持つようなオブジェクトを代入できる object2d という変数を定義しています。 
+                        </p>
+<pre class="prettyprint linenums">var object2d: { position: Vector2; paint: ()=>void; };
 
 // object2d には position, paint を持つようなオブジェクトを代入できる
 object2d = { 
@@ -441,31 +519,30 @@ object2d = {
 
 // 型から object2d は position を持っていることが保証されるので、position にアクセスできる
 console.log(object2d.position.x);
-
 </pre>     
-                <p>また、先ほどのコードで person が参照しているオブジェクトは実行時に実際には size というプロパティも持っているはずですが、型は
-                    静的に解決されるのでこのプロパティにはアクセスできません。</p>
-                <pre class="ts">console.log(person.size); // コンパイルエラー！size というプロパティはない</pre>
+                        <p>また、先ほどのコードで object2d が参照しているオブジェクトは実行時に実際には size というプロパティも持っているはずですが、型は
+                            静的に解決されるのでこのプロパティにはアクセスできません。</p>
+                        <pre class="prettyprint linenums">console.log(object2d.size); // コンパイルエラー！size というプロパティはない</pre>
 
-                <h4>関数シグニチャ</h4>
+                        <h4>関数シグニチャ</h4>
 
-                <p>関数であるようなプロパティを定義するためのシグニチャとして、</p>
-                <pre class="ts">関数名(引数...): 返り値の型</pre>　
-                <p>という形式の<dfn>関数シグニチャ</dfn>というものもあります。
-                先ほど説明したプロパティシグニチャでも関数であるようなプロパティの型を示せますが、
-                関数シグニチャのほうが function 式やメンバ関数の構文に近いので、こちらを使ったほうが直感的というひともいるかもしれません。
-                先ほどのコードにおいて、 hello というプロパティの型は関数でしたが、これを次のように関数シグニチャで表すこともできます。
-            </p>
-                <pre class="ts">var person : { 
+                        <p>関数であるようなプロパティを定義するためのシグニチャとして、</p>
+                        <pre class="prettyprint linenums">関数名(引数...): 返り値の型</pre>　
+                        <p>という形式の<dfn>関数シグニチャ</dfn>というものもあります。
+                        先ほど説明したプロパティシグニチャでも関数であるようなプロパティの型を示せますが、
+                        関数シグニチャのほうが function 式やメンバ関数の構文に近いので、こちらを使ったほうが直感的というひともいるかもしれません。
+                        先ほどのコードにおいて、 hello というプロパティの型は関数でしたが、これを次のように関数シグニチャで表すこともできます。
+                    </p>
+<pre class="prettyprint linenums">var object2d : { 
     position: Vector2; 
     paint(): void;      // 関数シグニチャ。 paint: ()=>void と同じ
 };</pre>        
-                <p>また、同じ名前でシグニチャの異なる複数の関数シグニチャを定義することで、オーバーロードされた関数を表すことが可能です。
-                    プロパティシグニチャでは同じ名前の複数のプロパティを定義することはできないので、オーバーロードされた関数を定義する場合は次のように関数シグニチャを使うか、
-                    後述するコールシグニチャを使う必要があります。
-                    このようなオーバーロードは後に紹介するコンストラクトシグニチャでも可能で、オーバーロードされたコンストラクタも表現できます。</p>
-                
-                <pre class="ts">var object2d: { 
+                        <p>また、同じ名前でシグニチャの異なる複数の関数シグニチャを定義することで、オーバーロードされた関数を表すことが可能です。
+                            プロパティシグニチャでは同じ名前の複数のプロパティを定義することはできないので、オーバーロードされた関数を定義する場合は次のように関数シグニチャを使うか、
+                            後述するコールシグニチャを使う必要があります。
+                            このようなオーバーロードは後に紹介するコンストラクトシグニチャでも可能で、オーバーロードされたコンストラクタも表現できます。</p>
+                        
+<pre class="prettyprint linenums">var object2d: { 
     setPosition(x:number, y:number):void;   //　オーバーロード！
     setPosition(p:Vector2):void; 
 }; 
@@ -474,40 +551,46 @@ object2d.setPosition(10, 20);               // number ふたつでもいいし�
 object2d.setPosition(new Vector2(10, 20));  // ベクトルでも渡せる 
 </pre>
 
-                <h4>インデックスシグニチャ</h4>
-                <p><dfn>インデックスシグニチャ</dfn>(Index signiture)があれば、そのオブジェクトに対して [ ] を利用してアクセスできます。
-                インデックスシグニチャは [ ] の中にインデックスの型、コロンのあとに値の型を書きます。</p>
-                <pre class="ts">var v : { [index:number]:number; } = {};
+                        <h4>インデックスシグニチャ</h4>
+                        <p><dfn>インデックスシグニチャ</dfn>(Index signiture)があれば、そのオブジェクトに対して [ ] を利用してアクセスできます。
+                        インデックスシグニチャは [ ] の中にインデックスの型、コロンのあとに値の型を書きます。</p>
+<pre class="prettyprint linenums">
+var v : { [index:number]:number; } = {};
 v[0] = 10;
 v[1] = 20;
-console.log(v[0]);</pre>
-                <p>ただし、現時点ではなぜか普通の Array と互換性がないなどの問題があるようです。</p>
-                <pre class="ts">var v: { [index:number]:number; } = []; // コンパイルエラー！</pre>
-                <p>[] は any[] という型になるようで、any[] を number[] に代入するようなことは可能ですが、インデックスシグニチャとはうまく互換性がありません。
-                    とはいえ、これは安全なコードであるはずなので、&lt;any&gt; などを使ってやや強引に解決してしまって構わないと思います。</p>
-                <pre class="ts">var hoge : { [index:number]:number; } = &lt;any&gt;[]; // 型チェックがゴミのようだ！</pre>
-                <p>また、最初期のバージョンではインデックスの型に any が許容されていましたが、現在では string か number のみが認められています。</p>
-                
-                <h4>コールシグニチャ</h4>
-                <p><dfn>コールシグニチャ</dfn>(Call signitures)があれば、そのオブジェクトを関数のように呼び出せます。
-                コールシグニチャは括弧の中に引数列と、その後ろにコロンと返り値の型を書きます。
-                たとえば、文字列をひとつ引数にとって void を返す関数 paint があったとすると、その型注釈は次のように書けます。</p>
-                <pre class="ts">var paint: { (text:string):void; };    
+console.log(v[0]);
+</pre>
+                        <p>ただし、現時点ではなぜか普通の Array と互換性がないなどの問題があるようです。</p>
+                        <pre class="prettyprint linenums">var v: { [index:number]:number; } = []; // コンパイルエラー！</pre>
+                        <p>[] は any[] という型になるようで、any[] を number[] に代入するようなことは可能ですが、インデックスシグニチャとはうまく互換性がありません。
+                            とはいえ、これは安全なコードであるはずなので、&lt;any&gt; などを使ってやや強引に解決してしまって構わないと思います。</p>
+                        <pre class="prettyprint linenums">var hoge : { [index:number]:number; } = &lt;any&gt;[]; // 型チェックがゴミのようだ！</pre>
+                        <p>また、最初期のバージョンではインデックスの型に any が許容されていましたが、現在では string か number のみが認められています。</p>
+                        
+                        <h4>コールシグニチャ</h4>
+                        <p><dfn>コールシグニチャ</dfn>(Call signitures)があれば、そのオブジェクトを関数のように呼び出せます。
+                        コールシグニチャは括弧の中に引数列と、その後ろにコロンと返り値の型を書きます。
+                        たとえば、文字列をひとつ引数にとって void を返す関数 paint があったとすると、その型注釈は次のように書けます。</p>
+<pre class="prettyprint linenums">
+var paint: { (text:string):void; };    
 paint("Hello!");    // コールシグニチャがあるので、関数として呼び出せる
-                </pre>
-                <p>この場合、関数型リテラルを使って次のように定義するのと同じです。</p>
-                <pre class="ts">var paint: (text:string)=>void;    
+</pre>
+                        <p>この場合、関数型リテラルを使って次のように定義するのと同じです。</p>
+<pre class="prettyprint linenums">
+var paint: (text:string)=>void;    
 paint("Hello!"); 
-                </pre>
-                <p>
-                このような単なる関数であれば関数型リテラルを使って定義してもいいのですが、JavaScript の関数はオブジェクトでもありプロパティを持つことができるので、
-                関数としても呼び出せるしプロパティも持っているというような型を示すには、オブジェクト型リテラルでコールシグニチャとプロパティシグニチャなどを組み合わせる必要があります。</p>
-                <pre class="ts">var paint: { (text:string): void; color: string; };
+</pre>
+                        <p>
+                        このような単なる関数であれば関数型リテラルを使って定義してもいいのですが、JavaScript の関数はオブジェクトでもありプロパティを持つことができるので、
+                        関数としても呼び出せるしプロパティも持っているというような型を示すには、オブジェクト型リテラルでコールシグニチャとプロパティシグニチャなどを組み合わせる必要があります。</p>
+<pre class="prettyprint linenums">
+var paint: { (text:string): void; color: string; };
 paint.color = "#00f";    // プロパティも持てるし    
 paint("Hello!");         // 関数として呼び出せる
-                </pre>
-                <p>オブジェクト型リテラルに複数のコールシグニチャを含めれば、オーバーロードされた関数の型を示すこともできます。</p>
-<pre class="ts">var paint: { 
+</pre>
+                        <p>オブジェクト型リテラルに複数のコールシグニチャを含めれば、オーバーロードされた関数の型を示すこともできます。</p>
+<pre class="prettyprint linenums">
+var paint: { 
     (text:string): void; 
     (num:number): void;
     (condition:bool): void;
@@ -517,9 +600,10 @@ paint.color = "utf8";      // プロパティも持てるし
 paint("Hello!");           // string
 paint(42);                 // number
 paint(true);               // bool でオーバーロードしてる！
-                </pre>
-                <p>また、先ほど関数シグニチャでオーバーロードされた関数を定義する例として挙げたコードも、次のようにコールシグニチャで表現することが可能です。</p>                
-                <pre class="ts">var object2d:{ 
+</pre>
+                        <p>また、先ほど関数シグニチャでオーバーロードされた関数を定義する例として挙げたコードも、次のようにコールシグニチャで表現することが可能です。</p>                
+<pre class="prettyprint linenums">
+var object2d:{ 
     setPosition: {
         (x:number, y:number):void;
         (p:Vector2):void;
@@ -528,13 +612,14 @@ paint(true);               // bool でオーバーロードしてる！
 
 object2d.setPosition(10, 20);               // number ふたつでもいいし、
 object2d.setPosition(new Vector2(10, 20));  // ベクトルでも渡せる 
-                </pre>
+</pre>
 
-                <h4>コンストラクトシグニチャ</h4>
-                <p>あるオブジェクトが new できるかどうかは、<dfn>コンストラクトシグニチャ</dfn>(Construct signitures)の有無によります。
-                
-                オーバーロードされたコンストラクタを定義することも可能です。</p>
-                <pre class="ts">var Object2D : { 
+                        <h4>コンストラクトシグニチャ</h4>
+                        <p>あるオブジェクトが new できるかどうかは、<dfn>コンストラクトシグニチャ</dfn>(Construct signitures)の有無によります。
+                        
+                        オーバーロードされたコンストラクタを定義することも可能です。</p>
+<pre class="prettyprint linenums">
+var Object2D : { 
     new (x:number, y:number): Object2D;
     new (x:Vector2): Object2D;
 };
@@ -542,25 +627,26 @@ object2d.setPosition(new Vector2(10, 20));  // ベクトルでも渡せる
 var objectA: Object2D = new Object2D(10, 20);   // number ふたつで new することもできるし、
 var objectB: Object2D = new Object2D(v);        // ベクトルを渡して new もできる
 </pre>
-                <p>ただ、普通は new できるようなオブジェクトはクラスを表している場合が大半なので、素直にクラスとして書くほうが読みやすいのではないかと思います。
-                コンストラクトシグニチャは既存の JavaScript コードの型の定義を書くときにが使われることが多いようです。</p>
-                <p>コンストラクトシグニチャでは、コンストラクタが返す値の型は何でも構いません。
-                    このあたりも JavaScript の仕様に合わせて柔軟に定義できるようになっています。</p>
-<pre class="ts">
+                        <p>ただ、普通は new できるようなオブジェクトはクラスを表している場合が大半なので、素直にクラスとして書くほうが読みやすいのではないかと思います。
+                        コンストラクトシグニチャは既存の JavaScript コードの型の定義を書くときにが使われることが多いようです。</p>
+                        <p>コンストラクトシグニチャでは、コンストラクタが返す値の型は何でも構いません。
+                            このあたりも JavaScript の仕様に合わせて柔軟に定義できるようになっています。</p>
+<pre class="prettyprint linenums">
 var Object2D: {
     new (x:number, y:number): string;   // new Object2D で string が返る……？
 };
 
 var s:string = new Object2D(10, 20);    // コンパイルは問題ないけど、わけがわからないよ
 </pre>                
-                <h3>インターフェイス</h3>
-                <p><dfn>インターフェイス</dfn> (interface) はオブジェクト型リテラルに別名を定義します。
-                Java や C# にある「インターフェイス」と目的は似ていますが、TypeScript のインターフェイスは
-                どんなオブジェクト型リテラルについても別名をつけられるので、コールシグニチャが含まれるようなオブジェクト型リテラルをインターフェイスとして定義すると、
-                関数の型にも別名を付けられることになります。インターフェイスの定義は、キーワード interface のあとにインターフェイス名、そのあとに
-                オブジェクト型リテラルを書きます。
-                </p>
-                <pre class="ts">// インターフェイスの定義
+                        <h3>インターフェイス</h3>
+                        <p><dfn>インターフェイス</dfn> (interface) はオブジェクト型リテラルに別名を定義します。
+                        Java や C# にある「インターフェイス」と目的は似ていますが、TypeScript のインターフェイスは
+                        どんなオブジェクト型リテラルについても別名をつけられるので、コールシグニチャが含まれるようなオブジェクト型リテラルをインターフェイスとして定義すると、
+                        関数の型にも別名を付けられることになります。インターフェイスの定義は、キーワード interface のあとにインターフェイス名、そのあとに
+                        オブジェクト型リテラルを書きます。
+                        </p>
+<pre class="prettyprint linenums">
+// インターフェイスの定義
 interface Person{
     name : string;
     birthday : Date;
@@ -576,8 +662,9 @@ var person : Person = {
 
 person.hello();
 </pre>
-                <p>次は関数のシグニチャに別名を与えてみた例です。</p>
-                <pre class="ts">// Id であるオブジェクトは、(n:string):string か (n:number):number で呼び出せる
+                        <p>次は関数のシグニチャに別名を与えてみた例です。</p>
+<pre class="prettyprint linenums">
+// Id であるオブジェクトは、(n:string):string か (n:number):number で呼び出せる
 interface Id{
     (n:string):string; 
     (n:number):number;
@@ -591,10 +678,10 @@ var id : Id = function(arg){
 var n : number = id(100);       // number を渡すと id(n:number):number が選択される
 var s : string = id("100");     // string を渡すと id(n:string):string が選択される
 var x : Date = id(new Date());    // id(n:Date):Date は存在しないのでコンパイルエラー
-            </pre>
+</pre>
 
-                <p>また、インターフェイスはパーシャルに書けるようになっているようです。つまり同名のインターフェイスを複数書くことができ、それらが単一のインターフェイスとして扱われます。あるインターフェイスについて、そのインターフェイスにシグニチャを追加したければ同じ名前で定義することでシグニチャを追加できます。</p>
-                <pre class="ts">
+                        <p>また、インターフェイスはパーシャルに書けるようになっているようです。つまり同名のインターフェイスを複数書くことができ、それらが単一のインターフェイスとして扱われます。あるインターフェイスについて、そのインターフェイスにシグニチャを追加したければ同じ名前で定義することでシグニチャを追加できます。</p>
+<pre class="prettyprint linenums">
 interface A{
     piyo:string;    
 }
@@ -605,60 +692,62 @@ interface A{
 
 // A なオブジェクトは hoge, piyo を両方持っていなければならない
 var a:A = { piyo:"", hoge:10  };    
-                </pre>
+</pre>
 
-                <p>この仕様、仕様書には見当たらないので詳しくはよくわかりません。
-                    例えば、window に試験的に実装した API を使いたいときに interface Window を定義してプロパティを追加するような使い方ができるのかなと思います。
-                標準ライブラリの定義ファイルをいじるか、any でごまかす方法もありますけれど。</p>
+                        <p>この仕様、仕様書には見当たらないので詳しくはよくわかりません。
+                            例えば、window に試験的に実装した API を使いたいときに interface Window を定義してプロパティを追加するような使い方ができるのかなと思います。
+                        標準ライブラリの定義ファイルをいじるか、any でごまかす方法もありますけれど。</p>
 
- <pre class="ts">
+<pre class="prettyprint linenums">
 interface Window{
     webkitRequestAnimationFrame(func:()=>void):void;    
 }
-                </pre>               
-            
-                
-                <h3>サブタイピング</h3>
-                <p>TypeScript はサブタイプを決定するための型システムとして <dfn>Structural Subtyping</dfn> を採用しています。
-                大雑把に言えば、Structural Subtyping とは『スーパークラスのすべてのプロパティさえ持っていれば、そのオブジェクトはそのスーパークラスのオブジェクトとして振る舞えるので、
-                直接の継承関係に関わらずそれをサブタイプとみなす』という仕組みです。例えば、次のコードで err に代入してるオブジェクトはインターフェイス Error を実装しているクラスだというわけではありませんが、name と message というプロパティさえあれば(もちろん型も一致していなければなりません)それは Error として問題なく扱えるので、err:Error に代入することが可能になっています。</p>
+</pre>               
+                    
+                        
+                        <h3>サブタイピング</h3>
+                        <p>TypeScript はサブタイプを決定するための型システムとして <dfn>Structural Subtyping</dfn> を採用しています。
+                        大雑把に言えば、Structural Subtyping とは『スーパークラスのすべてのプロパティさえ持っていれば、そのオブジェクトはそのスーパークラスのオブジェクトとして振る舞えるので、
+                        直接の継承関係に関わらずそれをサブタイプとみなす』という仕組みです。例えば、次のコードで err に代入してるオブジェクトはインターフェイス Error を実装しているクラスだというわけではありませんが、name と message というプロパティさえあれば(もちろん型も一致していなければなりません)それは Error として問題なく扱えるので、err:Error に代入することが可能になっています。</p>
 
-                <pre class="ts">
+<pre class="prettyprint linenums">
 interface Error{
     name:string;
     message:string;
 }
 
 var err:Error = { name:"HogeError", message:"Unexpected Hoge!" };
-                </pre>
+</pre>
 
 
 
-                <p>サブタイプとなる条件はやや複雑ですが、その振る舞いはごく直感的なので実際は迷うことはあまりないと思います。サブクラスはスーパークラスのすべてのメンバを継承するというようなオブジェクト指向の基本は、
-                TypeScript においても同じです。</p>
+                        <p>サブタイプとなる条件はやや複雑ですが、その振る舞いはごく直感的なので実際は迷うことはあまりないと思います。サブクラスはスーパークラスのすべてのメンバを継承するというようなオブジェクト指向の基本は、
+                        TypeScript においても同じです。</p>
 
-                <p>ある型が他の型のサブタイプであるとき、その型の変数へと代入することが可能になります。サブタイプとなる条件や代入が可能となる条件は簡単に言えば次のとおりですが、厳密な条件は仕様書を参照してください( 3.6.2 Subtypes and Supertypes, 3.6.3 Assignment Compatibility )。</p>
-                <ul>
-                    <li>Any の変数にはどんな型の値でも代入できる</li>
-                    <li>Any な式はどんな型の変数へでも代入できる</li>
-                    <li>null, undefined はどんな型の変数にでも代入できる</li>
-                    <li>ある型がスーパータイプのすべてのプロパティを持っていればサブタイプになる。</li>
-                </ul>
-                <p>ただし、クラスはそれぞれが自分の型を特定するための<dfn>ブランド</dfn>を持っており、たとえメンバの構成がまったく同じでも
-                ブランドが異なれば互換性はありません。
-                たとえば、以下の２つのクラス A と B は(Objectから継承したものを除き)どちらもメンバを持っていないので『AはBのすべてのプロパティを持っている』といえますが、a を b に代入しようとするとエラーになります。</p>
-                <pre class="ts">class A{
+                        <p>ある型が他の型のサブタイプであるとき、その型の変数へと代入することが可能になります。サブタイプとなる条件や代入が可能となる条件は簡単に言えば次のとおりですが、厳密な条件は仕様書を参照してください( 3.6.2 Subtypes and Supertypes, 3.6.3 Assignment Compatibility )。</p>
+                        <ul>
+                            <li>Any の変数にはどんな型の値でも代入できる</li>
+                            <li>Any な式はどんな型の変数へでも代入できる</li>
+                            <li>null, undefined はどんな型の変数にでも代入できる</li>
+                            <li>ある型がスーパータイプのすべてのプロパティを持っていればサブタイプになる。</li>
+                        </ul>
+                        <p>ただし、クラスはそれぞれが自分の型を特定するための<dfn>ブランド</dfn>を持っており、たとえメンバの構成がまったく同じでも
+                        ブランドが異なれば互換性はありません。
+                        たとえば、以下の２つのクラス A と B は(Objectから継承したものを除き)どちらもメンバを持っていないので『AはBのすべてのプロパティを持っている』といえますが、a を b に代入しようとするとエラーになります。</p>
+<pre class="prettyprint linenums">
+class A{
 }
 class B{
 }
 
 var a : A = new A();
-var b : B = a; // コンパイルエラー</pre>
+var b : B = a; // コンパイルエラー
+</pre>
 
-                <p>extends で継承したクラスはスーパークラスのすべてのメンバを持ち、なおかつスーパークラスのブランドも引き継ぐので、そのクラスはそのスーパークラスのサブタイプとなります。</p>
+                        <p>extends で継承したクラスはスーパークラスのすべてのメンバを持ち、なおかつスーパークラスのブランドも引き継ぐので、そのクラスはそのスーパークラスのサブタイプとなります。</p>
 
-                <p>このとき、インターフェイスを経由するとブランドが取り除かれるので、a を b へと代入することができたりします。インターフェイスにはブランドがありませんから、必要なプロパティさえあればそのインターフェイスのサブタイプになることができます。</p>
-                <pre class="ts">
+                        <p>このとき、インターフェイスを経由するとブランドが取り除かれるので、a を b へと代入することができたりします。インターフェイスにはブランドがありませんから、必要なプロパティさえあればそのインターフェイスのサブタイプになることができます。</p>
+<pre class="prettyprint linenums">
 class A{
 }
 class B{
@@ -670,30 +759,30 @@ interface I{
 var a : A = new A();
 var i : I = a;
 var b : B = b;
-                </pre>
+</pre>
 
-                
-                <p>(余談となりますが、Structural Subtyping は『構造的部分型』と訳す例が多いようです。
-                ただ、"static typing" を『静的型付け』と訳すように、この "typing" は『型』ではなく『型付け』を意味しているので、訳すなら
-                『構造的部分型付け』とでもなるようにも思います。さらに、オブジェクト指向界隈では "subtype" は『部分型』とするより『派生型』と訳すのが一般的なので、
-                『構造的派生型付け』とでも訳すほうが正確(？)のように思いますが、まったく一般的でないので
-                ここではそのまま Structural Subtyping と呼んでおきます。意味合いとしては、
-                『そのオブジェクトがどんなメンバを持っているかという構造に従った派生型の決定』というような意味になります。</p>
+                        
+                        <p>(余談となりますが、Structural Subtyping は『構造的部分型』と訳す例が多いようです。
+                        ただ、"static typing" を『静的型付け』と訳すように、この "typing" は『型』ではなく『型付け』を意味しているので、訳すなら
+                        『構造的部分型付け』とでもなるようにも思います。さらに、オブジェクト指向界隈では "subtype" は『部分型』とするより『派生型』と訳すのが一般的なので、
+                        『構造的派生型付け』とでも訳すほうが正確(？)のように思いますが、まったく一般的でないので
+                        ここではそのまま Structural Subtyping と呼んでおきます。意味合いとしては、
+                        『そのオブジェクトがどんなメンバを持っているかという構造に従った派生型の決定』というような意味になります。</p>
 
-                <p>筆者としては『部分型』というと『スーパークラスの一部分だけのメンバで構成された型』みたいに思えてしまうので、
-                なんとなく『部分型』よりは『派生型』という呼び方のほうが好きです。
-                もちろん、『型』は『集合』であり、サブクラスのオブジェクトの集合はスーパークラスのオブジェクトの部分集合なので
-                『部分型』という呼び方そのものは正しいですが、『部分型』という訳語を partial type の訳語に割り当てたいという思惑もあったりして。
-                )</p>
+                        <p>筆者としては『部分型』というと『スーパークラスの一部分だけのメンバで構成された型』みたいに思えてしまうので、
+                        なんとなく『部分型』よりは『派生型』という呼び方のほうが好きです。
+                        もちろん、『型』は『集合』であり、サブクラスのオブジェクトの集合はスーパークラスのオブジェクトの部分集合なので
+                        『部分型』という呼び方そのものは正しいですが、『部分型』という訳語を partial type の訳語に割り当てたいという思惑もあったりして。
+                        )</p>
 
 
-            <h3>型表明</h3>
-            <p>型表明 (type assertion) は、基底クラスの型から派生クラスの型へと式の型を変換します。いわゆるダウンキャストやナローイング変換のようなものだと思えばいいでしょう。</p>
-            <pre class="ts"><code>&lt;type&gt; expression; </code></pre>
-            <p>というように、型を &lt;　&gt; で囲んで式の先頭に置くと、式 expression の型が type であると表明できます(4.13 Type Assertions)。この型は型名にかぎらずオブジェクト型リテラルでも大丈夫です。
-            例えば Circle が Shape のサブタイプであるとき、型表明を使うと Shape である値を Circle に変換することができます。 
-            </p>
-            <pre class="ts">class Shape { ... }
+                    <h3>型表明</h3>
+                    <p>型表明 (type assertion) は、基底クラスの型から派生クラスの型へと式の型を変換します。いわゆるダウンキャストやナローイング変換のようなものだと思えばいいでしょう。</p>
+                    <pre class="prettyprint linenums"><code>&lt;type&gt; expression; </code></pre>
+                    <p>というように、型を &lt;　&gt; で囲んで式の先頭に置くと、式 expression の型が type であると表明できます(4.13 Type Assertions)。この型は型名にかぎらずオブジェクト型リテラルでも大丈夫です。
+                    例えば Circle が Shape のサブタイプであるとき、型表明を使うと Shape である値を Circle に変換することができます。 
+                    </p>
+<pre class="prettyprint linenums">class Shape { ... }
             
 class Circle extends Shape { ... }
 
@@ -706,32 +795,34 @@ function createShape(kind: string): Shape {
 
 var circle:Circle = &lt;Circle&gt; createShape("circle");
 </pre> 
-                <p>型表明は型チェックのときにコンパイラを説得するためだけに使われ、実行時に型をチェックしてエラーを出すコードが追加されるようなことはありません。
-                型表明は単に取り除かれて JavaScript が出力されます。
-                実行時に誤った型へと変換しても実行時エラーは出ないので気をつけましょう。
-                たとえば、上記のコードで createShape("circle") は実行時に　Circle のオブジェクトを返しますが、
-                コンパイルすると型注釈や型表明は単に取り除かれるので、代入した時にエラーがでるようなことはありません。</p>
-                <pre class="ts">var rect:Rectangle = &lt;Rectangle&gt; createShape("circle"); </pre> 
-                このコードをコンパイルすると、単に以下のような JavaScript になります。
-                <pre class="js">var rect = createShape("circle");  </pre> 
-                <p>基本的にはサブタイプになり得ない型へとキャストすることはできませんが、&lt;any&gt; を使えばどんな型にでも自在にキャストできてしまいます。既存の JavaScript のなかには型の概念など歯牙にもかけないコードがありますが、そうしたコードを TypeScript から呼び出す場合には &lt;any&gt; を使わざるを得ないケースは結構あります。とはいえ &lt;any&gt; は型チェックがもたらす安全性を台無しにしますから、最低限の使用に限るのがいいでしょう。</p>
-                
-
-                
-                <h3>this キーワード</h3>
-                <p>
-                TypeScript の this はそれが書かれている場所によって意味が異なります( 4.2 The this Keyword )。</p>
-                <ul>
-                    <li>コンストラクタ、メンバ関数、メンバアクセサにおいては、this はそのインスタンスを指す。</li>
-                    <li>静的関数や静的アクセサでは、this はそのコンストラクタ関数を指す。</li>
-                    <li>関数定義や通常の function 式、グローバルモジュールでは this は呼び出した文脈によって変わり、this は Any である。</li>
-                </ul>
-                <p>any となる位置では間違って参照してもコンパイルエラーが出ません。比較的ハマりやすい部分だと思うので十分気をつけましょう。
-                </p>
-                <p>これだけ読んでも、はあ？という感じだと思うので、例に基づいて理解したほうがいいでしょう。
-                    たとえば、以下のソースコードでは function 式を使っていますが、この中の this は message が参照しているオブジェクトではなく window なので、
-                    この場合は this.message は undefined になってしまいます。</p>
-                <pre class="ts">
+                        <p>型表明は型チェックのときにコンパイラを説得するためだけに使われ、実行時に型をチェックしてエラーを出すコードが追加されるようなことはありません。
+                        型表明は単に取り除かれて JavaScript が出力されます。
+                        実行時に誤った型へと変換しても実行時エラーは出ないので気をつけましょう。
+                        たとえば、上記のコードで createShape("circle") は実行時に　Circle のオブジェクトを返しますが、
+                        コンパイルすると型注釈や型表明は単に取り除かれるので、代入した時にエラーがでるようなことはありません。</p>
+                        <pre class="prettyprint linenums">var rect:Rectangle = &lt;Rectangle&gt; createShape("circle"); </pre> 
+                        このコードをコンパイルすると、単に以下のような JavaScript になります。
+                        <pre class="prettyprint linenums">var rect = createShape("circle");  </pre> 
+                        <p>基本的にはサブタイプになり得ない型へとキャストすることはできませんが、&lt;any&gt; を使えばどんな型にでも自在にキャストできてしまいます。既存の JavaScript のなかには型の概念など歯牙にもかけないコードがありますが、そうしたコードを TypeScript から呼び出す場合には &lt;any&gt; を使わざるを得ないケースは結構あります。とはいえ &lt;any&gt; は型チェックがもたらす安全性を台無しにしますから、最低限の使用に限るのがいいでしょう。</p>
+                        
+                        <p>( ちなみに Type Assertion の訳語として定着したものはなく、『型表明』という訳語は筆者の裁量によるものです。
+                        『型アサーション』という訳しているのも見受けられますが、筆者はいまいちピンと来なかったのでこうなっています。
+                        このテキストでは『型表明』としておきますが、他の場所で語るときには『型表明』では伝わらない場合が多いでしょうから、Type Assertion と呼んでおくのが無難だと思います。)</p>
+                        
+                        <h3>this キーワード</h3>
+                        <p>
+                        TypeScript の this はそれが書かれている場所によって意味が異なります( 4.2 The this Keyword )。</p>
+                        <ul>
+                            <li>コンストラクタ、メンバ関数、メンバアクセサにおいては、this はそのインスタンスを指す。</li>
+                            <li>静的関数や静的アクセサでは、this はそのコンストラクタ関数を指す。</li>
+                            <li>関数定義や通常の function 式、グローバルモジュールでは this は呼び出した文脈によって変わり、this は Any である。</li>
+                        </ul>
+                        <p>any となる位置では間違って参照してもコンパイルエラーが出ません。比較的ハマりやすい部分だと思うので十分気をつけましょう。
+                        </p>
+                        <p>これだけ読んでも、はあ？という感じだと思うので、例に基づいて理解したほうがいいでしょう。
+                            たとえば、以下のソースコードでは function 式を使っていますが、この中の this は message が参照しているオブジェクトではなく window なので、
+                            この場合は this.message は undefined になってしまいます。</p>
+<pre class="prettyprint linenums">
 var messenger = {
     message: "Hello World",
     start: function() {
@@ -739,9 +830,11 @@ var messenger = {
         setTimeout(<strong>function(){</strong> alert(this.message); <strong>}</strong>, 3000);   
     }
 };
-messenger.start();</pre>       
-            <p>このようなときは、function 式を使うのではなくアロー関数式を使うと、this がちゃんとインスタンスを指すようになります。</p>
-            <pre class="ts">var messenger = {
+messenger.start();
+</pre>       
+                    <p>このようなときは、function 式を使うのではなくアロー関数式を使うと、this がちゃんとインスタンスを指すようになります。</p>
+<pre class="prettyprint linenums">
+var messenger = {
     message: "Hello World",
     start: function() {
         // this.message がちゃんと "Hello, World" になる！ふしぎ！
@@ -750,9 +843,11 @@ messenger.start();</pre>
 };
 messenger.start();
 </pre> 
-                <p>なぜアロー関数式内の this がインスタンスを参照できるかというと、コンパイルするときに自動的にインスタンスを参照する変数 _this を定義して、
-                いったん this の参照を保存しておいてからそれを参照するようにしてくれるからです。</p>
-                <pre class="js">var messenger = {
+                        <p>なぜアロー関数式内の this がインスタンスを参照できるかというと、コンパイルするときに自動的にインスタンスを参照する変数 _this を定義して、
+                        いったん this の参照を保存しておいてからそれを参照するようにしてくれるからです。</p>
+<pre class="prettyprint linenums">
+// JavaScript
+var messenger = {
     message: "Hello World",
     start: function () {
         <strong>var _this = this;</strong>
@@ -765,101 +860,104 @@ messenger.start();
 </pre> 
 
 
-                
-                
+                        
+                        
 
-                
-                <h3>クラス</h3>
-                <p>TypeScript にはクラスベースオブジェクト指向の機能があります。
-                出力される JavaScript ソースコードにおいてはプロトタイプを使用してオブジェクト指向を実現しているにすぎませんが、
-                クラスベースのように継承やオーバーライドを使用できるので記述が容易になり、可読性は高くなります。</p>
-                <p><dfn>クラス</dfn>は <dfn>class</dfn> キーワードで始まり、次にクラス名を書きます。そのあとに中括弧を書き、その中にクラスのメンバを書きます。
-                コンストラクタの名前として <span>constructor</span> という予約語を使うことにも注意しましょう。
-                他の型を継承する場合は、クラス名のあとに extends、続けてスーパータイプ名を書きます。
-                大まかには次のような構文になっています。</p>
-                
-            <pre class="ts"><span class="preserved">class</span> <span class="var">className</span> <span class="preserved">extends</span> <span class="var">superClass</span> <span class="preserved">implements</span> <span class="var">interface1</span>, ...　{
+                        
+                        <h3>クラス</h3>
+                        <p>TypeScript にはクラスベースオブジェクト指向の機能があります。
+                        出力される JavaScript ソースコードにおいてはプロトタイプを使用してオブジェクト指向を実現しているにすぎませんが、
+                        クラスベースのように継承やオーバーライドを使用できるので記述が容易になり、可読性は高くなります。</p>
+                        <p><dfn>クラス</dfn>は <dfn>class</dfn> キーワードで始まり、次にクラス名を書きます。そのあとに中括弧を書き、その中にクラスのメンバを書きます。
+                        コンストラクタの名前として <span>constructor</span> という予約語を使うことにも注意しましょう。
+                        他の型を継承する場合は、クラス名のあとに extends、続けてスーパータイプ名を書きます。
+                        大まかには次のような構文になっています。</p>
+                        
+<pre class="prettyprint linenums">
+class className extends superClass implements interface1, ...　{
     
-    <span class="comment">// クラス変数</span>
-    <span class="var">varName</span> : <span class="var">varType</span> = <span class="var">expression</span> ;
+    // クラス変数
+    varName : varType = expression;
     
-    <span class="comment">// メンバ関数</span>
-    <span class="var">funcName</span>(<span class="var">arg1</span> : <span class="var">arg1Type</span>, <span class="var">arg2</span> : <span class="var">arg2Type</span>, ...) : <span class="var">returnType</span>　{
+    // メンバ関数
+    funcName(arg1 : arg1Type, arg2 : arg2Type, ...) : returnType　{
         ...
     }
-
-    <span class="comment">// コンストラクタ</span>
-    <span class="preserved">constructor</span>(<span class="var">arg1</span> : <span class="var">arg1Type</span>, <span class="var">arg2</span> : <span class="var">arg2Type</span>, ...)　{
-        ...
-    }
-    
-    <span class="comment">// get アクセサ</span>
-    <span class="preserved">get</span> <span class="var">getAccessorName</span>() : <span class="var">returnType</span>　{
+ 
+    // コンストラクタ
+    constructor(arg1 : arg1Type, arg2 : arg2Type, ...)　{
         ...
     }
     
-    <span class="comment">// set アクセサ</span>
-    <span class="preserved">set</span> <span class="var">setAccessorName</span>(<span class="var">arg</span> : <span class="var">argType</span>) {
+    // get アクセサ
+    get getAccessorName() : returnType　{
         ...
     }
     
-    <span class="comment">// 静的クラス変数</span>
-    <span class="preserved">static</span> <span class="var">varName</span> : <span class="var">varType</span> = <span class="var">expression</span> ;
-    
-    <span class="comment">// 静的メンバ関数</span>
-    <span class="preserved">static</span> <span class="var">funcName</span>(<span class="var">arg1</span> : <span class="var">arg1Type</span>, <span class="var">arg2</span> : <span class="var">arg2Type</span>, ...) : <span class="var">returnType</span>　{
+    // set アクセサ
+    set setAccessorName(arg : argType) {
         ...
     }
-}</pre>
+    
+    // 静的クラス変数
+    static varName : varType = expression ;
+    
+    // 静的メンバ関数
+    static funcName(arg1 : arg1Type, arg2 : arg2Type, ...) : returnType　{
+        ...
+    }
+}
+</pre>
 
-                <h4>アクセス修飾子</h4>
-                <p>メンバにはアクセス修飾子をつけることができます。
-                アクセス修飾子は private か public のどちらかで、省略した場合は public になります( 8.2.1 Accessibility )。</p>
-                
-                <h4>メンバ変数/メンバ関数</h4>
-                <p>メンバ変数は var キーワードは付けずにあとは通常の変数と同じように記述します。
-                メンバ関数は function のキーワードは書かずに関数名、引数、本体と書いていきます。
-                用語としては「フィールド」ではなく「メンバ変数」、「メソッド」ではなく「メンバ関数」のようです。
-                メンバへのアクセスは、クラスの内部でも this. を省略することはできません。</p>
+                        <h4>アクセス修飾子</h4>
+                        <p>メンバにはアクセス修飾子をつけることができます。
+                        アクセス修飾子は private か public のどちらかで、省略した場合は public になります( 8.2.1 Accessibility )。</p>
+                        
+                        <h4>メンバ変数/メンバ関数</h4>
+                        <p>メンバ変数は var キーワードは付けずにあとは通常の変数と同じように記述します。
+                        メンバ関数は function のキーワードは書かずに関数名、引数、本体と書いていきます。
+                        用語としては「フィールド」ではなく「メンバ変数」、「メソッド」ではなく「メンバ関数」のようです。
+                        メンバへのアクセスは、クラスの内部でも this. を省略することはできません。</p>
 
-                <h4>コンストラクタ</h4>
-                <p>コンストラクタは constructor というキーワードを使用して定義します。
-                また、コンストラクタの引数に public もしくは private という修飾子をつけることができ、
-                このときクラスには自動的に引数と同名のメンバ変数が定義されて引数の値が代入されます。
-                これを<dfn>引数プロパティ宣言</dfn>(parameter property declaration)といいます( 8.3.1 Constructor Parameters )。
-                クラス変数をコンストラクタで初期化するような場面はとても多いので、思った以上に使用頻度の大きい便利な機能です。</p>
-                <p>スーパークラスのコンストラクタを明示的に呼び出すには super を使います ( 8.3.2 Super Calls )。
-                引数プロパティ定義を使用する場合は明示的な super(); が必要になるようです。</p>   
+                        <h4>コンストラクタ</h4>
+                        <p>コンストラクタは constructor というキーワードを使用して定義します。
+                        また、コンストラクタの引数に public もしくは private という修飾子をつけることができ、
+                        このときクラスには自動的に引数と同名のメンバ変数が定義されて引数の値が代入されます。
+                        これを<dfn>引数プロパティ宣言</dfn>(parameter property declaration)といいます( 8.3.1 Constructor Parameters )。
+                        クラス変数をコンストラクタで初期化するような場面はとても多いので、思った以上に使用頻度の大きい便利な機能です。</p>
+                        <p>スーパークラスのコンストラクタを明示的に呼び出すには super を使います ( 8.3.2 Super Calls )。
+                        引数プロパティ定義を使用する場合は明示的な super(); が必要になるようです。</p>   
 
-                <p>また、コンストラクタとして呼べるオブジェクトの型は、<dfn>コンストラクタ型リテラル</dfn>(Function Type Literal)でも表すことができます。
-                オブジェクト型リテラルではコンストラクタとして呼べるようなオブジェクトは { new (arg1: ArgType1, ...) : ReturnType; } というシグニチャを追加することで表すことができましたが、コンストラクタ型リテラルを使うと次のように表すこともできます。</p>
+                        <p>また、コンストラクタとして呼べるオブジェクトの型は、<dfn>コンストラクタ型リテラル</dfn>(Constructor Type Literal)でも表すことができます。
+                        オブジェクト型リテラルではコンストラクタとして呼べるようなオブジェクトは { new (arg1: ArgType1, ...) : ReturnType; } というシグニチャを追加することで表すことができましたが、コンストラクタ型リテラルを使うと次のように表すこともできます。</p>
 
-                <pre class="ts">new (arg1: Arg1Type, arg2: Arg2Type) => ReturnType</pre>             
+                        <pre class="prettyprint linenums">new (arg1: Arg1Type, arg2: Arg2Type) => ReturnType</pre>             
 
-                <h4>アクセサ</h4>
-                <p>get, set キーワードを使ってアクセサを定義できます(8.4.3 Member Accessor Declarations)。
-                アクセサにもアクセス修飾子をつけることができます。
-                アクセサは Object.defineProperty の get プロパティの定義へとコンパイルされます。
-                デフォルトでは tsc は EcmaScript3 に準拠するコードを出力しますが、get プロパティは EcmaScript5 の機能なのでアクセサを定義するとエラーになります。
-                アクセサを定義するにはコンパイル引数として --target ES5 を渡す必要があります。</p>
-                
-                <h4>オーバーライド</h4>
-                <p>メソッドのオーバーライドも可能です。メソッドをオーバーライドするには、サブクラスでスーパークラスのメソッドと同名のメソッドを定義します。
-                残念ながら C# の override キーワードや Java の @Override アノテーションのようなものはありませんので、
-                うっかりタイプミスをするとオーバーライドしたつもりでオーバーライドできていなかったりという危険があります。くれぐれもタイプミスをしないよう気をつけましょう。
-                また、オーバーライドを禁止することもできませんから、スーパークラスのメンバ関数の名前を変更するときは細心の注意を払いましょう。
-                </p>
-                
-                
-                
-                <h4>静的メンバ</h4>
-                <p>static をつけたメンバは静的メンバになります。アクセス属性は常に public です。静的メンバにアクセスするときは、
-                そのクラス内からであっても常に <i>classname</i>. の修飾が必要になります。</p>
+                        <h4>アクセサ</h4>
+                        <p>get, set キーワードを使ってアクセサを定義できます(8.4.3 Member Accessor Declarations)。
+                        アクセサにもアクセス修飾子をつけることができます。
+                        アクセサは Object.defineProperty の get プロパティの定義へとコンパイルされます。
+                        デフォルトでは tsc は EcmaScript3 に準拠するコードを出力しますが、get プロパティは EcmaScript5 の機能なのでアクセサを定義するとエラーになります。
+                        アクセサを定義するにはコンパイル引数として --target ES5 を渡す必要があります。</p>
+                        
+                        <h4>オーバーライド</h4>
+                        <p>メソッドのオーバーライドも可能です。メソッドをオーバーライドするには、サブクラスでスーパークラスのメソッドと同名のメソッドを定義します。
+                        残念ながら C# の override キーワードや Java の @Override アノテーションのようなものはありませんので、
+                        うっかりタイプミスをするとオーバーライドしたつもりでオーバーライドできていなかったりという危険があります。くれぐれもタイプミスをしないよう気をつけましょう。
+                        また、オーバーライドを禁止することもできませんから、スーパークラスのメンバ関数の名前を変更するときは細心の注意を払いましょう。
+                        </p>
+                        
+                        
+                        
+                        <h4>静的メンバ</h4>
+                        <p>static をつけたメンバは静的メンバになります。アクセス属性は常に public です。静的メンバにアクセスするときは、
+                        そのクラス内からであっても常に <i>classname</i>. の修飾が必要になります。</p>
 
-                <h3>列挙型</h3>
-                <p>列挙型も使用可能なようです。列挙型は enum というキーワードを使い、中括弧の中にメンバとなる識別子をカンマで区切って列挙します。このメンバには定義した順番で整数が自動的に割り当てられますが、= を使って明示的にその値を指定することもできるようです。たとえば、コンパイラに付属する winjs.d.ts では、キーコードを次のように定義しています。</p>
+                        <h3>列挙型</h3>
+                        <p>列挙型も使用可能なようです。列挙型は enum というキーワードを使い、中括弧の中にメンバとなる識別子をカンマで区切って列挙します。このメンバには定義した順番で整数が自動的に割り当てられますが、= を使って明示的にその値を指定することもできるようです。たとえば、コンパイラに付属する winjs.d.ts では、キーコードを次のように定義しています。</p>
 
-                <pre class="ts">export enum Key {
+<pre class="prettyprint linenums">
+export enum Key {
     backspace = 8, 
     tab = 9, 
     enter = 13, 
@@ -867,21 +965,22 @@ messenger.start();
     ctrl = 17, 
     ...
 }</pre>
-                <p>列挙型はまだ実験的な機能なので、今後仕様が大きく変更されるかもしれません。仕様書にもほとんど書かれていません。</p>
-                
-                <h3>モジュール</h3>
-                <p>TypeScript のモジュールは大まかにふたつの機構があります。そのため、あるソースコードにモジュールをインポートする方法が２種類、
-                モジュールをエクスポートする方法も２種類あります。</p>
-                
-                <h4>内部モジュール</h4>
-                <p><dfn>内部モジュール</dfn> (Internal Module) は TypeScript 自身に用意されたモジュール機能です。
-                TypeScript は内部モジュールとは別に CommonJS や AMD に沿って定義されたモジュールをインポート/エクスポートすることもできますが、
-                これらの仕様に従っている既存の JavaScript コードと相互に運用するのでなければ、内部モジュールだけで問題ないでしょう。
-                モジュールは任意の関数、クラス、インターフェイスなどを内部に含むことができ、
-                これらのモジュールメンバをその名前空間ごとに分けて扱うことができます。
-                </p>
-                
-                <pre class="ts">module <span class="var">moduleName</span> {
+                        <p>列挙型はまだ実験的な機能なので、今後仕様が大きく変更されるかもしれません。仕様書にもほとんど書かれていません。</p>
+                        
+                        <h3>モジュール</h3>
+                        <p>TypeScript のモジュールは大まかにふたつの機構があります。そのため、あるソースコードにモジュールをインポートする方法が２種類、
+                        モジュールをエクスポートする方法も２種類あります。</p>
+                        
+                        <h4>内部モジュール</h4>
+                        <p><dfn>内部モジュール</dfn> (Internal Module) は TypeScript 自身に用意されたモジュール機能です。
+                        TypeScript は内部モジュールとは別に CommonJS や AMD に沿って定義されたモジュールをインポート/エクスポートすることもできますが、
+                        これらの仕様に従っている既存の JavaScript コードと相互に運用するのでなければ、内部モジュールだけで問題ないでしょう。
+                        モジュールは任意の関数、クラス、インターフェイスなどを内部に含むことができ、
+                        これらのモジュールメンバをその名前空間ごとに分けて扱うことができます。
+                        </p>
+                        
+<pre class="prettyprint linenums">
+module <span class="var">moduleName</span> {
     var varName : varType = expression;
     
     function funcName(arg1 : arg1Type) : returnType{
@@ -895,18 +994,20 @@ messenger.start();
     module nestedModule{
         ...
     }
-}</pre>
-                
-                <p>内部モジュールは実際には単なるオブジェクトとして JavaScript に出力されます。したがって、出力されたファイルを html 側で読みこめば
-                そのモジュール名でモジュールを参照することができます。</p>
-                <p>ひとつの内部モジュールはひとつのファイル内だけで定義する必要はありません。
-                必要なら２つ以上のソースファイルで別々に同名のモジュールを定義しても構いません。
-                その場合、ソースファイルを両方コンパイルして、出力された JavaScript を両方読みこむようにすればちゃんと動作します。</p>
-                
-                <h4>モジュールメンバのエクスポート</h4>
-                <p>モジュール内の関数やクラスは、デフォルトではそのモジュール内のみで参照可能です。これを外部から参照可能にするには、
-                そのメンバの先頭に export キーワードを付けます。</p>
-                <pre class="ts">module M{
+}
+</pre>
+                        
+                        <p>内部モジュールは実際には単なるオブジェクトとして JavaScript に出力されます。したがって、出力されたファイルを html 側で読みこめば
+                        そのモジュール名でモジュールを参照することができます。</p>
+                        <p>ひとつの内部モジュールはひとつのファイル内だけで定義する必要はありません。
+                        必要なら２つ以上のソースファイルで別々に同名のモジュールを定義しても構いません。
+                        その場合、ソースファイルを両方コンパイルして、出力された JavaScript を両方読みこむようにすればちゃんと動作します。</p>
+                        
+                        <h4>モジュールメンバのエクスポート</h4>
+                        <p>モジュール内の関数やクラスは、デフォルトではそのモジュール内のみで参照可能です。これを外部から参照可能にするには、
+                        そのメンバの先頭に export キーワードを付けます。</p>
+<pre class="prettyprint linenums">
+module M{
     class T{
     }
 
@@ -915,107 +1016,113 @@ messenger.start();
 }
 var t : M.T;  // T はエクスポートされていないので、コンパイルエラー
 var s : M.S;  // S はエクスポートされているので M.S で参照できる 
-            </pre>
-                <p>また、トップレベルのメンバに対しては自動的にエクスポートされます。
-                上記の例では、M は自動的にエクスポートされるので export はつけません(トップレベルのメンバに対する export は、
-                そのモジュールを内部モジュールではなく外部モジュールとしてエクスポートすることを指します)。</p>
-                
-                <h4>モジュールの別名</h4>
-                <p>モジュールは別名をつけることができます。モジュールはしばしば Foo.Bar.Baz のように深くネストすることがありますが、
-                毎回 Foo.Bar.Baz.AnyClass のように書くのは面倒です。このようなときには、import キーワードでモジュールに別名をつけることができます。</p>
-                <pre class="ts"><code>import Qux = Foo.Bar.Baz; </code></pre>
-                <p>このようにすると、そのファイル内で Qux.AnyClass のようにクラスや関数を参照することができます。</p>
-                
-                
-                <h4>外部モジュール</h4>
-                <p>外部モジュール (External Module) は CommonJS や Asynchronous Module Definition (AMD) が規定する機構でモジュールをエクスポート/インポートする仕組みです。
-                TypeScript が外部モジュールとしてどちらの仕様を選択するかは、コンパイルオプションで指定することができます。
-                ただ、外部モジュール周りはいくつか仕様変更があったり、無言でコンパイルが失敗するなどの問題があって
-                    げんなりしたので、筆者はあまり詳しく調べていません。</p>
-                
-                <p>外部モジュールをエクスポートするには、エクスポートしたいモジュールの module キーワードの前に export キーワードを置きます。
-                こうするとコンパイラが外部モジュールとしてインポートできるように、exportsという変数にモジュール名のオブジェクトを追加して、
-                これに対してモジュールメンバを定義します。このあたりの挙動は CommonJS や AMD の仕様通りなので、詳しくはそちらを参照してください。
-                </p>
-                
-                <h4>モジュールのインポート</h4>
-                <p>モジュールが外部モジュールか内部モジュールかによってインポートの仕方が異なります。内部モジュールの場合、</p>
-                <pre class="ts"><code>/// &lt;reference path="…"/&gt; </code></pre>
-                <p>という行をソースファイルに含めることで、コンパイラにそのファイルを参照させることができます。
-                内部モジュールをインポートしても、インポートしたモジュールがコンパイルされて取り込まれるわけではありません。
-                あくまで型や変数などのシンボルの解決のために参照するだけなので、インポートするモジュールが実装を伴うメンバを持っている場合は
-                それらも別にコンパイルし、HTML ではそれらの出力された JavaScript を適宜読み込む必要があります。</p>
-                
-                <p>外部モジュールの場合、import キーワードおよび module キーワードを使用してモジュールを読み込みます。</p>
-                <pre class="ts"><code>import hoge = module("piyo"); </code></pre>
-                <p>このとき、コンパイラはまず piyo.ts というファイルを探し、見つかればこのモジュールをロードします。
-                この場合、モジュールは hoge という識別子を通してアクセスすることになります。たとえば、</p>
-                <pre class="ts"><code>// piyo.ts 
+</pre>
+                        <p>また、トップレベルのメンバに対しては自動的にエクスポートされます。
+                        上記の例では、M は自動的にエクスポートされるので export はつけません(トップレベルのメンバに対する export は、
+                        そのモジュールを内部モジュールではなく外部モジュールとしてエクスポートすることを指します)。</p>
+                        
+                        <h4>モジュールの別名</h4>
+                        <p>モジュールは別名をつけることができます。モジュールはしばしば Foo.Bar.Baz のように深くネストすることがありますが、
+                        毎回 Foo.Bar.Baz.AnyClass のように書くのは面倒です。このようなときには、import キーワードでモジュールに別名をつけることができます。</p>
+                        <pre class="prettyprint linenums">import Qux = Foo.Bar.Baz; </pre>
+                        <p>このようにすると、そのファイル内で Qux.AnyClass のようにクラスや関数を参照することができます。</p>
+                        
+                        
+                        <h4>外部モジュール</h4>
+                        <p>外部モジュール (External Module) は CommonJS や Asynchronous Module Definition (AMD) が規定する機構でモジュールをエクスポート/インポートする仕組みです。
+                        TypeScript が外部モジュールとしてどちらの仕様を選択するかは、コンパイルオプションで指定することができます。
+                        ただ、外部モジュール周りはいくつか仕様変更があったり、無言でコンパイルが失敗するなどの問題があって
+                            げんなりしたので、筆者はあまり詳しく調べていません。</p>
+                        
+                        <p>外部モジュールをエクスポートするには、エクスポートしたいモジュールの module キーワードの前に export キーワードを置きます。
+                        こうするとコンパイラが外部モジュールとしてインポートできるように、exportsという変数にモジュール名のオブジェクトを追加して、
+                        これに対してモジュールメンバを定義します。このあたりの挙動は CommonJS や AMD の仕様通りなので、詳しくはそちらを参照してください。
+                        </p>
+                        
+                        <h4>モジュールのインポート</h4>
+                        <p>モジュールが外部モジュールか内部モジュールかによってインポートの仕方が異なります。内部モジュールの場合、</p>
+                        <pre class="prettyprint linenums">/// &lt;reference path="…"/&gt; </pre>
+                        <p>という行をソースファイルに含めることで、コンパイラにそのファイルを参照させることができます。
+                        内部モジュールをインポートしても、インポートしたモジュールがコンパイルされて取り込まれるわけではありません。
+                        あくまで型や変数などのシンボルの解決のために参照するだけなので、インポートするモジュールが実装を伴うメンバを持っている場合は
+                        それらも別にコンパイルし、HTML ではそれらの出力された JavaScript を適宜読み込む必要があります。</p>
+                        
+                        <p>外部モジュールの場合、import キーワードおよび module キーワードを使用してモジュールを読み込みます。</p>
+                        <pre class="prettyprint linenums">import hoge = module("piyo"); </pre>
+                        <p>このとき、コンパイラはまず piyo.ts というファイルを探し、見つかればこのモジュールをロードします。
+                        この場合、モジュールは hoge という識別子を通してアクセスすることになります。たとえば、</p>
+<pre class="prettyprint linenums">
+// piyo.ts 
 export module Hoge{
     function fuga() : void{
     
     }
-}</code></pre>
-                <p>というファイルがあった場合、このモジュール Hoge は hoge のメンバとなるため、Fuga を呼び出したかったら</p>
-                <pre class="ts"><code>import hoge = module("piyo"); 
-hoge.Hoge.fuga(); </code></pre>
-                <p>というようになります。変数や関数の型を書くときも同じように書きます。
-                外部モジュールの特徴としては、モジュールを動的にロードするため、特定のスコープの中だけでモジュールを参照できるようにロードすることができます。
-                たとえば、
-                
-                </p>
-                
-                 <pre class="ts"><code>import Geometry = module("geometry");
+}
+</pre>
+                        <p>というファイルがあった場合、このモジュール Hoge は hoge のメンバとなるため、Fuga を呼び出したかったら</p>
+<pre class="prettyprint linenums">
+import hoge = module("piyo"); 
+hoge.Hoge.fuga(); 
+</pre>
+                        <p>というようになります。変数や関数の型を書くときも同じように書きます。
+                        外部モジュールの特徴としては、モジュールを動的にロードするため、特定のスコープの中だけでモジュールを参照できるようにロードすることができます。
+                        たとえば、
+                        
+                        </p>
+                        
+<pre class="prettyprint linenums">
+import Geometry = module("geometry");
 …
 if (useGeometry()) {
     var g: Geometry = require("geometry");
     var p = g.Point(10, 20);
     …
-}</code></pre>
-                <p>のようなコードで、Geometry をインポートしているので g の型として Geometry を指定することができますが、
-                Geometry は型注釈にのみ現れていますので、実際にはモジュールはロードされません。
-                その一方で require を明示的に呼び出すことでモジュールを動的にロードし、g という名前で束縛しています。
-                このコードでは useGeometry() が true を返すときだけモジュールがロードされます。
-                (9.4.2 CommonJS Modules) このように外部モジュールでは CommonJS や AMD に沿ったモジュールをロードすることができますが、
-                TypeScript を node.js などの環境で動くスクリプトを書くために使う場合は外部モジュールが必要になりますが、 
-                そうでなければ外部モジュールでモジュールをエクスポートしたりインポートする必要はないように思います。</p>
-                
-                <p>JavaScript においても言えることですが、TypeScript が結局は JavaScript に依存している以上、ソースファイルのロードの仕組みは JavaScript で実現できる以上の機能はありません。
-                JavaScript に外部ファイルのインポートの機能がないので、ビルドするときにファイルをすべて結合してしまうことはよくありますが、
-                TypeScript においてもファイルをすべて結合してしまうのがもっとも手っ取り早い解決策かもしれません。
-                <!-- その場合、.ts と .d.ts を結合するときは、.d.ts は暗黙的にすべての宣言に declare がついていますが、.ts にはついていないのでそのまま結合するとうまくいかないことがあるので
-                きをつけましょう。--></p>
-                
-                <h3>アンビエント宣言</h3>
-                <p><dfn>アンビエント宣言</dfn>(Ambient declarations)は関数やクラスのシグニチャだけを定義するもので、
-                主に既存の JavaScript に型注釈を付け加えるときに使います。C言語のプロトタイプ宣言のようなものです。
-                変数や関数の定義のとき、declare キーワードを先頭につけて本体や初期化部分を省けば、
-                それはアンビエントの定義になります。アンビエントとして定義された変数や関数をそのファイル内で参照することはできますが、
-                コンパイルして出力されるファイルには影響しません。</p>
-                <p>アンビエント宣言は型チェックの解決に使われるだけなので、実際の JavaScript の実装と必ずしも一致してる必要はありません。筆者は number である変数を列挙型のシンボルとみなして列挙型として定義したり、存在しないクラスを抽象クラスとして追加してしまったりとアンビエント宣言では結構大胆な使いかたをしています。</p>
-                <p><dfn>宣言ソースファイル</dfn>(declaration source files )はアンビエント宣言のみが書かれたファイルです。
-                定義ソースファイルは拡張子を .d.ts にします。
-                通常の .ts ファイルでは declare キーワードをつけたシンボルだけがアンビエント宣言になりますが、
-                定義ソースファイルではすべてのシンボルが自動的に declare をつけたものだとみなされます。
-                </p>
+}
+</pre>
+                        <p>のようなコードで、Geometry をインポートしているので g の型として Geometry を指定することができますが、
+                        Geometry は型注釈にのみ現れていますので、実際にはモジュールはロードされません。
+                        その一方で require を明示的に呼び出すことでモジュールを動的にロードし、g という名前で束縛しています。
+                        このコードでは useGeometry() が true を返すときだけモジュールがロードされます。
+                        (9.4.2 CommonJS Modules) このように外部モジュールでは CommonJS や AMD に沿ったモジュールをロードすることができますが、
+                        TypeScript を node.js などの環境で動くスクリプトを書くために使う場合は外部モジュールが必要になりますが、 
+                        そうでなければ外部モジュールでモジュールをエクスポートしたりインポートする必要はないように思います。</p>
+                        
+                        <p>JavaScript においても言えることですが、TypeScript が結局は JavaScript に依存している以上、ソースファイルのロードの仕組みは JavaScript で実現できる以上の機能はありません。
+                        JavaScript に外部ファイルのインポートの機能がないので、ビルドするときにファイルをすべて結合してしまうことはよくありますが、
+                        TypeScript においてもファイルをすべて結合してしまうのがもっとも手っ取り早い解決策かもしれません。
+                        <!-- その場合、.ts と .d.ts を結合するときは、.d.ts は暗黙的にすべての宣言に declare がついていますが、.ts にはついていないのでそのまま結合するとうまくいかないことがあるので
+                        きをつけましょう。--></p>
+                        
+                        <h3>アンビエント宣言</h3>
+                        <p><dfn>アンビエント宣言</dfn>(Ambient declarations)は関数やクラスのシグニチャだけを定義するもので、
+                        主に既存の JavaScript に型注釈を付け加えるときに使います。C言語のプロトタイプ宣言のようなものです。
+                        変数や関数の定義のとき、declare キーワードを先頭につけて本体や初期化部分を省けば、
+                        それはアンビエントの定義になります。アンビエントとして定義された変数や関数をそのファイル内で参照することはできますが、
+                        コンパイルして出力されるファイルには影響しません。</p>
+                        <p>アンビエント宣言は型チェックの解決に使われるだけなので、実際の JavaScript の実装と必ずしも一致してる必要はありません。筆者は number である変数を列挙型のシンボルとみなして列挙型として定義したり、存在しないクラスを抽象クラスとして追加してしまったりとアンビエント宣言では結構大胆な使いかたをしています。</p>
+                        <p><dfn>宣言ソースファイル</dfn>(declaration source files )はアンビエント宣言のみが書かれたファイルです。
+                        定義ソースファイルは拡張子を .d.ts にします。
+                        通常の .ts ファイルでは declare キーワードをつけたシンボルだけがアンビエント宣言になりますが、
+                        定義ソースファイルではすべてのシンボルが自動的に declare をつけたものだとみなされます。
+                        </p>
 
-                <h3>Source Map</h3>
-                <p>Source Map は、もとのソースコードとコンパイル後の JavaScript ソースコードの対応関係を記録しておいて、デバッガでもとのソースコードを見ながらブレークポイントを仕掛けたりステップ実行したりできる機能です。TypeScript もこれに対応しており、--sourcemap オプションをつけてコンパイルすると、.map という拡張子がついたファイルが出力されます。また、出力された .js の最後に </p>
+                        <h3>Source Map</h3>
+                        <p>Source Map は、もとのソースコードとコンパイル後の JavaScript ソースコードの対応関係を記録しておいて、デバッガでもとのソースコードを見ながらブレークポイントを仕掛けたりステップ実行したりできる機能です。TypeScript もこれに対応しており、--sourcemap オプションをつけてコンパイルすると、.map という拡張子がついたファイルが出力されます。また、出力された .js の最後に </p>
 
-                <pre class="js">//@ sourceMappingURL=hoge.js.map</pre>
+                        <pre class="prettyprint linenums">//@ sourceMappingURL=hoge.js.map</pre>
 
-                <p>というようなコメント行が追加されているのが確認できると思います。Chrome の場合、開発者ツールを起動したら右下の歯車のボタンを押し、その中の General タブ → Source → Enable source maps というチェックボックスにチェックを入れると sourcemap が使えるようになります。Source タブのソースコード一覧に .ts ファイルが現れますから、あとは通常の JavaScript と同じようにデバッグできます。ただし、いまいち挙動に不審なところがあったりして、うまくブレイクポイントを仕掛けられなかったりします。
-                TypeScript は最も sourcemap を相性のいい言語のひとつではありますが、それでも 100% 対応関係が取れるわけではないでしょうから、sourcemap に頼りすぎるのは禁物です。
-                筆者はしばらく Source Map 使ってましたけど、結局不具合が多くて普通に JavaScript でのデバッグに戻りました……。</p>
-
-
-                <h3>ドキュメントコメント</h3>
-                <p>jsdoc スタイルのソースコードインラインドキュメントに一部対応しました。
-                VisualStudio のエディタで型名などにカーソルを合わせると、ツールチップに対応するドキュメントが表示されます。
-                0.8.2 の時点ではタグは @param にしか対応していません。</p>
+                        <p>というようなコメント行が追加されているのが確認できると思います。Chrome の場合、開発者ツールを起動したら右下の歯車のボタンを押し、その中の General タブ → Source → Enable source maps というチェックボックスにチェックを入れると sourcemap が使えるようになります。Source タブのソースコード一覧に .ts ファイルが現れますから、あとは通常の JavaScript と同じようにデバッグできます。ただし、いまいち挙動に不審なところがあったりして、うまくブレイクポイントを仕掛けられなかったりします。
+                        TypeScript は最も sourcemap を相性のいい言語のひとつではありますが、それでも 100% 対応関係が取れるわけではないでしょうから、sourcemap に頼りすぎるのは禁物です。
+                        筆者はしばらく Source Map 使ってましたけど、結局不具合が多くて普通に JavaScript でのデバッグに戻りました……。</p>
 
 
-<pre class="ts">
+                        <h3>ドキュメントコメント</h3>
+                        <p>jsdoc スタイルのソースコードインラインドキュメントに一部対応しました。
+                        VisualStudio のエディタで型名などにカーソルを合わせると、ツールチップに対応するドキュメントが表示されます。
+                        0.8.2 の時点ではタグは @param にしか対応していません。</p>
+
+
+<pre class="prettyprint linenums">
 /**
  * Converts A string to an integer.
  * @param s A string to convert into a number.
@@ -1026,54 +1133,55 @@ if (useGeometry()) {
 declare function parseInt(s: string, radix?: number): number;
 </pre>
 
-                <h3>今後の言語仕様の変更について</h3>
-                <p><a href="http://typescript.codeplex.com/wikipage?title=Roadmap">TypeScript のロードマップ</a>が公開されており、今後どのような言語仕様が追加されるかが大まかにわかるようになっています。
-                    このうち幾つかについて紹介しておきます。
-                    TypeScript の言語仕様のかなりの部分が　EcmaScript の仕様に基づいているので、今後の TypeScript の動向を探るうえでは EcmaScript の動きも追っておくといいかもしれません。</p>
+                        <h3>今後の言語仕様の変更について</h3>
+                        <p><a href="http://typescript.codeplex.com/wikipage?title=Roadmap">TypeScript のロードマップ</a>が公開されており、今後どのような言語仕様が追加されるかが大まかにわかるようになっています。
+                            このうち幾つかについて紹介しておきます。
+                            TypeScript の言語仕様のかなりの部分が　EcmaScript の仕様に基づいているので、今後の TypeScript の動向を探るうえでは EcmaScript の動きも追っておくといいかもしれません。</p>
 
-                <dl>
-                    <dt>Generics</dt>
-                    <dd>パラメタライズされた型を定義できるようになります。
-                        例えば、配列の型は Array&lt;T&gt;のように型パラメータとともに表されるようになります。
-                        このとき T は配列の要素を表しており、number のみを要素に持つ配列の型は Array&lt;number&gt; と表されます。 
-                        コレクションに限らず使い道の多い重要な機能です。
-                        これが導入されると lib.d.ts を始めありとあらゆるコードに影響するので、
-                        おそらく今後行われるであろう変更のうち最も大きいものとなると思います。</dd>
+                        <dl>
+                            <dt>Generics</dt>
+                            <dd>パラメタライズされた型を定義できるようになります。
+                                例えば、配列の型は Array&lt;T&gt;のように型パラメータとともに表されるようになります。
+                                このとき T は配列の要素を表しており、number のみを要素に持つ配列の型は Array&lt;number&gt; と表されます。 
+                                コレクションに限らず使い道の多い重要な機能です。
+                                これが導入されると lib.d.ts を始めありとあらゆるコードに影響するので、
+                                おそらく今後行われるであろう変更のうち最も大きいものとなると思います。</dd>
 
-                    <dt>Async/Await</dt>
-                    <dd>非同期処理を書きやすくする機能です。JavaScript は非同期処理が原則になっており、
-                        時間のかかる処理では処理をリクエストしておいて、完了するとイベントとして完了が通知されるような設計になっています。
-                        これはこれで便利な時もありますが、処理があちこちに飛ぶことになりやすく直感的に読みにくいコードになりがちです。await を使うと同期的な処理を行なっているかのように処理の流れに沿って自然に記述できるようになり、
-                        可読性も増します。ES6 でも採用が決定されているわけではありませんが導入が検討されているようです。</dd>
+                            <dt>Async/Await</dt>
+                            <dd>非同期処理を書きやすくする機能です。JavaScript は非同期処理が原則になっており、
+                                時間のかかる処理では処理をリクエストしておいて、完了するとイベントとして完了が通知されるような設計になっています。
+                                これはこれで便利な時もありますが、処理があちこちに飛ぶことになりやすく直感的に読みにくいコードになりがちです。await を使うと同期的な処理を行なっているかのように処理の流れに沿って自然に記述できるようになり、
+                                可読性も増します。ES6 でも採用が決定されているわけではありませんが導入が検討されているようです。</dd>
 
-                    <dt>Mixin</dt>
-                    <dd>多重継承の問題のようなもの起こさずにコードの再利用を行える仕組みのようです。筆者は Mixin のある言語をほとんど使ったことがないので、あまり詳細には解説できません。
-                        Perl/Ruby/Python, Scala あたりでよく使われているようなので、詳しくはそちらの解説を探してみるといいんじゃないかと思います。</dd>
+                            <dt>Mixin</dt>
+                            <dd>多重継承の問題のようなもの起こさずにコードの再利用を行える仕組みのようです。筆者は Mixin のある言語をほとんど使ったことがないので、あまり詳細には解説できません。
+                                Perl/Ruby/Python, Scala あたりでよく使われているようなので、詳しくはそちらの解説を探してみるといいんじゃないかと思います。</dd>
 
-                    <dt>Protected access</dt>
-                    <dd>おそらくですが、アクセス修飾子に public と private に加えてサブクラス内からのみ参照可能であることを指定する protected が追加されるということでしょう。</dd>
+                            <dt>Protected access</dt>
+                            <dd>おそらくですが、アクセス修飾子に public と private に加えてサブクラス内からのみ参照可能であることを指定する protected が追加されるということでしょう。</dd>
+                                
+                        </dl>
+
+                    </section>
+
+                    <section>   
+                        <h2>ケーススタディ</h2>
+                        <P>ここではある程度具体的なケースを例にとって TypeScript の扱い方を解説していきます。</p>
                         
-                </dl>
+                        <h3>API を確認する</h3>
 
-            </section>
+                        <p>それで、『言語仕様はわかったけれど、TypeScript の標準ライブラリにはどんなクラスが用意されているの？』と思った方もいるかもしれませんが、<strong>TypeScript には独自の標準ライブラリというものは存在しません。</strong>静的型付け以外は全部 JavaScript と同じだと考えてください。ですから API リファレンスにしろ Web 上なんかのサンプルコードにしろ、大抵の場合は JavaScript のものをそのまま流用できます。</p>
 
-            <section>   
-                <h2>ケーススタディ</h2>
-                <P>ここではある程度具体的なケースを例にとって TypeScript の扱い方を解説していきます。</p>
-                
-                <h3>API を確認する</h3>
+                        <p>とはいえ、実際にコーディングしていると何かうまく型が合わなかったり、あるはずのプロパティが見つからなかったりということもあるでしょう。その場合は定義ソースファイルを直接確認する必要も出てきます。
+                        TypeScript コンパイラはデフォルトで自動的に HTML DOM や JavaScript の標準ライブラリの定義ソースファイルを読み込みます。筆者の Windows8 の環境だと
 
-                <p>それで、『言語仕様はわかったけれど、TypeScript の標準ライブラリにはどんなクラスが用意されているの？』と思った方もいるかもしれませんが、<strong>TypeScript には独自の標準ライブラリというものは存在しません。</strong>静的型付け以外は全部 JavaScript と同じだと考えてください。ですから API リファレンスにしろ Web 上なんかのサンプルコードにしろ、大抵の場合は JavaScript のものをそのまま流用できます。</p>
+                        <span style="white-space:nowrap;">C:\Users\【ユーザ名】\AppData\Roaming\npm\node_modules\typescript\bin</span>
 
-                <p>とはいえ、実際にコーディングしていると何かうまく型が合わなかったり、あるはずのプロパティが見つからなかったりということもあるでしょう。その場合は定義ソースファイルを直接確認する必要も出てきます。
-                TypeScript コンパイラはデフォルトで自動的に HTML DOM や JavaScript の標準ライブラリの定義ソースファイルを読み込みます。筆者の Windows8 の環境だと
+                        に lib.d.ts がありました。このファイルは TypeScript コンパイラのソースコードの typings　というディレクトリにも入っています。
 
-                <span style="white-space:nowrap;">C:\Users\【ユーザ名】\AppData\Roaming\npm\node_modules\typescript\bin</span>
-
-                に lib.d.ts がありました。このファイルは TypeScript コンパイラのソースコードの typings　というディレクトリにも入っています。
-
-                このファイルを覗くと、たとえば Number の定義は次のようになっています。</p>
-    <pre class="ts">interface Number {
+                        このファイルを覗くと、たとえば Number の定義は次のようになっています。</p>
+<pre class="prettyprint linenums">
+interface Number {
    toString(radix?: number): string;
    toFixed(fractionDigits?: number): string;
    toExponential(fractionDigits?: number): string;
@@ -1088,120 +1196,129 @@ declare var Number: {
    NaN: number;
    NEGATIVE_INFINITY: number;
    POSITIVE_INFINITY: number;
-}</pre>
-                <p>
-                lib.d.ts はデフォルトで自動的に読み込まれますが、なにか都合がわるい時には --nolib コンパイラオプションで読み込まないようにもすることができます。
-                JavaScript は Web クライアントだけで使うわけではないので、たとえば他のアプリケーション組み込みのスクリプト言語として使っている場合は HTML DOM の API は邪魔です。
-                そのような場合は --nolib をつけるといいでしょう。</p>
+}
+</pre>
+                        <p>
+                        lib.d.ts はデフォルトで自動的に読み込まれますが、なにか都合がわるい時には --nolib コンパイラオプションで読み込まないようにもすることができます。
+                        JavaScript は Web クライアントだけで使うわけではないので、たとえば他のアプリケーション組み込みのスクリプト言語として使っている場合は HTML DOM の API は邪魔です。
+                        そのような場合は --nolib をつけるといいでしょう。</p>
 
-                <p>筆者がやっつけ仕事で作った <a href="http://kontan.github.com/dtsdoc/lib.d.ts.html">lib.d.ts の API リファレンス</a>もあります。 lib.d.ts がどうなっているか知りたければ、こっちが参考になるかもしれません。</p>
+                        <p>筆者がやっつけ仕事で作った <a href="http://kontan.github.com/dtsdoc/lib.d.ts.html">lib.d.ts の API リファレンス</a>もあります。 lib.d.ts がどうなっているか知りたければ、こっちが参考になるかもしれません。</p>
 
-                <h3>既存の JavaScript を TypeScript から利用する</h3>
-                
-                <p>もし既存の JavaScript ライブラリを TypeScript から使いたいと思ったら、まず　<a href="https://github.com/borisyankov/DefinitelyTyped">borisyankov/DefinitelyTyped</a>　を探してみるといいでしょう。DefinitelyTyped は著名な Javascript ライブラリの環境定義ファイルを収集しており、underscore.js や backbone.js のような著名なライブラリの環境定義ファイルはここですぐ見つかります。とはいえ、TypeScript のコンパイラの仕様変更にあってすでにコンパイルが通らなくなっている定義ファイルもあったり、
-                当然定義ファイルが間違っている場合もあります。
-                実用的にはもとの JavaScript の仕様を確認し適宜定義ファイルを修正しながら開発を続ける必要があるかもしれません。
-                </p>
+                        <h3>既存の JavaScript を TypeScript から利用する</h3>
+                        
+                        <p>もし既存の JavaScript ライブラリを TypeScript から使いたいと思ったら、まず　<a href="https://github.com/borisyankov/DefinitelyTyped">borisyankov/DefinitelyTyped</a>　を探してみるといいでしょう。DefinitelyTyped は著名な Javascript ライブラリの環境定義ファイルを収集しており、underscore.js や backbone.js のような著名なライブラリの環境定義ファイルはここですぐ見つかります。とはいえ、TypeScript のコンパイラの仕様変更にあってすでにコンパイルが通らなくなっている定義ファイルもあったり、
+                        当然定義ファイルが間違っている場合もあります。
+                        実用的にはもとの JavaScript の仕様を確認し適宜定義ファイルを修正しながら開発を続ける必要があるかもしれません。
+                        </p>
 
-                <p>JQuery などの著名なライブラリははすでにコンパイラのソースコードにも含まれています。
-                たとえば、 JQuery なら typings/jquery.d.ts というのがそのファイルです。
-                <a href="http://download-codeplex.sec.s-msft.com/Download/SourceControlFileDownload.ashx?ProjectName=typescript&amp;changeSetId=d397c54a55db">コンパイラのソースコードごとダウンロード</a>してもよいし、<a href="http://typescript.codeplex.com/SourceControl/changeset/view/fe3bc0bfce1f#typings%2fjquery.d.ts">ここ</a>
-                から個別に持ってきてもいいでしょう。
-                あとは適当な場所に保存して、コンパイラが見つけられるように依存関係をソースコードに書いておきます。
-                コンパイルしたあとも、実行するときは実際の jquery の JavaScript ソースファイルを読み込むのを忘れずに。
-                </p>
-                <p>jquery そのものの使い方は JavaScript から使う時とまったく同じなので、jquery に慣れていれば特に迷うことはないでしょう。jquery.d.ts の使い方を知りたければ、JavaScript で情報を探せば OK です。</p>
+                        <p>JQuery などの著名なライブラリははすでにコンパイラのソースコードにも含まれています。
+                        たとえば、 JQuery なら typings/jquery.d.ts というのがそのファイルです。
+                        <a href="http://download-codeplex.sec.s-msft.com/Download/SourceControlFileDownload.ashx?ProjectName=typescript&amp;changeSetId=d397c54a55db">コンパイラのソースコードごとダウンロード</a>してもよいし、<a href="http://typescript.codeplex.com/SourceControl/changeset/view/fe3bc0bfce1f#typings%2fjquery.d.ts">ここ</a>
+                        から個別に持ってきてもいいでしょう。
+                        あとは適当な場所に保存して、コンパイラが見つけられるように依存関係をソースコードに書いておきます。
+                        コンパイルしたあとも、実行するときは実際の jquery の JavaScript ソースファイルを読み込むのを忘れずに。
+                        </p>
+                        <p>jquery そのものの使い方は JavaScript から使う時とまったく同じなので、jquery に慣れていれば特に迷うことはないでしょう。jquery.d.ts の使い方を知りたければ、JavaScript で情報を探せば OK です。</p>
 
-                <p>おなじく筆者がやっつけ仕事で作った <a href="http://kontan.github.com/dtsdoc/jquery.d.ts.html">jquery.d.ts の API リファレンス</a>もあります。 ご参考までにどうぞ。</p>
+                        <p>おなじく筆者がやっつけ仕事で作った <a href="http://kontan.github.com/dtsdoc/jquery.d.ts.html">jquery.d.ts の API リファレンス</a>もあります。 ご参考までにどうぞ。</p>
 
 
-                
-                <!--
-                <h3>TypeScript ソースファイルを分割する</h3>
-                <p></p>
-                -->
-                
+                        
+                        <!--
+                        <h3>TypeScript ソースファイルを分割する</h3>
+                        <p></p>
+                        -->
+                        
 
-                
-                
-                <h3>宣言ソースファイルを書く</h3>
-                <p>既存の JavaScript を呼び出したいときに、すでに誰かが書いた宣言ソースファイルが公開されていてそれを使えればいいのですが、
-                そうでない場合は自分で宣言ソースファイルを書く必要があるでしょう。
-                通常のソースファイルに書いてもいいのですが、その場合はいちいち declare をつけるのが面倒ですし、
-                他のプロジェクトでそれを再利用したい場合もあるでしょうから、素直に .d.ts の宣言ソースファイルにファイルに分けて定義しておくほうが楽だと思います。</p>
-                <p>モジュールのない JavaScript といえど、実際にはまるでモジュールがあるかのように Foo.Bar.Baz のように関数やコンストラクタを参照するように
-                既存のコードが作られている場合も多いかと思います。
-                こうした構造を TypeScript でも自然にモジュールとして扱えるほうが便利でわかりやすいでしょう。
-                このような場合は、宣言ソースファイルでこれらの要素をモジュール内の要素として宣言ソースファイルを書くとよいと思います。
-                </p>
-                <p>自分が試した例で言うと、たとえば <a href="http://code.google.com/p/box2dweb/">box2dweb</a> のライブラリは C++ や ActionScript を元に移植されたため、
-                モジュールがあるかのように参照されるようになっています。
-                たとえば、2次元ベクトルクラス b2Vec2 をインスタンス化するとき、</p>
-                
-                <pre class="js">var v = new Box2D.Dynamics.b2Vec2();</pre>
-                
-                <p>というように書くようになっています。JavaScript ではこの "Box2D" は単なるオブジェクトですが、モジュールのある TypeScript ではモジュールとして定義するのが自然です。
-                したがって、次のようにクラス b2Vec2 が Box2D.Dynamics というモジュール内にあるものとして定義しました。
-                </p>
-                
-                <div class="source_file_name"></div>
-                <pre class="ts"><code>// box2dambient.d.ts
+                        
+                        
+                        <h3>宣言ソースファイルを書く</h3>
+                        <p>既存の JavaScript を呼び出したいときに、すでに誰かが書いた宣言ソースファイルが公開されていてそれを使えればいいのですが、
+                        そうでない場合は自分で宣言ソースファイルを書く必要があるでしょう。
+                        通常のソースファイルに書いてもいいのですが、その場合はいちいち declare をつけるのが面倒ですし、
+                        他のプロジェクトでそれを再利用したい場合もあるでしょうから、素直に .d.ts の宣言ソースファイルにファイルに分けて定義しておくほうが楽だと思います。</p>
+                        <p>モジュールのない JavaScript といえど、実際にはまるでモジュールがあるかのように Foo.Bar.Baz のように関数やコンストラクタを参照するように
+                        既存のコードが作られている場合も多いかと思います。
+                        こうした構造を TypeScript でも自然にモジュールとして扱えるほうが便利でわかりやすいでしょう。
+                        このような場合は、宣言ソースファイルでこれらの要素をモジュール内の要素として宣言ソースファイルを書くとよいと思います。
+                        </p>
+                        <p>自分が試した例で言うと、たとえば <a href="http://code.google.com/p/box2dweb/">box2dweb</a> のライブラリは C++ や ActionScript を元に移植されたため、
+                        モジュールがあるかのように参照されるようになっています。
+                        たとえば、2次元ベクトルクラス b2Vec2 をインスタンス化するとき、</p>
+                        
+                        <pre class="prettyprint linenums">var v = new Box2D.Dynamics.b2Vec2();</pre>
+                        
+                        <p>というように書くようになっています。JavaScript ではこの "Box2D" は単なるオブジェクトですが、モジュールのある TypeScript ではモジュールとして定義するのが自然です。
+                        したがって、次のようにクラス b2Vec2 が Box2D.Dynamics というモジュール内にあるものとして定義しました。
+                        </p>
+                        
+                        <div class="source_file_name"></div>
+<pre class="prettyprint linenums">
+// box2dambient.d.ts
 module Box2D.Dynamics{
     class b2Vec2{
         ...
     }
-}</code></pre>
-            <p>このとき、もちろん</p>
-            <pre class="ts"><code>module Box2D{
+}
+</pre>
+                    <p>このとき、もちろん</p>
+<pre class="prettyprint linenums">
+module Box2D{
     module Dynamics{
         class b2Vec2{
             ...
         }
     }
-}</code></pre>
-                <p>のようにモジュールをネストして定義しても、意味としてはまったく同じです。
-                Box2D 以下に複数のモジュールがあるような場合では、後者のほうが何度も "Box2D."と書かなくていいので多少楽ですが、
-                前者のほうがネストが浅くてすみます。</p>
-                
-                <p>この b2Vec2 クラスを使うときは、</p>
-                <pre class="ts">var v : Box2D.Dynamics.b2Vec2 = new Box2D.Dynamics.b2Vec2();</pre>                
-                <p>のようにかけます。ただこのままではすべての場所で完全名でクラスを参照しなければならず、面倒です。
-                そこでクラスの別名が欲しくなるわけですが、JavaScript のように単なる変数として別名を定義してもうまくいきません。</p>
-                <pre class="ts">// b2Vec2 の別名のつもり……
+}
+</pre>
+                        <p>のようにモジュールをネストして定義しても、意味としてはまったく同じです。
+                        Box2D 以下に複数のモジュールがあるような場合では、後者のほうが何度も "Box2D."と書かなくていいので多少楽ですが、
+                        前者のほうがネストが浅くてすみます。</p>
+                        
+                        <p>この b2Vec2 クラスを使うときは、</p>
+                        <pre class="prettyprint linenums">var v : Box2D.Dynamics.b2Vec2 = new Box2D.Dynamics.b2Vec2();</pre>                
+                        <p>のようにかけます。ただこのままではすべての場所で完全名でクラスを参照しなければならず、面倒です。
+                        そこでクラスの別名が欲しくなるわけですが、JavaScript のように単なる変数として別名を定義してもうまくいきません。</p>
+<pre class="prettyprint linenums">
+// b2Vec2 の別名のつもり……
 var b2Vec2 = Box2D.Dynamics.b2Vec2; 
 
 // コンパイルエラー。b2Vec2 というコンストラクタはあっても b2Vec2 という型はない
-var v : b2Vec2; = new b2Vec2(); </pre>                
-                <p>コンストラクタの呼び出しだけならできるのですが、b2Vec2 は単なる変数で型の名前空間にあるわけではなく、
-                型注釈の位置では使うことができません。かと言って直接クラス名の別名を定義する機能はないようです。
-                このような場合、import キーワードでモジュールの別名を定義することはできるので、これを使うと少しは楽なのではないかと思います。</p>    
-                <pre class="ts">import B2D = Box2D.Dynamics;
-var v : B2D.b2Vec2 = new B2D.b2Vec2(); </pre>    
+var v : b2Vec2; = new b2Vec2(); 
+</pre>                
+                        <p>コンストラクタの呼び出しだけならできるのですが、b2Vec2 は単なる変数で型の名前空間にあるわけではなく、
+                        型注釈の位置では使うことができません。かと言って直接クラス名の別名を定義する機能はないようです。
+                        このような場合、import キーワードでモジュールの別名を定義することはできるので、これを使うと少しは楽なのではないかと思います。</p>    
+<pre class="prettyprint linenums">
+import B2D = Box2D.Dynamics;
+var v : B2D.b2Vec2 = new B2D.b2Vec2();
+</pre>    
 
-                <h3>空の列挙型</h3>
-                <p>筆者は three.js というライブラリの宣言ソースファイル three.d.ts を書いているのですが、
-                このライブラリでは定数のシンボルがオブジェクトで分けられていないのが TypeScript 的にはちょっと厄介なところです。
-                どういうことか例を上げて詳しく説明しておきますと、
-                three.js には THREE というオブジェクトがあり、これが three.js のすべてのプロパティや関数を保持しており、これがつまり three.js 全体のモジュールに相当します。
-                また、three.js には THREE.Material というオブジェクトがあり、このオブジェクトのプロパティ side は次の3つの定数のうちのどれかをとります。</p>
-<pre class="js">
+                        <h3>空の列挙型</h3>
+                        <p>筆者は three.js というライブラリの宣言ソースファイル three.d.ts を書いているのですが、
+                        このライブラリでは定数のシンボルがオブジェクトで分けられていないのが TypeScript 的にはちょっと厄介なところです。
+                        どういうことか例を上げて詳しく説明しておきますと、
+                        three.js には THREE というオブジェクトがあり、これが three.js のすべてのプロパティや関数を保持しており、これがつまり three.js 全体のモジュールに相当します。
+                        また、three.js には THREE.Material というオブジェクトがあり、このオブジェクトのプロパティ side は次の3つの定数のうちのどれかをとります。</p>
+<pre class="prettyprint linenums">
 THREE.FrontSide = 0;
 THREE.BackSide = 1;
 THREE.DoubleSide = 2;
 </pre>
-                <p>これらの定数シンボルはつまり列挙型のメンバに相当し、本来なら列挙型を用いて定義されるべきでしょう。しかし、THREE はあくまでモジュールであり、これを列挙型として定義するのは不可能です。
-                かといって、</p>
-<pre class="ts">
+                        <p>これらの定数シンボルはつまり列挙型のメンバに相当し、本来なら列挙型を用いて定義されるべきでしょう。しかし、THREE はあくまでモジュールであり、これを列挙型として定義するのは不可能です。
+                        かといって、</p>
+<pre class="prettyprint linenums">
 enum Side {
     FrontSide  = 0,
     BackSide   = 1,
     DoubleSide = 2
 }
 </pre>
-                <p>と定義すると、Side というオブジェクトのメンバとしてシンボルが定義されてしまい、たとえば FrontSide は THREE.Side.FrontSide とアクセスしなければならなくなり、これもうまくいきません。
-                    仕方ないので、three.d.ts ではこの問題を次のように空の列挙体 THREE.Side を定義することで切り抜けています。</p>
+                        <p>と定義すると、Side というオブジェクトのメンバとしてシンボルが定義されてしまい、たとえば FrontSide は THREE.Side.FrontSide とアクセスしなければならなくなり、これもうまくいきません。
+                            仕方ないので、three.d.ts ではこの問題を次のように空の列挙体 THREE.Side を定義することで切り抜けています。</p>
 
-                    <pre class="ts">
+<pre class="prettyprint linenums">
 module THREE{
     ...
 
@@ -1213,31 +1330,31 @@ module THREE{
     ...
 }
 </pre>
-                <p>この場合、THREE.Side という列挙型にはメンバがひとつもないので、THREE.Side であるような値はどこにも存在しないはずですが、THREE.FrontSide も THREE.BackSide も THREE.Side という型になっています。
-                よく考えると結構変ですが、これが案外とちゃんと列挙型として機能することがわかったので、筆者は内心このパターンを Empty enum pattern と名付けて three.d.ts で多用しています。
-                でもこの方式にも欠点があって、</p>
-<pre class="ts">
+                        <p>この場合、THREE.Side という列挙型にはメンバがひとつもないので、THREE.Side であるような値はどこにも存在しないはずですが、THREE.FrontSide も THREE.BackSide も THREE.Side という型になっています。
+                        よく考えると結構変ですが、これが案外とちゃんと列挙型として機能することがわかったので、筆者は内心このパターンを Empty enum pattern と名付けて three.d.ts で多用しています。
+                        でもこの方式にも欠点があって、</p>
+<pre class="prettyprint linenums">
 THREE.FrontSide = THREE.BackSide;
 </pre>
-            <p>のようなコードが通ってしまう危険が残っています。本当はこれらの定数を readonly にしたいところですが、TypeScript に readonly が導入される気配はあまりないです……。
-            とはいえ、現時点では TypeScript の enum は</p>
-<pre class="ts">
+                        <p>のようなコードが通ってしまう危険が残っています。本当はこれらの定数を readonly にしたいところですが、TypeScript に readonly が導入される気配はあまりないです……。
+                        とはいえ、現時点では TypeScript の enum は</p>
+<pre class="prettyprint linenums">
 enum Side{
     Front,
     Back
 }
 Side.Front = Side.Back;
 </pre>
-        <p>のようなコードが通ってしまうので、実はその危険性は列挙型にした場合と大差ありません(いや、この enum の挙動は明らかにダメダメだと思うんですけど、TypeScript では readonly はあまり重視されていません)。</p>
+                        <p>のようなコードが通ってしまうので、実はその危険性は列挙型にした場合と大差ありません(いや、この enum の挙動は明らかにダメダメだと思うんですけど、TypeScript では readonly はあまり重視されていません)。</p>
 
 
 
-                <h3>Error の継承</h3>
-                <p>Stack Overflow に <a href="http://stackoverflow.com/questions/12915412/how-do-i-extend-a-host-object-e-g-error-in-typescript">Error を継承してカスタムな例外クラスをつくりたいんだけど</a>、という質問があるようですが、JavaScript は Java と違って Error のサブタイプじゃないと例外オブジェクトとして投げられないということはないので、独自の例外クラスを作りたいからといって別に Error を継承する必要はないと思います。とはいえ、Error は確かに存在しているのでこれを継承したい、というケースもあるのかもしれません。ですが現時点の lib.d.ts では Error はインターフェイスと変数として定義されており、これを TypeScript の extends で継承することはできません。
-                どうしても「継承」したければ、(1) JavaScript で通常行うような prototype を設定することで継承もどきをする(Stack Overflow での結論もそうなっているみたい) か、(2) 自分で Error を implements したの基底クラスを作れば？(Stack Overflow での回答) という方法もありますし、(3) lib.d.ts を改ざんするという手もあります。独自の基底クラスを作る方法は、たぶんこの質問者が望んでいることではないだろうし、筆者としては Error がクラスになっているほうがスマートだとは思います。なぜか lib.d.ts はそうなっていませんが、それにはなにか深いわけがあるのか、単なるミスなのかはよくわかりません(もしかしたら Error をパーシャルにしておきたいからかもしれません。それに、型を interface にしておいたほうがいろいろ柔軟に扱えます。)。</p>
+                        <h3>Error の継承</h3>
+                        <p>Stack Overflow に <a href="http://stackoverflow.com/questions/12915412/how-do-i-extend-a-host-object-e-g-error-in-typescript">Error を継承してカスタムな例外クラスをつくりたいんだけど</a>、という質問があるようですが、JavaScript は Java と違って Error のサブタイプじゃないと例外オブジェクトとして投げられないということはないので、独自の例外クラスを作りたいからといって別に Error を継承する必要はないと思います。とはいえ、Error は確かに存在しているのでこれを継承したい、というケースもあるのかもしれません。ですが現時点の lib.d.ts では Error はインターフェイスと変数として定義されており、これを TypeScript の extends で継承することはできません。
+                        どうしても「継承」したければ、(1) JavaScript で通常行うような prototype を設定することで継承もどきをする(Stack Overflow での結論もそうなっているみたい) か、(2) 自分で Error を implements したの基底クラスを作れば？(Stack Overflow での回答) という方法もありますし、(3) lib.d.ts を改ざんするという手もあります。独自の基底クラスを作る方法は、たぶんこの質問者が望んでいることではないだろうし、筆者としては Error がクラスになっているほうがスマートだとは思います。なぜか lib.d.ts はそうなっていませんが、それにはなにか深いわけがあるのか、単なるミスなのかはよくわかりません(もしかしたら Error をパーシャルにしておきたいからかもしれません。それに、型を interface にしておいたほうがいろいろ柔軟に扱えます。)。</p>
 
-                <p>以下は、上記のページから引用した質問者による JavaScript と同じ方法で「継承」を行うというオーソドックスな結論ですが、確かにこれで十分だと思います。</p>
-<pre class="ts">
+                        <p>以下は、上記のページから引用した質問者による JavaScript と同じ方法で「継承」を行うというオーソドックスな結論ですが、確かにこれで十分だと思います。</p>
+<pre class="prettyprint linenums">
 function UploadError (message: string, code: number) {
     this.message = message;
     this.code = code;
@@ -1251,28 +1368,28 @@ UploadError.prototype.getCode = (): number => {
     return this.code;
 }
 </pre>
-            <p><strong>あくまで TypeScript は JavaScript をちょっとマシに書くだけのシステムです。
-            JavaScript で出来ていたことが TypeScript でやりにくいなと思ったら、JavaScript と同じ方法でやればいいのです。</strong>
-            TypeScript の instanceof は JavaScript と同じなので、instanceof で調べることももちろん可能です。型チェックが邪魔だと思ったら、とりあえず &lt;any&gt; つけとけば全部回避できます。TypeScript が JavaScript で培ったノウハウの使用を妨げることはほとんどありません。 
-            </p>
+                        <p><strong>あくまで TypeScript は JavaScript をちょっとマシに書くだけのシステムです。
+                        JavaScript で出来ていたことが TypeScript でやりにくいなと思ったら、JavaScript と同じ方法でやればいいのです。</strong>
+                        TypeScript の instanceof は JavaScript と同じなので、instanceof で調べることももちろん可能です。型チェックが邪魔だと思ったら、とりあえず &lt;any&gt; つけとけば全部回避できます。TypeScript が JavaScript で培ったノウハウの使用を妨げることはほとんどありません。 
+                        </p>
 
 
 
-            <h3>クラスやインターフェイスの別名</h3>
-                <p>現状の TypeScript の言語仕様の大きな問題として、型の別名が定義できないというものがあります。
-                    この節を読んで時間を浪費してしまわないように結論から申し上げてしまうと、<strong>TypeScript でモジュール以外の別名を定義するのは困難</strong>だと思っていたほうがいいでしょう。
-                    安易に別名をつけようと工夫するといろいろ問題を引き起こします。それがなぜかということを知りたいかたは、このままこの節を読み進めていただければと思います。
-                </p>
+                        <h3>クラスやインターフェイスの別名</h3>
+                        <p>現状の TypeScript の言語仕様の大きな問題として、型の別名が定義できないというものがあります。
+                            この節を読んで時間を浪費してしまわないように結論から申し上げてしまうと、<strong>TypeScript でモジュール以外の別名を定義するのは困難</strong>だと思っていたほうがいいでしょう。
+                            安易に別名をつけようと工夫するといろいろ問題を引き起こします。それがなぜかということを知りたいかたは、このままこの節を読み進めていただければと思います。
+                        </p>
 
-                <p>Java なら import PackageName.*; でパッケージのクラスとインターフェイスを単純名で全部インポートできますし、
-                    import PackageName.AnyClass; で特定のクラスのみをインポートできるので、パッケージの名前が長くても問題ありません。
-                    C# なら更に柔軟に using AnyAlias = NameSpaceName.AnyClass のように別名をつけることさえできます。
-                    TypeScript ではどうするのがいいのでしょうか。クラスの別名は非常に厄介ですが、インターフェイスの別名やオブジェクトの別名<strong>っぽい</strong>ことはそれほど難しくはありません。
-                    インターフェイスの別名には、単に元のインターフェイスを継承するような空のインターフェイスを定義する手があります。
-                    Structual Subtyping のお陰でどっちがどっちを extends しているということは関係ないので、
-                    本名と別名のあいだで自由にオブジェクトをやり取りできます。</p>
+                        <p>Java なら import PackageName.*; でパッケージのクラスとインターフェイスを単純名で全部インポートできますし、
+                            import PackageName.AnyClass; で特定のクラスのみをインポートできるので、パッケージの名前が長くても問題ありません。
+                            C# なら更に柔軟に using AnyAlias = NameSpaceName.AnyClass のように別名をつけることさえできます。
+                            TypeScript ではどうするのがいいのでしょうか。クラスの別名は非常に厄介ですが、インターフェイスの別名やオブジェクトの別名<strong>っぽい</strong>ことはそれほど難しくはありません。
+                            インターフェイスの別名には、単に元のインターフェイスを継承するような空のインターフェイスを定義する手があります。
+                            Structual Subtyping のお陰でどっちがどっちを extends しているということは関係ないので、
+                            本名と別名のあいだで自由にオブジェクトをやり取りできます。</p>
 
-                <pre class="ts">
+<pre class="prettyprint linenums">
 interface Graphics2D extends CanvasRenderingContext2D {}
 
 var g:Graphics2D;
@@ -1282,15 +1399,15 @@ g = h;  // どっちにどっちを代入しても大丈夫
 h = g;
 </pre>
 
-                <p>オブジェクトの別名も、もちろん単にそういう別名の変数を定義して代入すればいいですね。</p>
+                        <p>オブジェクトの別名も、もちろん単にそういう別名の変数を定義して代入すればいいですね。</p>
 
-                <pre class="ts">var XHR = XMLHttpRequest;</pre>
+                        <pre class="prettyprint linenums">var XHR = XMLHttpRequest;</pre>
 
-                <p>クラスの場合はインターフェイスのようにはいきません。もとのクラスを継承するような空のクラスを作ったとしても、
-                別名のクラスのオブジェクトをもとのクラスの変数に代入できないので、これはとても別名とは言えません。
-                </p>
+                        <p>クラスの場合はインターフェイスのようにはいきません。もとのクラスを継承するような空のクラスを作ったとしても、
+                        別名のクラスのオブジェクトをもとのクラスの変数に代入できないので、これはとても別名とは言えません。
+                        </p>
 
-                <pre class="ts">
+<pre class="prettyprint linenums">
 class Vector3 extends THREE.Vector3 { }
 
 var v: THREE.Vector3;
@@ -1299,12 +1416,12 @@ var u: Vector3;
 v = u;
 u = v; // Cannnot convert'THREE.Vector3' to 'Vector3'
 </pre>
-                <p>もちろん &lt;any&gt; を乱用すれば代入できますが、そういう問題でもありません。
-                なにか良い方法はないものだろうかと筆者は次のような方法を検討しました。
-                次のような長い名前のモジュールにクラスがあったとしましょう。
-                </p>
+                        <p>もちろん &lt;any&gt; を乱用すれば代入できますが、そういう問題でもありません。
+                        なにか良い方法はないものだろうかと筆者は次のような方法を検討しました。
+                        次のような長い名前のモジュールにクラスがあったとしましょう。
+                        </p>
 
-                <pre class="ts">
+<pre class="prettyprint linenums">
 module Long.Long.Annoying.Namespace {
     export class Vector2 {
         x: number;
@@ -1312,19 +1429,19 @@ module Long.Long.Annoying.Namespace {
         constructor(x: number, y: number);
     }
 }
-                </pre>
+</pre>
 
-                <p>このクラスを本名で使うのはすごく面倒ですね。</p>
+                        <p>このクラスを本名で使うのはすごく面倒ですね。</p>
 
-                <pre class="ts">
+<pre class="prettyprint linenums">
 var v: Long.Long.Annoying.Namespace.Vector2 = new Long.Long.Annoying.Namespace.Vector2(10, 20);
-                </pre>
+</pre>
 
-                <p>クラスの別名を定義できるようにするために、このクラスを次のように interface と var を使って書き換えます。
-                    このように interface と var で定義しても、class とほぼ同じように型注釈やコンストラクタ呼び出しができます。
-                    このような擬似的なクラスの定義は、lib.d.ts で使われているのと同じ方法です。</p>
+                        <p>クラスの別名を定義できるようにするために、このクラスを次のように interface と var を使って書き換えます。
+                            このように interface と var で定義しても、class とほぼ同じように型注釈やコンストラクタ呼び出しができます。
+                            このような擬似的なクラスの定義は、lib.d.ts で使われているのと同じ方法です。</p>
 
-                <pre class="ts">
+<pre class="prettyprint linenums">
 module Long.Long.Annoying.Namespace {
     export interface IVector2 {
         x: number;
@@ -1337,76 +1454,76 @@ module Long.Long.Annoying.Namespace {
 
 // 普通に new や型注釈できる
 var v:new Long.Long.Annoying.Namespace.IVector2 = new Long.Long.Annoying.Namespace.Vector2(10, 20);
-                </pre>
+</pre>
 
-                <p>lib.d.ts で String というインターフェイスと String という変数が共存しているように、グローバルな名前空間では型名と変数名を同じ名前に出来るのですが、モジュール内の型と変数では同名での定義は可能なものの、外部からは変数が型名を隠してしまって、
-                    型注釈でうまく型名の方を参照できないようです。このため、インターフェイスと変数が異なる名前になっています。</p>
+                        <p>lib.d.ts で String というインターフェイスと String という変数が共存しているように、グローバルな名前空間では型名と変数名を同じ名前に出来るのですが、モジュール内の型と変数では同名での定義は可能なものの、外部からは変数が型名を隠してしまって、
+                            型注釈でうまく型名の方を参照できないようです。このため、インターフェイスと変数が異なる名前になっています。</p>
 
-                <p>この形式であれば、型はインターフェイスでコンストラクタはただの変数なので、それぞれ別名を定義することができます。</p>
+                        <p>この形式であれば、型はインターフェイスでコンストラクタはただの変数なので、それぞれ別名を定義することができます。</p>
 
-                <pre class="ts">
+<pre class="prettyprint linenums">
 // 型の別名の定義
 interface IVector2 extends Long.Long.Annoying.Namespace.IVector2 {}
 
 // コンストラクタの別名の定義
 var IVector2 = Long.Long.Annoying.Namespace.Vector2;
-                </pre>
+</pre>
 
-                <p>これで、次のように本名でも別名でも型注釈をつけたりコンストラクタを呼んだりすることができます。</p>
+                        <p>これで、次のように本名でも別名でも型注釈をつけたりコンストラクタを呼んだりすることができます。</p>
 
-                <pre class="ts">
+<pre class="prettyprint linenums">
 // 本名での型注釈とコンストラクタ呼び出し
 var v: Long.Long.Annoying.Namespace.IVector2 = new Long.Long.Annoying.Namespace.Vector2(10, 20);
 
 // 別名での型注釈とコンストラクタ呼び出し。おお！短い！
 var u: IVector2 = new IVector2(10, 20);
-                </pre>
+</pre>
 
-                <p>さて、問題は本名の型と別名の型の変数に互換性があるのか？ということですが、
-                これらの型はインターフェイスなので次のようにお互いにお互いを代入してもエラーは出ません。
-                    やったね！</p>
+                        <p>さて、問題は本名の型と別名の型の変数に互換性があるのか？ということですが、
+                        これらの型はインターフェイスなので次のようにお互いにお互いを代入してもエラーは出ません。
+                            やったね！</p>
 
-                <pre class="ts">
+<pre class="prettyprint linenums">
 // 本名の変数と別名の変数に互換性はあるのか？
 v = u;  // Long.Long.Annoying.Namespace.IVector2 に IVector2 を代入できる！
 u = v;  // IVector2 に Long.Long.Annoying.Namespace.IVector2 を代入できる！
-                </pre>
+</pre>
 
-                <p>……。さて、クラスやインターフェイス、変数の別名について検討してきましたが、よく訓練されたプログラマならすごく<strong>コレジャナイ感</strong>を感じていただけるのではないでしょうか。たしかに別名を定義できたものの、いろいろ問題は山積していますね。</p>
-                <dl>
-                    <dt>クラスがどうみてもクラスに見えない</dt>
-                    <dd>interface と var を使ってクラスっぽいものを作ることは lib.d.ts でも多用されていますが、
-                    この定義は一見してクラスのようには見えません。せっかく TypeScript にクラスがあるのに、
-                    この機構を使えないのはいろいろ損失が大きいです。</dd>
-                    <dt>型名とコンストラクタ名が違う</dt>
-                    <dd>クラスベースオブジェクト指向言語ではたいてい new クラス名() でインスタンス化できることが多いので、
-                    クラスメイトコンストラクタ名が異なるのは結構違和感があると思います。</dd>
-                    <dt>クラスの別名を定義するのに型名とコンストラクタ名を別々に行わなければならない</dt>
-                    <dd>別名を定義するのにいちいち２行かかります。確か面倒を避けるために別名を定義しようとしたのに……。</dd>
-                    <dt>モジュールのメンバをまとめてインポートできない</dt>
-                    <dd>結局 Java の import Hoge.*; のようなことはできません。ダメじゃん。</dd>
-                    <dt>他のソースファイルにも影響がでる</dt>
-                    <dd>本当にそういう名前の型が定義されてしまうので、他のソースファイルからでもその別名を参照可能です。
-                    別々のソースファイルでそれぞれ別名を定義すると、名前の衝突が起こります。
-                    別名を付けたければスコープを作っておかないと危険ですが、この辺りは JavaScript でも同じことです。</dd>
-                </dl>
-                <p>
-                    というわけで、現時点では TypeScript でモジュール以外の別名を定義しようと姑息な工夫をするのは控えたほうがいいと思います。
-                    安易に別名をつけるといろいろ問題を引き起こします。
-                    もしかしたら今後別名が付けられるように言語仕様が変更される可能性もあるでしょうから、そうなるように祈りましょう……。
-                </p>
+                        <p>……。さて、クラスやインターフェイス、変数の別名について検討してきましたが、よく訓練されたプログラマならすごく<strong>コレジャナイ感</strong>を感じていただけるのではないでしょうか。たしかに別名を定義できたものの、いろいろ問題は山積していますね。</p>
+                        <dl>
+                            <dt>クラスがどうみてもクラスに見えない</dt>
+                            <dd>interface と var を使ってクラスっぽいものを作ることは lib.d.ts でも多用されていますが、
+                            この定義は一見してクラスのようには見えません。せっかく TypeScript にクラスがあるのに、
+                            この機構を使えないのはいろいろ損失が大きいです。</dd>
+                            <dt>型名とコンストラクタ名が違う</dt>
+                            <dd>クラスベースオブジェクト指向言語ではたいてい new クラス名() でインスタンス化できることが多いので、
+                            クラスメイトコンストラクタ名が異なるのは結構違和感があると思います。</dd>
+                            <dt>クラスの別名を定義するのに型名とコンストラクタ名を別々に行わなければならない</dt>
+                            <dd>別名を定義するのにいちいち２行かかります。確か面倒を避けるために別名を定義しようとしたのに……。</dd>
+                            <dt>モジュールのメンバをまとめてインポートできない</dt>
+                            <dd>結局 Java の import Hoge.*; のようなことはできません。ダメじゃん。</dd>
+                            <dt>他のソースファイルにも影響がでる</dt>
+                            <dd>本当にそういう名前の型が定義されてしまうので、他のソースファイルからでもその別名を参照可能です。
+                            別々のソースファイルでそれぞれ別名を定義すると、名前の衝突が起こります。
+                            別名を付けたければスコープを作っておかないと危険ですが、この辺りは JavaScript でも同じことです。</dd>
+                        </dl>
+                        <p>
+                            というわけで、現時点では TypeScript でモジュール以外の別名を定義しようと姑息な工夫をするのは控えたほうがいいと思います。
+                            安易に別名をつけるといろいろ問題を引き起こします。
+                            もしかしたら今後別名が付けられるように言語仕様が変更される可能性もあるでしょうから、そうなるように祈りましょう……。
+                        </p>
 
 
-                <h3>型の異なるオーバーライド</h3>
-                <p>オーバーライドするメンバは、基本的にはサブクラスでも同じ型でなければなりませんが、
-                互換性のある型であればサブクラスで型を変更することもできるようです。
-                ざっと見た限りではあまり仕様書には詳しく書かれていないようなので、現在のコンパイラ(0.8.2)での挙動を調べた分をメモしておきます。
-                この情報はジェネリクス導入後はほとんど役に立たなくなると思いますが、一応説明しておきます</p>
+                        <h3>型の異なるオーバーライド</h3>
+                        <p>オーバーライドするメンバは、基本的にはサブクラスでも同じ型でなければなりませんが、
+                        互換性のある型であればサブクラスで型を変更することもできるようです。
+                        ざっと見た限りではあまり仕様書には詳しく書かれていないようなので、現在のコンパイラ(0.8.2)での挙動を調べた分をメモしておきます。
+                        この情報はジェネリクス導入後はほとんど役に立たなくなると思いますが、一応説明しておきます</p>
 
-                <p>JavaScript で書かれた２次元のベクトルを表すクラスと３次元のベクトルの表すクラスがあって、
-                    それぞれのクラスにベクトルの和を計算するクラス関数 add やスカラ倍する multiplyScalar() があるとします。
-                    これらのクラスに環境定義ファイルを書くと、次のようになるかと思います。</p>
-                <pre class="ts">
+                        <p>JavaScript で書かれた２次元のベクトルを表すクラスと３次元のベクトルの表すクラスがあって、
+                            それぞれのクラスにベクトルの和を計算するクラス関数 add やスカラ倍する multiplyScalar() があるとします。
+                            これらのクラスに環境定義ファイルを書くと、次のようになるかと思います。</p>
+<pre class="prettyprint linenums">
 class Vector2{
     add(v:Vector2):Vector2;
     multiplyScalar(t:number):Vector2;
@@ -1416,14 +1533,14 @@ class Vector3{
     add(v:Vector3):Vector3;
     multiplyScalar(t:number):Vector3;
 }
-                </pre>
+</pre>
 
-                <p>これで一見よさそうなのですが、Vector2 もしくは Vector3 のどちらかをとるような変数があったらどうでしょうか。たとえば、2次元の線分はふたつの Vector2 で表現されますし、
-                    3次元の線分はふたつの　Vector3 で表されます。Vector2 でも Vector3 でも使える線分のクラス　Line　を定義することを考えると、
-                    これらのクラスに共通する add を呼び出したくなります。従って、これらの二つのクラスを抽象するクラスかインターフェイス Vector が欲しくなります。</p>
+                        <p>これで一見よさそうなのですが、Vector2 もしくは Vector3 のどちらかをとるような変数があったらどうでしょうか。たとえば、2次元の線分はふたつの Vector2 で表現されますし、
+                            3次元の線分はふたつの　Vector3 で表されます。Vector2 でも Vector3 でも使える線分のクラス　Line　を定義することを考えると、
+                            これらのクラスに共通する add を呼び出したくなります。従って、これらの二つのクラスを抽象するクラスかインターフェイス Vector が欲しくなります。</p>
 
 
-                <pre class="ts">                    
+<pre class="prettyprint linenums">                    
 class Line{
     // u, v は両方 Vector2 か 両方 Vector3
     constructor(private v:Vector, private u:Vector){
@@ -1435,15 +1552,16 @@ class Line{
         return this.v.add(this.u).multiplyScalar(0.5);
     }
 }
-                </pre>
+</pre>
 
-                   <p> JavaScript のコードにこのような抽象的なクラスがない場合は、TypeScript の環境定義ファイルのほうで抽象クラスを勝手に作り出して定義してしまうのはあまり適切とは言えません。
-                    そんなクラスは存在しないし、もし抽象的なクラスを定義してしまうと、そのクラスをインスタンス化するようなコードを許してしまうからです。
-                    したがって、インターフェイスとして定義するのがよいでしょう。
-                    ここで、Vector2 の add と Vector3 の add は型が異なるわけで、単純に Vector の　add を同じ型にするわけにはいきません。
-                    この場合インターフェイスで定義する add は、次のように Vector2 の add と Vector3 の add に互換性があれば定義することができるのです。</p>
+                           <p> JavaScript のコードにこのような抽象的なクラスがない場合は、TypeScript の環境定義ファイルのほうで抽象クラスを勝手に作り出して定義してしまうのはあまり適切とは言えません。
+                            そんなクラスは存在しないし、もし抽象的なクラスを定義してしまうと、そのクラスをインスタンス化するようなコードを許してしまうからです。
+                            したがって、インターフェイスとして定義するのがよいでしょう。
+                            ここで、Vector2 の add と Vector3 の add は型が異なるわけで、単純に Vector の　add を同じ型にするわけにはいきません。
+                            この場合インターフェイスで定義する add は、次のように Vector2 の add と Vector3 の add に互換性があれば定義することができるのです。
+                            </p>
 
-                <pre class="ts">
+<pre class="prettyprint linenums">
 interface Vector{
     add(v:Vector):Vector;
 }
@@ -1455,23 +1573,23 @@ class Vector2 implements Vector{
 class Vector3 implements Vector{
     add(v:Vector3):Vector3;
 }
-                </pre>
+</pre>
 
-                <p>型安全性の観点では、サブクラスでオーバーライドするときに引数の型を広げるぶんには（そして返り値の型を狭めるぶんには）問題ないわけですが、
-                上記の例では引数の型を狭めることができてしまっています。これでは型安全性としては不十分ですが、
-                ジェネリクスのない現段階では any などでごまかすよりはこのほうがマシだと思います。
-                ちなみに、まったく互換性のないオーバーライドの定義はコンパイルエラーになります。</p>
-                <pre class="ts">
+                        <p>このように、スーパークラスで定義されたメソッドの返り値の型をサブクラスでオーバーライドするときに狭めるのは Java あたりでも可能で、
+                        共変戻り値型（covariant return type）と呼ばれています。
+                        型安全性の観点では、サブクラスでオーバーライドするときに引数の型を広げるぶんには（そして返り値の型を狭めるぶんには）問題ないわけですが、
+                        上記の例では引数の型を狭めることができてしまっています。
+                        これはバグかもしれませんが、ジェネリクスのない現段階では any などでごまかすよりはこの方法が無理のない解決策だと思います。
+                        ちなみに、まったく互換性のない型へ変えるようなオーバーライドはコンパイルエラーになります。</p>
+<pre class="prettyprint linenums">
 class Vector2 implements Vector{
-    add(v:string):Vector2;  // string と Vector は互換性がないのでコンパイルエラー！
+    add(v:string):Vector2;  // string と Vector はぜんぜん関係ないのでコンパイルエラー！
 }
-                </pre>
+</pre>
 
-                <p>ジェネリクス導入後は、これらの定義は次のように型安全なコードに書き換えることができるようになると思います。 </p>
+                        <p>ジェネリクス導入後は、これらの定義は次のように型安全なコードに書き換えることができるようになると思います。 </p>
 
-                <pre class="ts">
-
-
+<pre class="prettyprint linenums">
 interface Vector&lt;T&gt;{
     add(v:T):T;
     multiplyScalar(t:number):T;
@@ -1494,108 +1612,140 @@ class Line&lt;T extends Vector&gt;{
         return this.v.add(this.u).multiplyScalar(0.5);
     }
 }
-                </pre>
+</pre>
 
 
-            </section>
+                    </section>
 
-            <section>    
-                <h2>類似のコンセプトをもつ言語</h2>
-                <p>冒頭で説明したとおり、JavaScript へトランスコンパイルする系統の言語は他に山ほど存在します。
-                これまで長々と TypeScript の紹介をしてきましたが、TypeScript だけが選択肢ではありませんし、
-                当然他の言語のほうが向いているケースもたくさんあるでしょう。
-                そのなかでも TypeScript とコンセプトが近い幾つかのシステムについても紹介しておきます。
-                ただし筆者は以下の言語について十分使い込んでいるわけではないので、第一印象という程度だと思っていてください。
-                </p>
+                    <section>    
+                        <h2>類似のコンセプトをもつ言語</h2>
+                        <p>冒頭で説明したとおり、JavaScript へトランスコンパイルする系統の言語は他に山ほど存在します。
+                        これまで長々と TypeScript の紹介をしてきましたが、TypeScript だけが選択肢ではありませんし、
+                        当然他の言語のほうが向いているケースもたくさんあるでしょう。
+                        そのなかでも TypeScript とコンセプトが近い幾つかのシステムについても紹介しておきます。
+                        ただし筆者は以下の言語について十分使い込んでいるわけではないので、第一印象という程度だと思っていてください。
+                        </p>
 
-                <dl>
-                    <dt><a href="http://haxe.org/">Haxe</a></dt>
-                    <dd><p>Haxeも TypeScript と同様に JavaScript を出力できる系統の言語です。しかも JavaScript にかぎらず、Flash や C# など多数の言語へコンパイルすることができる点が特徴的です（まあ Web という環境がすでに十分すぎるほどマルチプラットフォームではありますが）。言語仕様も非常に現代的で、ジェネリクスが導入されたまともなクラスベースオブジェクト指向や型推論、データを保持できる直和型的な列挙型、Structual Subtyping など、言語仕様においては最高クラスの完成度です。インラインで JavaScript を埋め込むこともできるし、コンパイラの最適化の性能も優れておりドキュメントも十分に揃っているなど、現時点で最も実用的な環境といえるのではないでしょうか。
-                    これだけ TypeScript を推しておいてアレなんですけれど、
-                    <strong>ちゃんとした言語仕様のものを使いたければ、 TypeScript より Haxe 選ぶほうがいい</strong>と思います。</p>
-                    <p>
-                    欠点らしい欠点は見当たりませんが、あえていうなら単に静的型付けがされた JavaScript という範囲を踏み越えてしまうことでしょうか？たとえば、HTML の要素は js.HtmlDom という型になっていて、JavaScript の HTMLElement という名前とは異なっていたり、number がなくて Int や Float になるなど、JavaScript そのままという雰囲気にはなりません。
-                    とにかく JavaScript のスーパーセットという立ち位置にこだわる TypeScript とは少し理念が異なります。
-                    JavaScript からの移植をするさいも、TypeScript のように型注釈を加えればだいたい移植できる、というほどの移植性はありません。</p>
-                    <p>筆者が書いている three.d.ts は TypeScript から three.js を使えるようにする、という目的はもちろんのことですが、
-                    three.js は API リファレンスが古かったり型付けという面では曖昧な記述が多いので、
-                    TypeScript の定義ファイルを利用してちゃんとした API リファレンスを提供しよう、というものもあったりします。
-                    そのためにはあらゆる型名や API が JavaScript のものと一致していないと意味がないわけで、
-                    この目的においては Haxe より TypeScript のほうが適していると言えるのではないでしょうか。</p>
-                    </dd>
-                    <dt><a href="http://jsx.github.com/">JSX</a></dt>
-                    <dd>こちらもジェネリクスのあるクラスベースオブジェクト指向を備えた言語。とにかく最適化の性能が最重視されているようで、最適化オプションをつけると非常にコンパクトで高速な JavaScript を出力することができます。Google Closure Compiler の Advanced Optimizations を使える場面は非常に限られるので、こっちのコンパイラの側で minify ができるのは地味に便利だったりします。Nullable を導入するなどかなり堅実な型システムを持つ一方で、性能を優先して配列の要素に null を許容するような妥協も結構見られるようです。ちなみに、最適化の性能は Haxe と拮抗するくらいらしいですが、
-                    JSX 自身の開発も活発なので他の言語を突き放す日も来るかもしれません。</dd>
-                    <dt><a href="http://www.dartlang.org/">Dart</a></dt>
-                    <dd>クラスベースオブジェクト指向はもちろん、ラムダ式やジェネリクスもあるなかなか優れた言語仕様を持ちます。
-                    型注釈を付けないと型チェックがされない緩い型付けは TypeScript とも比較的似通った面も感じますが、
-                    独自の標準ライブラリが用意し API ごと既存の JavaScript 環境を置き換えることを目論むあたりが TypeScript と違ってやたら野心的です。実行時にも型エラーが出る Checked モードと静的な型チェックのみで効率優先の Production モードという2種類のモードを用意しているのは、実際の開発にはとても便利そうです。ただ、出力される JavaScript ソースコードはかなり大きく読み解くのも難しいコードになってしまうので、筆者としてはちょっと導入に躊躇してしまいます。
-                    万が一主要なブラウザにエンジンが搭載されたら喜んで使いますが、果たしてそんな日が来るのだろうか……。
-                    </dd>                 
-                </dl>
-                <p>(ほかにも JavaScript トランスコンパイルな言語には CoffeeScript や　ClosureScript のような言語がありますが、これらは動的な型付けの言語であり競合するような存在ではまったくありません。
-                    GWT や Processing なども静的型付けという面では上記の３言語とは似ていますが、やはり Web クライアントサイドスクリプトの置き換えというコンセプトとは異なるものがあります。)</p>
-                <p>正直なところ、TypeScript はこれら３つの言語の中でももっとも言語仕様が貧弱なほうだといえます。
-                    TypeScript もさまざまな問題を抱えており筆者も手放しで TypeScript を褒めるわけではありませんが、
-                    それでも筆者が TypeScript を推すのは、それが既存の JavaScript 環境との親和性を最重視しているからです。
-                    奇しくも JavaScript は現在最も普及している言語であり、すでに標準化された仕様や多数のライブラリ、数えきれないノウハウの蓄積があります。
-                    新しい言語に乗り換えるということはそれらの資産が失われかねないわけですが、
-                    <strong>TypeScript　なら JavaScript の遺産を他のどの言語より素直に引き継げる</strong>のです。
-                    あまり理想に囚われず、とにかく現実的に今すぐ役に立つべくして作られたシステムが TypeScript だというわけです。
-                </p>
+                        <dl>
+                            <dt><a href="http://haxe.org/">Haxe</a></dt>
+                            <dd><p>Haxeも TypeScript と同様に JavaScript を出力できる系統の言語です。しかも JavaScript にかぎらず、Flash や C# など多数の言語へコンパイルすることができる点が特徴的です（まあ Web という環境がすでに十分すぎるほどマルチプラットフォームではありますが）。言語仕様も非常に現代的で、ジェネリクスが導入されたまともなクラスベースオブジェクト指向や型推論、データを保持できる直和型的な列挙型、Structual Subtyping など、言語仕様においては最高クラスの完成度です。インラインで JavaScript を埋め込むこともできるし、コンパイラの最適化の性能も優れておりドキュメントも十分に揃っているなど、現時点で最も実用的な環境といえるのではないでしょうか。
+                            これだけ TypeScript を推しておいてアレなんですけれど、
+                            <strong>ちゃんとした言語仕様のものを使いたければ、 TypeScript より Haxe 選ぶほうがいい</strong>と思います。</p>
+                            <p>
+                            欠点らしい欠点は見当たりませんが、あえていうなら単に静的型付けがされた JavaScript という範囲を踏み越えてしまうことでしょうか？たとえば、HTML の要素は js.HtmlDom という型になっていて、JavaScript の HTMLElement という名前とは異なっていたり、number がなくて Int や Float になるなど、JavaScript そのままという雰囲気にはなりません。
+                            とにかく JavaScript のスーパーセットという立ち位置にこだわる TypeScript とは少し理念が異なります。
+                            JavaScript からの移植をするさいも、TypeScript のように型注釈を加えればだいたい移植できる、というほどの移植性はありません。</p>
+                            <p>筆者が書いている three.d.ts は TypeScript から three.js を使えるようにする、という目的はもちろんのことですが、
+                            three.js は API リファレンスが古かったり型付けという面では曖昧な記述が多いので、
+                            TypeScript の定義ファイルを利用してちゃんとした API リファレンスを提供しよう、というものもあったりします。
+                            そのためにはあらゆる型名や API が JavaScript のものと一致していないと意味がないわけで、
+                            この目的においては Haxe より TypeScript のほうが適していると言えるのではないでしょうか。</p>
+                            </dd>
+                            <dt><a href="http://jsx.github.com/">JSX</a></dt>
+                            <dd>こちらもジェネリクスのあるクラスベースオブジェクト指向を備えた言語。とにかく最適化の性能が最重視されているようで、最適化オプションをつけると非常にコンパクトで高速な JavaScript を出力することができます。Google Closure Compiler の Advanced Optimizations を使える場面は非常に限られるので、こっちのコンパイラの側で minify ができるのは地味に便利だったりします。Nullable を導入するなどかなり堅実な型システムを持つ一方で、性能を優先して配列の要素に null を許容するような妥協も結構見られるようです。ちなみに、最適化の性能は Haxe と拮抗するくらいらしいですが、
+                            JSX 自身の開発も活発なので他の言語を突き放す日も来るかもしれません。</dd>
+                            <dt><a href="http://www.dartlang.org/">Dart</a></dt>
+                            <dd>クラスベースオブジェクト指向はもちろん、ラムダ式やジェネリクスもあるなかなか優れた言語仕様を持ちます。
+                            型注釈を付けないと型チェックがされない緩い型付けは TypeScript とも比較的似通った面も感じますが、
+                            独自の標準ライブラリが用意し API ごと既存の JavaScript 環境を置き換えることを目論むあたりが TypeScript と違ってやたら野心的です。実行時にも型エラーが出る Checked モードと静的な型チェックのみで効率優先の Production モードという2種類のモードを用意しているのは、実際の開発にはとても便利そうです。ただ、出力される JavaScript ソースコードはかなり大きく読み解くのも難しいコードになってしまうので、筆者としてはちょっと導入に躊躇してしまいます。
+                            万が一主要なブラウザにエンジンが搭載されたら喜んで使いますが、果たしてそんな日が来るのだろうか……。
+                            </dd>                 
+                        </dl>
+                        <p>(ほかにも JavaScript トランスコンパイルな言語には CoffeeScript や　ClosureScript のような言語がありますが、これらは動的な型付けの言語であり競合するような存在ではまったくありません。
+                            GWT や Processing なども静的型付けという面では上記の３言語とは似ていますが、やはり Web クライアントサイドスクリプトの置き換えというコンセプトとは異なるものがあります。)</p>
+                        <p>正直なところ、TypeScript はこれら３つの言語の中でももっとも言語仕様が貧弱なほうだといえます。
+                            TypeScript もさまざまな問題を抱えており筆者も手放しで TypeScript を褒めるわけではありませんが、
+                            それでも筆者が TypeScript を推すのは、それが既存の JavaScript 環境との親和性を最重視しているからです。
+                            奇しくも JavaScript は現在最も普及している言語であり、すでに標準化された仕様や多数のライブラリ、数えきれないノウハウの蓄積があります。
+                            新しい言語に乗り換えるということはそれらの資産が失われかねないわけですが、
+                            <strong>TypeScript　なら JavaScript の遺産を他のどの言語より素直に引き継げる</strong>のです。
+                            あまり理想に囚われず、とにかく現実的に今すぐ役に立つべくして作られたシステムが TypeScript だというわけです。
+                        </p>
 
-            </section>
+                    </section>
 
-                
-            <section>    
-                <h2>おわりに</h2>
-                <p>このページの目次も TypeScript で動的に生成されています(<a href="indexer.ts">indexer.ts</a>)。ちょっとしたサンプルにもなっているので、興味のある方は覗いてみるのもいいかもしれません。</p>
+                        
+                    <section>    
+                        <h2>おわりに</h2>
+                        <p>このページの目次も TypeScript で動的に生成されています(<a href="indexer.ts">indexer.ts</a>)。ちょっとしたサンプルにもなっているので、興味のある方は覗いてみるのもいいかもしれません。</p>
 
-                <p>筆者はすでに TypeScript でいくつかのプロジェクトを始めています。
-                たとえば、動的な言語である JavaScript では本質的に難しいドキュメントジェネレータを TypeScript の環境定義ファイルを使用して出力するようなことを試しています。
-                もし興味があるようならそちらもご覧ください。
-                </p>
-                <ul>
-                    <li><a href="https://github.com/kontan/dtsdoc">dtsdoc</a> - *.d.ts を利用したドキュメンテーションジェネレータ。TypeScript の型システムは JavaScript そのままなので、これで出力されたドキュメントは javaScript のユーザにとってもそのまま使えます。
-                    three.js の API リファレンスが欲しくてやっつけ仕事で作りました。
-                    サンプルとして <a href="http://kontan.github.com/dtsdoc/lib.d.ts.html">JavaScript 標準ライブラリのドキュメント</a>なども用意してあるので、ご参考までにどうぞ。</li>
-                    <li><a href="https://github.com/kontan/parsect">Parsect</a> - TypeScript でパーサを書くためのライブラリ。
-                        文字列のパーシングはプログラミングにおける永久の課題でもありますが、Haskell の Parsec に代表されるパーサコンビネータを TypeScript で
-                        作ってみました。可読性の高い記法で、LL(n) の文法のパーサを構築出来ます(たぶん)。上記の dtsdoc で使っています。</li>
-                    <li><a href="https://github.com/kontan/three.d.ts">three.d.ts</a> - HTML5/WebGL を利用した 3D グラフィックスライブラリ 
-                    <a href="http://mrdoob.github.com/three.js/">three.js</a> の
-                    環境定義ファイル。複雑な three.js のようなライブラリでも型安全に使用することができます。</li> 
-                </ul>
-                <p>TypeScript の仕様は今後も変更されますので、動向にも注意しましょう。もし本稿に間違いがあるのを発見された場合は、よろしければ以下のメールアドレスもしくは Twitter までお知らせいただければ幸いです。
-                本稿の著作権は筆者が保持するものですが、もちろん引用の権利を妨げるようなものではありませんので、法律の定めに従う限り引用は自由にしていただいて構いません。
-                引用を超える形態での利用についてはご相談ください。このページヘのリンクやツイートにも制限はありません。</p>
-                <p>
-            </section>
+                        <p>筆者はすでに TypeScript でいくつかのプロジェクトを始めています。
+                        たとえば、動的な言語である JavaScript では本質的に難しいドキュメントジェネレータを TypeScript の環境定義ファイルを使用して出力するようなことを試しています。
+                        もし興味があるようならそちらもご覧ください。
+                        </p>
+                        <ul>
+                            <li><a href="https://github.com/kontan/dtsdoc">dtsdoc</a> - *.d.ts を利用したドキュメンテーションジェネレータ。TypeScript の型システムは JavaScript そのままなので、これで出力されたドキュメントは javaScript のユーザにとってもそのまま使えます。
+                            three.js の API リファレンスが欲しくてやっつけ仕事で作りました。
+                            サンプルとして <a href="http://kontan.github.com/dtsdoc/lib.d.ts.html">JavaScript 標準ライブラリのドキュメント</a>なども用意してあるので、ご参考までにどうぞ。</li>
+                            <li><a href="https://github.com/kontan/parsect">Parsect</a> - TypeScript でパーサを書くためのライブラリ。
+                                文字列のパーシングはプログラミングにおける永久の課題でもありますが、Haskell の Parsec に代表されるパーサコンビネータを TypeScript で
+                                作ってみました。可読性の高い記法で、LL(n) の文法のパーサを構築出来ます(たぶん)。上記の dtsdoc で使っています。</li>
+                            <li><a href="https://github.com/kontan/three.d.ts">three.d.ts</a> - HTML5/WebGL を利用した 3D グラフィックスライブラリ 
+                            <a href="http://mrdoob.github.com/three.js/">three.js</a> の
+                            環境定義ファイル。複雑な three.js のようなライブラリでも型安全に使用することができます。</li> 
+                        </ul>
+                        <p>TypeScript の仕様は今後も変更されますので、動向にも注意しましょう。もし本稿に間違いがあるのを発見された場合は、よろしければ以下のメールアドレスもしくは Twitter までお知らせいただければ幸いです。
+                        本稿の著作権は筆者が保持するものですが、もちろん引用の権利を妨げるようなものではありませんので、法律の定めに従う限り引用は自由にしていただいて構いません。
+                        引用を超える形態での利用についてはご相談ください。このページヘのリンクやツイートにも制限はありません。</p>
+                        <p>
+                    </section>
 
-            <h2>変更履歴</h2>
-            <ul>
-                <li>2013/02/03 サンプルコードの調整と HTML の整理。サンプルコードについては良くないものが多いので、後で全面的に見直す必要がありそう</li>
-                <li>2013/01/29 そういや、型注釈って例のポシャった ES4 には入ってたけど、ES6 では入ってないんだよね？なんか ES についてすごい適当なこと書いてた気がする。正直もう ES には期待してないのですごくどうでもいいけど。 </li>
-                <li>2013/01/28 型の別名についての説明。蛇足な感じだけど、誰かが筆者のような無駄な努力を費やさないように願って。</li>                
-                <li>2013/01/25 インターフェイスの説明のサンプルの間違いを修正。ページのデザインに関しては全面的に再考する余地が大きい。硬派すぎる気がする </li>
-                <li>2013/01/23 サンプルコードの枠線の色の説明を追加。今どき HTML を手書きって……。CMS 使えって話だよね。</li>
-                <li>2013/01/22 オーバーロードで本体の引数を any にしなければならないかのように書いていたけどそんなことはなかった。あと Number が他の型のサブタイプにならないって書いていたけど、明らかにおかしいので削除</li>
-                <li>2013/01/20 記述が増え過ぎて全然クイックじゃない件について。当初はもう少し淡白なページを考えていたんだけど、利点欠点を書き始めたあたりからどんどん記述が増えてきた</li>
-                <li>2013/01/19 お仲間の言語についての説明も追加。そろそろ長くなってきたので、ページ分けたほうがいいかな？めんどい</li>
-                <li>2013/01/18 空の列挙型についてのケーススタディを追加＆tscのバージョンアップにしたがってインデックスシグニチャの記述を修正＆教えてもらったタイプミスを修正。Thanks f_saito!</li>
-                <li>2013/01/16 クラス定義の解説で、なぜか多重継承ができるかのような書き方になっていたけど、もちろんそんなことはなかったぜ</li>
-                <li>2013/01/04 列挙型や可変長引数についての記述を追加</li>
-                <li>2012/11/?? 公開。詳しい日付忘れちゃった……</li>   
+                    <h2>変更履歴</h2>
+                    <ul>
+                        <li>2013/02/05 清々しいまでに bootstrap のサンプル丸パクりでページデザインの再構成。ts/js の見分けがつかなくなってユーザビリティ悪化してるので要調整。</li>
+                        <li>2013/02/03 サンプルコードの調整と HTML の整理。サンプルコードについては良くないものが多いので、後で全面的に見直す必要がありそう</li>
+                        <li>2013/01/29 そういや、型注釈って例のポシャった ES4 には入ってたけど、ES6 では入ってないんだよね？なんか ES についてすごい適当なこと書いてた気がする。正直もう ES には期待してないのですごくどうでもいいけど。 </li>
+                        <li>2013/01/28 型の別名についての説明。蛇足な感じだけど、誰かが筆者のような無駄な努力を費やさないように願って。</li>                
+                        <li>2013/01/25 インターフェイスの説明のサンプルの間違いを修正。ページのデザインに関しては全面的に再考する余地が大きい。硬派すぎる気がする </li>
+                        <li>2013/01/23 サンプルコードの枠線の色の説明を追加。今どき HTML を手書きって……。CMS 使えって話だよね。</li>
+                        <li>2013/01/22 オーバーロードで本体の引数を any にしなければならないかのように書いていたけどそんなことはなかった。あと Number が他の型のサブタイプにならないって書いていたけど、明らかにおかしいので削除</li>
+                        <li>2013/01/20 記述が増え過ぎて全然クイックじゃない件について。当初はもう少し淡白なページを考えていたんだけど、利点欠点を書き始めたあたりからどんどん記述が増えてきた</li>
+                        <li>2013/01/19 お仲間の言語についての説明も追加。そろそろ長くなってきたので、ページ分けたほうがいいかな？めんどい</li>
+                        <li>2013/01/18 空の列挙型についてのケーススタディを追加＆tscのバージョンアップにしたがってインデックスシグニチャの記述を修正＆教えてもらったタイプミスを修正。Thanks f_saito!</li>
+                        <li>2013/01/16 クラス定義の解説で、なぜか多重継承ができるかのような書き方になっていたけど、もちろんそんなことはなかったぜ</li>
+                        <li>2013/01/04 列挙型や可変長引数についての記述を追加</li>
+                        <li>2012/11/?? 公開。詳しい日付忘れちゃった……</li>   
 
-            </ul>
-           
-            <footer>
-           <a href="https://twitter.com/share" class="twitter-share-button">Tweet</a>
-            <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="http://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
-            </footer>
+                    </ul>
+                   
 
+                    <a href="https://twitter.com/share" class="twitter-share-button">Tweet</a>
+                    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="http://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
 
-            
+                    <hr>
+                    <div class="footer" style="text-align: center;">
+                        <p>
+                            &copy; Kon 2013 
+                            -
+                            <a href="https://github.com/kontan"><img src="../github.png" alt="github my page" style="width:36px;height:36px;" /></a>
+                            -
+                            <a href="https://twitter.com/KDKTN"><img src="../twitter-bird-blue-on-white.png" alt="twitter link" style="width:36px;height:36px;"/></a>
+                            -
+                            <a href=""><img id="gmail"   src="../gmail.png" alt="twitter link" style="width:36px;height:36px;"/></a>
+                            <img id="address" src="../mail.png" alt="gmail address" style="visibility:hidden;"/>
+                            <script type="text/javascript">
+                                $('#gmail').click(function(e){ 
+                                    $('#address').css('visibility', $('#address').css('visibility') == 'hidden' ? 'visible' : 'hidden');
+                                    e.preventDefault(); 
+                                });
+                            </script>
+                        </p>
+                    </div>
+                </div>
+            </div>
         </div>
+
+        <script src="../jquery-1.9.0.js"></script>
+        <script src="../bootstrap/js/bootstrap.js"></script>
+
+        <!-- 目次が長すぎて affix やると見づらい件  -->
+        <!-- Affix を有効にすると prettyprint が実行される？-->
+        <!-- <script src="../bootstrap/js/bootstrap-affix.js"></script> -->
+
+        <script type="text/javascript">
+            window.addEventListener('load', function(){
+                prettyPrint();
+            });
+        </script>
     </body>
 </html>

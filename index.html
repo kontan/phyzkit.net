@@ -1,68 +1,153 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="utf-8"></meta>
-        <title>phyzkit.net</title>
-        <link rel="stylesheet" type="text/css" href="style.css"></link>
-        <script type="text/javascript">
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>phyzkit.net</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="description" content="">
+		<meta name="author" content="Kon">
 
-  var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', 'UA-28131600-1']);
-  _gaq.push(['_trackPageview']);
+		<!-- Le styles -->
+		<link href="./bootstrap/css/bootstrap.css" rel="stylesheet">
+		<style type="text/css">
+		body {
+			padding-top: 20px;
+			padding-bottom: 40px;
+			font-family: 'Oxygen', 'meiryo', sans-serif;
+		}
 
-  (function() {
-    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-  })();
+		/* Custom container */
+		.container-narrow {
+			margin: 0 auto;
+			max-width: 700px;
+		}
+		.container-narrow > hr {
+			margin: 30px 0;
+		}
 
-</script>
-    </head>
-    <body>
-        <div class="box">
-            <h1>Phyzkit.net</h1>
-            <a href="./phyzkit/index.html">
-                <div class="content">
-                    <div>Phyzkit - Web物理シミュレーションサンドボックス</div>
-                    <div>Web Physics Simulation Sandbox</div>
-                </div>
-            </a>
-            <a href="./typescript/index.html">    
-                <div class="content">
-                    <div>TypeScript クイックガイド</div>
-                    <div>TypeScript Quick Guide</div>
-                </div>
-            </a>
-            <a href="./opensurf.ts/test.html">    
-                <div class="content">
-                    <div>SURF(Speeded Up Robust Feature) TypeScript Port Demo</div>
-                </div>
-            </a>
-            <a href="./c83/reversi/index.html">    
-                <div class="content">
-                    <div>コミックマーケット83 bit-fragment Vol.2</div>
-                    <div>『堅苦しくない！静的型付け言語 TypeScript 入門』</div>
-                    <div>デモ＆ソースコード</div>
-                </div>
-            </a>
-               
-                <div class="content">
-                    <div>コミックマーケット83 bit-fragment Vol.2</div>
-                    <div> 『GLSL ES / three.js で作るトゥーンシェーダ』</div>
-                    <a href="./c83/ToonShader/app.html"><div>デモ＆ソースコード(シンプル版)</div></a>
-                    <a href="./c83/SkinnedToonShader/app.html"><div>デモ＆ソースコード(スキニングアニメーション版)</div></a>
-                </div>
-             <div><a href="http://ph.halfmoon.jp/c/">[ bit-fragment サークルサイト]</a></div>
-             <div><a href="threedts/app.html">[ three.d.ts マルチアクション出力＆トゥーンレンダリングなデモ ]</a></div>
-        </div>
-        <footer>
-            <div>
-                <span class="copyright">Copyright (C) 2012 Kon</span>
-                <a href="https://twitter.com/KDKTN" class="twitter-follow-button" data-show-count="false">Follow @KDKTN</a>
-<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
-                <img src="mail.png"></img>
-            </div>
+		/* Main marketing message and sign up button */
+		.jumbotron {
+			margin: 60px 0;
+			text-align: center;
+		}
+		.jumbotron h1 {
+			font-size: 32px;
+			line-height: 1;
+		}
+		.jumbotron .btn {
+			font-size: 21px;
+			padding: 14px 24px;
+		}
 
-        </footer>
-    </body>
+		/* Supporting marketing content */
+		.marketing {
+			margin: 60px 0;
+		}
+		.marketing p + h4 {
+			margin-top: 28px;
+		}
+		</style>
+		<link href="./bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+
+		<!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+		<!--[if lt IE 9]>
+		<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+		<![endif]-->
+
+		<!-- Fav and touch icons -->
+		<link rel="apple-touch-icon-precomposed" sizes="144x144" href="../assets/ico/apple-touch-icon-144-precomposed.png">
+		<link rel="apple-touch-icon-precomposed" sizes="114x114" href="../assets/ico/apple-touch-icon-114-precomposed.png">
+		<link rel="apple-touch-icon-precomposed" sizes="72x72" href="../assets/ico/apple-touch-icon-72-precomposed.png">
+		<link rel="apple-touch-icon-precomposed" href="../assets/ico/apple-touch-icon-57-precomposed.png">
+		<link rel="shortcut icon" href="../assets/ico/favicon.png">
+
+		<script src="./jquery-1.9.0.js"></script>
+
+		<!-- Web Fonts -->
+		<link href='http://fonts.googleapis.com/css?family=Oxygen' rel='stylesheet' type='text/css'>
+	</head>
+
+	<body>
+		<div class="container-narrow">
+			<div class="masthead">
+				<!--
+				<ul class="nav nav-pills pull-right">
+					<li class="active"><a href="#">Home</a></li>
+					<li><a href="#">About</a></li>
+					<li><a href="#footer">Contact</a></li>
+				</ul>
+				<h3 class="muted">phyzkit.net</h3>
+				-->
+			</div>
+
+			<hr />
+
+			<div class="jumbotron">
+				<h1>phyzkit.net</h1>
+				<p class="lead">This just can't be right.</p>
+			</div>
+
+			<hr />
+
+			<div class="row-fluid marketing">
+				<div class="span6">
+					<h4><a href="./typescript/">TypeScript Quick Guide (ja) </a></h4>
+					<p>Lean TypeScript Tutorial Text for JavaScript Users. -
+					TypeScript クイックガイド</p>
+
+					<h4><a href="./phyzkit/index.html">Phyzkit (ja)</a></h4>
+					<p>2D Physics Simulation Sandbox in Web Browser.</p>
+
+					<h4><a href="./opensurf.ts/test.html">OpenSurf.ts</a></h4>
+					<p>TypeScript porting of OpenSurf.cs</p>
+
+					<h4><a href="./threedts/app.html">three.d.ts demo</a></h4>
+					<p>three.d.ts multi-action animation &amp; toon rendering demo.</p>
+				</div>
+
+				<div class="span6">
+					<h4>コミックマーケット83 bit-fragment Vol.2</h4>
+					<p>『堅苦しくない！静的型付け言語 TypeScript 入門』</p>	
+					<ul>
+						<li><a href="./c83/reversi/index.html">リバーシ　デモ＆ソースコード</a></li>
+					</ul>
+					<p>『GLSL ES / three.js で作るトゥーンシェーダ</p>
+					<ul>
+						<li><a href="./c83/ToonShader/app.html">デモ＆ソースコード(シンプル版)</a></li>
+						<li><a href="./c83/SkinnedToonShader/app.html">デモ＆ソースコード(スキニングアニメーション版)</a></li>
+					</ul>
+					<h4>External Links</h4>
+					<ul>
+						<li><a href="http://ph.halfmoon.jp/c/">bit-fragment circle web site (ja) </a></li>
+					</ul>
+				</div>
+			</div>
+
+			<hr>
+			<div class="footer" style="text-align: center;">
+				<p>
+					&copy; Kon 2013 
+					-
+                	<a href="https://github.com/kontan"><img src="github.png" alt="github my page" style="width:36px;height:36px;" /></a>
+                	-
+					<a href="https://twitter.com/KDKTN"><img src="twitter-bird-blue-on-white.png" alt="twitter link" style="width:36px;height:36px;"/></a>
+                	-
+                	<a href=""><img id="gmail"   src="gmail.png" alt="twitter link" style="width:36px;height:36px;"/></a>
+					<img id="address" src="mail.png" alt="gmail address" style="visibility:hidden;"/>
+					<script type="text/javascript">
+						$('#gmail').click(function(e){ 
+							$('#address').css('visibility', $('#address').css('visibility') == 'hidden' ? 'visible' : 'hidden');
+							e.preventDefault(); 
+						});
+					</script>
+				</p>
+			</div>
+		</div> <!-- /container -->
+
+		<!-- Le javascript
+		================================================== -->
+		<!-- Placed at the end of the document so the pages load faster -->
+		
+		<script src="./bootstrap/js/bootstrap.js"></script>
+	</body>
 </html>
