@@ -16,6 +16,10 @@ dfn{
   font-weight: bold;
 }
 
+.bs-docs-sidebar{
+  overflow: hidden;
+}
+
 
 
 

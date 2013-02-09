@@ -13,8 +13,9 @@
 
         <title>TypeScript クイックガイド - phyzkit.net</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="description" content="">
-        <meta name="author" content="">
+        <meta name="description" content="TypeScript Quick Guide">
+        <meta name="author" content="Kon">
+        <meta name="keywords" content="TypeScript,チュートリアル,入門">
 
         <!-- Le styles -->
         <link href="../bootstrap/css/bootstrap.css" rel="stylesheet">
@@ -33,6 +34,8 @@
         <!-- indexer -->
         <script type="text/javascript" src="jquery-1.8.2.js"></script>
         <script type="text/javascript" src="indexer2.js"></script>
+
+        <script type="text/javascript" src="http://phyzkit.net/common.js"></script>
 
         <!-- Google Analytics -->
         <script type="text/javascript">
@@ -67,7 +70,16 @@
                             <li class=""><a href="#">Page Top</a></li>
                         </ul>
                         <ul class="nav">
-                            <li class=""><a href="index_old.html">Old Version</a></li>
+                            <li class=""><a href="index_old.html">(Old Version)</a></li>
+                        </ul>
+                        <ul class="nav">
+                            <li class=""><a href="http://www.typescriptlang.org/">typescriptlang.org</a></li>
+                        </ul>
+                        <ul class="nav">
+                            <li class=""><a href="http://www.typescriptlang.org/Content/TypeScript%20Language%20Specification.pdf">Language Specification</a></li>
+                        </ul>
+                        <ul class="nav">
+                            <li class=""><a href="http://www.typescriptlang.org/Playground/">TypeScript Playground</a></li>
                         </ul>
                     </div>
                 </div>
@@ -84,18 +96,21 @@
 
         <div class="container">
             <div class="row">
-                <div class="span3 bs-docs-sidebar menu">
-                    <!--
-                    <ul class="nav nav-list bs-docs-sidenav">
-                        <li><a href="#typography"><i class="icon-chevron-right"></i> Typography</a></li>
-                        <li><a href="#code"><i class="icon-chevron-right"></i> Code</a></li>
-                        <li><a href="#tables"><i class="icon-chevron-right"></i> Tables</a></li>
-                        <li><a href="#forms"><i class="icon-chevron-right"></i> Forms</a></li>
-                        <li><a href="#buttons"><i class="icon-chevron-right"></i> Buttons</a></li>
-                        <li><a href="#images"><i class="icon-chevron-right"></i> Images</a></li>
-                        <li><a href="#icons"><i class="icon-chevron-right"></i> Icons by Glyphicons</a></li>
-                    </ul>
-                    -->
+                <div class="span3 bs-docs-sidebar">
+                    <div class="menu"></div>
+
+
+                    <!-- Twitter #typescript timeline -->
+                    <p style="margin-top:4em; margin-right:10px;">
+                        <a class="twitter-timeline" href="https://twitter.com/search?q=TypeScript" data-widget-id="299388741716410368">TypeScript に関するツイート</a>
+                        <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+
+                        <a class="twitter-timeline" href="https://twitter.com/search?q=%23typescript" data-widget-id="299260141176487936">#typescript に関するツイート</a>
+                        <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+                        
+                        <a class="twitter-timeline" href="https://twitter.com/typescriptlang" data-widget-id="300258941433155584">@typescriptlang からのツイート</a>
+                        <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+                    </p>
                 </div>
                 
                 <div class="span9">
@@ -210,7 +225,7 @@
                                 </dd>
                                 <dt>コンパイラが不安定</dt>
                                 <dd>筆者にとっての TypeScript 最大の不安材料はコレです。現時点 (0.8.2) だと、
-                                かなり頻繁にコンパイラがクラッシュしたり無言で何も吐かずに終了したりといった事態に遭遇します。
+                                しばしばコンパイラがクラッシュしたり無言で何も吐かずに終了したりといった事態に遭遇します。
                                 まあ現在のコンパイラはプレビューの段階なので不安定なのは当たり前で、今すぐ実際に使おうとしている筆者のようなユーザはいくらなんでも気が早すぎではあります。
                                 あくまでプレビュー版だということを考慮に入れて、割りきって使いましょう。また、コンパイラの安定性については間違いなく今後改善されていくので、辛抱強く待つのがよいと思います。
                                 </dd>    
@@ -287,8 +302,11 @@ hello.say();
 Hello, World!
 </pre>
                         <p>また、オプションとして @filename を渡すと、filename で指定したテキストファイルをコンパイルオプションとして読み込んでコンパイルすることができます。
-                        多数のファイルを同時にコンパイルするときにはこちらのほうが便利でしょう。
-                        そのほかのコンパイルオプションについては、</p>
+                        多数のファイルを同時にコンパイルするときにはこちらのほうが便利でしょう。<p>
+
+                        <p>さらに、便利なオプションとして --watch オプションがあります。このオプションをつけると、現在のディレクトリ下の TypeScript ソースファイルを監視して、ソースコードが更新されると自動的にコンパイルしてくれます。JavaScript で開発していたときのように、ソースコードを編集して保存したらブラウザを更新すればすぐ反映されるのでちょっと便利です。</p>
+
+                        <p>そのほかのコンパイルオプションについては、</p>
                         <pre class="prettyprint linenums lang-bash">>tsc -h</pre>
                         <p>を実行して閲覧できるヘルプを参照してください。</p>
 
@@ -310,6 +328,18 @@ Hello, World!
                         <p>TypeScript のデータ型は概ね JavaScript のものと同じです。プリミティブ型として、<dfn>Number</dfn>、<dfn>Boolean</dfn>、<dfn>String</dfn>、<dfn>Null</dfn>、<dfn>Undefined</dfn> が使用可能です(3.2 Primitive Types)。
                         これらのデータ型は、JavaScript のデータ型とそのまま対応しており、リテラルもまったく同じように書きます。また、ソースコード中ではこれらの型をそれぞれ <dfn>number</dfn>, <dfn>bool</dfn>, <dfn>string</dfn> というキーワードで参照できます。
                         また、Null, Undefined については、これらの値は JavaScript と同様にそれぞれ <dfn>null</dfn>, <dfn>undefined</dfn> というリテラルで参照できます。Null や Undefined を型に持つ変数を定義することはできません。</p>
+
+                        <p>いきなり少々わかりづらいのですが、プリミティブ型 number, bool, string と別に Number, Boolean, String という型が存在しています。
+                        Number, Boolean, String　はインターフェイスとして定義されていますが、
+                        number と Number、 bool と Boolean、string と String はそれぞれまったく同じプロパティを持つようになっており、
+                        後述する『Structual Subtyping』によって number は Number へと、
+                        bool は Boolean へと、string は String へと暗黙に変換することができます。
+                        ただし、これも後述する『ブランド』により、逆方向の Number を number に変換するようなことはできないようになっています。
+                        さらにわかりづらいことに Nnumber, Boolean, String という変数（要するにコンストラクタ）も存在しています。
+                        プリミティブ型に関してこのあたりは一見わかりづらいですが、
+                        <strong>型注釈で型名を書くときには、ほとんどの場合は Number, Boolean, String ではなく number, bool, string のほうを書いておけばよい</strong>とだけ覚えておけば問題ありません。
+                        あとはすべて JavaScript で書くときと同じです。
+                        </p>
                         
                         <h4>Any</h4>
                         <p>JavaScript の変数の型に対応するものとして、<dfn>Any</dfn>が存在します。Any はコード中では<dfn>any</dfn>として参照できます。
@@ -327,6 +357,8 @@ Hello, World!
                         <p>TypeScript の型注釈は、ECMAScript4 や ActionScript における型注釈と似たような構文になっています。
                         変数の型を示すには、その変数を宣言するときに変数のすぐ後ろにコロンと型を書きます。</p>
                         <pre class="prettyprint linenums">var name : string = "Jorn";</pre>
+                        <p>プリミティブ型の節で述べたように、プリミティブ型で型注釈を加えるときには、ほとんどの場合は number, bool, string を使うことになるかと思います。</p>
+
                         <p>型注釈を省略した場合、<dfn>型推論</dfn>によって変数の型が決定されます。したがって、先程のコードで型注釈を省略しても、
                         変数 name には文字列が代入されていることから name の型は string であると推論され、name:string と型注釈がつけられたのと同じになります。</p>
                         <p>TypeScript はほぼ JavaScript のスーパーセットになっていますが、すべての JavaScript ソースコードが同じようにコンパイルが通るわけではありません（Wikipedia にあらゆる既存のソースコードが TypeScript としてコンパイルが通る、というような記述がありましたが、さすがにそこまでではないです）。
@@ -638,6 +670,51 @@ var Object2D: {
 
 var s:string = new Object2D(10, 20);    // コンパイルは問題ないけど、わけがわからないよ
 </pre>                
+                            
+                        <h4>省略可能なプロパティ</h4>
+                        <p>また、プロパティシグニチャのプロパティ名の後や関数シグニチャの関数名のあとに <strong>?</strong> をつけると、そのプロパティはあってもなくても構わない省略可能なプロパティということになります。
+                        省略可能なら定義する意味はないのでは？と思うかもしれませんが、そのプロパティが異なる型で定義されていたときに型エラーを検出できるというメリットがあります。
+                        </p>
+
+                        <p>ある関数に省略可能な多数の引数を渡したいというときに、オブジェクトに格納して渡すことが JavaScript ではよくあります。
+                            たとえば、JQuery の ajax() にはオブジェクトにエラーハンドラやタイムアウトの秒数などの多数のオプションをオブジェクトに格納して渡すことができますが、
+                        このオプションを格納するオブジェクトの型は JQueryAjaxSettings というインターフェイスで定義されています。
+                        このインターフェイスのプロパティは全部省略可能になっており、ユーザが渡したいオプションだけ渡して使うことができます。</p>
+
+<pre class="prettyprint linenums">
+interface JQueryAjaxSettings{
+    ...
+    dataType?: string;
+    error?(jqXHR: JQueryXHR, textStatus: string, errorThrow: string): any;
+    global?: bool;
+    success?(data: any, textStatus: string, jqXHR: JQueryXHR);
+    timeout?: number;
+    ...
+}
+
+interface JQueryStatic{
+    ...
+    ajax(url:string, settings;JQueryAjaxSettings):any;
+    ...
+}
+
+
+JQuery.ajax("hogehoge.txt", { 
+    success: (data)=> console.log(data),  
+    dataType: 'text',
+    timeout: '30秒'  // timeout は number でなければならないのでコンパイルエラー！
+});
+</pre>
+                        <p>注意しておきたいのは、JQueryAjaxSettings のようなインターフェイスを用意して型エラーを検出できるとしても、
+                            <strong>タイプミスにはまったく無力だということです</strong>。
+                            タイプミスしてもそのプロパティはもとからあってもなくてもよいものなのでプロパティが足りないことにはならないし、
+                            誤ったスペルのプロパティがあっても Sutructual Subtyping のおかげで無視されてしまうからです。</p>
+<pre class="prettyprint linenums">
+JQuery.ajax("hogehoge.txt", { 
+    sucess: (data)=> console.log(data)  // ajax に成功しても何も起きない。タイプミスだけどコンパイルエラーは出ない
+});
+</pre>
+
                         <h3>インターフェイス</h3>
                         <p><dfn>インターフェイス</dfn> (interface) はオブジェクト型リテラルに別名を定義します。
                         Java や C# にある「インターフェイス」と目的は似ていますが、TypeScript のインターフェイスは
@@ -679,8 +756,17 @@ var n : number = id(100);       // number を渡すと id(n:number):number が�
 var s : string = id("100");     // string を渡すと id(n:string):string が選択される
 var x : Date = id(new Date());    // id(n:Date):Date は存在しないのでコンパイルエラー
 </pre>
+                        <h4>インターフェイスの継承</h4>
+                        <p>extends キーワードを使うことで、ほかのインターフェイスを拡張した新しいインターフェイスを定義することができます。
+                            他のインターフェイスを拡張したインターフェイスは、もとのインターフェイスのシグニチャをすべて受け継ぎます。</p>
+ <pre class="prettyprint linenums">
+interface ExtendedPerson extends Person{
+    phoneNumber: string;
+}
+</pre>                       
 
-                        <p>また、インターフェイスはパーシャルに書けるようになっているようです。つまり同名のインターフェイスを複数書くことができ、それらが単一のインターフェイスとして扱われます。あるインターフェイスについて、そのインターフェイスにシグニチャを追加したければ同じ名前で定義することでシグニチャを追加できます。</p>
+                        <h4>既存のインターフェイスの拡張</h4>
+                        <p>インターフェイスはパーシャルに書けるようになっているようです。つまり同名のインターフェイスを複数書くことができ、それらが単一のインターフェイスとして扱われます。ある既存のインターフェイスについて、そのインターフェイスにシグニチャを追加したければ同じ名前で定義することでシグニチャを追加できます。</p>
 <pre class="prettyprint linenums">
 interface A{
     piyo:string;    
@@ -694,7 +780,7 @@ interface A{
 var a:A = { piyo:"", hoge:10  };    
 </pre>
 
-                        <p>この仕様、仕様書には見当たらないので詳しくはよくわかりません。
+                        <p>
                             例えば、window に試験的に実装した API を使いたいときに interface Window を定義してプロパティを追加するような使い方ができるのかなと思います。
                         標準ライブラリの定義ファイルをいじるか、any でごまかす方法もありますけれど。</p>
 
@@ -703,7 +789,12 @@ interface Window{
     webkitRequestAnimationFrame(func:()=>void):void;    
 }
 </pre>               
-                    
+                        <p>参考:
+                            <ul>
+                                <li><a href="http://blogs.msdn.com/b/typescript/archive/2013/01/24/interfaces-walkthrough.aspx">Walkthrough: Interfaces</a> (en)</li>
+                            </ul>
+                        </p>
+
                         
                         <h3>サブタイピング</h3>
                         <p>TypeScript はサブタイプを決定するための型システムとして <dfn>Structural Subtyping</dfn> を採用しています。
@@ -807,7 +898,8 @@ var circle:Circle = &lt;Circle&gt; createShape("circle");
                         
                         <p>( ちなみに Type Assertion の訳語として定着したものはなく、『型表明』という訳語は筆者の裁量によるものです。
                         『型アサーション』という訳しているのも見受けられますが、筆者はいまいちピンと来なかったのでこうなっています。
-                        このテキストでは『型表明』としておきますが、他の場所で語るときには『型表明』では伝わらない場合が多いでしょうから、Type Assertion と呼んでおくのが無難だと思います。)</p>
+                        このテキストではとりあえず『型表明』としておきますが、他の場所で語るときには『型表明』では伝わらない場合が多いでしょうから、
+                        そのまま Type Assertion とかあえてキャストと呼んでおくのが無難だと思います。)</p>
                         
                         <h3>this キーワード</h3>
                         <p>
@@ -819,10 +911,11 @@ var circle:Circle = &lt;Circle&gt; createShape("circle");
                         </ul>
                         <p>any となる位置では間違って参照してもコンパイルエラーが出ません。比較的ハマりやすい部分だと思うので十分気をつけましょう。
                         </p>
-                        <p>これだけ読んでも、はあ？という感じだと思うので、例に基づいて理解したほうがいいでしょう。
-                            たとえば、以下のソースコードでは function 式を使っていますが、この中の this は message が参照しているオブジェクトではなく window なので、
+                        <p>特に、アロー関数式の中にある this の意味が変更されているのはよく理解しておいたほうがいいと思います。
+                            たとえば、以下のソースコードでは function 式を使っていますが、この中の this は messenger が参照しているオブジェクトではなく window なので、
                             この場合は this.message は undefined になってしまいます。</p>
 <pre class="prettyprint linenums">
+// 3秒後にメッセージを出力するスクリプト……？
 var messenger = {
     message: "Hello World",
     start: function() {
@@ -946,12 +1039,18 @@ class className extends superClass implements interface1, ...　{
                         うっかりタイプミスをするとオーバーライドしたつもりでオーバーライドできていなかったりという危険があります。くれぐれもタイプミスをしないよう気をつけましょう。
                         また、オーバーライドを禁止することもできませんから、スーパークラスのメンバ関数の名前を変更するときは細心の注意を払いましょう。
                         </p>
-                        
-                        
+
+                        <h4>super キーワード</h4>
+                        <p>オーバーライドされたプロパティでも、<strong>super</strong> キーワードを使えばスーパークラスのプロパティにアクセスすることが可能です。
+                        super キーワードはコンストラクタの節で説明したように、スーパークラスのコンストラクタを呼ぶときにも使います。</p>                        
                         
                         <h4>静的メンバ</h4>
                         <p>static をつけたメンバは静的メンバになります。アクセス属性は常に public です。静的メンバにアクセスするときは、
                         そのクラス内からであっても常に <i>classname</i>. の修飾が必要になります。</p>
+
+
+
+
 
                         <h3>列挙型</h3>
                         <p>列挙型も使用可能なようです。列挙型は enum というキーワードを使い、中括弧の中にメンバとなる識別子をカンマで区切って列挙します。このメンバには定義した順番で整数が自動的に割り当てられますが、= を使って明示的にその値を指定することもできるようです。たとえば、コンパイラに付属する winjs.d.ts では、キーコードを次のように定義しています。</p>
@@ -1132,6 +1231,12 @@ if (useGeometry()) {
  */
 declare function parseInt(s: string, radix?: number): number;
 </pre>
+                        <p>参考:
+                            <ul>
+                                <li><a href="http://blogs.msdn.com/b/typescript/archive/2013/01/21/announcing-typescript-0-8-2.aspx">Announcing TypeScript 0.8.2</a> (en)</li>
+                            </ul>
+                        </p>
+
 
                         <h3>今後の言語仕様の変更について</h3>
                         <p><a href="http://typescript.codeplex.com/wikipage?title=Roadmap">TypeScript のロードマップ</a>が公開されており、今後どのような言語仕様が追加されるかが大まかにわかるようになっています。
@@ -1590,6 +1695,10 @@ class Vector2 implements Vector{
                         <p>ジェネリクス導入後は、これらの定義は次のように型安全なコードに書き換えることができるようになると思います。 </p>
 
 <pre class="prettyprint linenums">
+//////////////////////////////////////////////////////////////////////
+// 注: このサンプルコードは、いつかこう書けるようになるんじゃないかな？という筆者の妄想です
+// もちろんコンパイルとおりません
+//////////////////////////////////////////////////////////////////////
 interface Vector&lt;T&gt;{
     add(v:T):T;
     multiplyScalar(t:number):T;
@@ -1602,13 +1711,13 @@ class Vector2 implements Vector&lt;Vector2&gt;{
 
 class Vector3 implements Vector&lt;Vector3&gt;{
     add(v:Vector3):Vector3;
-    multiplyScalar():Vector3;
+    multiplyScalar(t:number):Vector3;
 }
 
 class Line&lt;T extends Vector&gt;{
     constructor(private v:T, private u:T){
     }
-    getMiddlePoint(){   
+    getMiddlePoint():T{   
         return this.v.add(this.u).multiplyScalar(0.5);
     }
 }
@@ -1667,8 +1776,6 @@ class Line&lt;T extends Vector&gt;{
                         
                     <section>    
                         <h2>おわりに</h2>
-                        <p>このページの目次も TypeScript で動的に生成されています(<a href="indexer.ts">indexer.ts</a>)。ちょっとしたサンプルにもなっているので、興味のある方は覗いてみるのもいいかもしれません。</p>
-
                         <p>筆者はすでに TypeScript でいくつかのプロジェクトを始めています。
                         たとえば、動的な言語である JavaScript では本質的に難しいドキュメントジェネレータを TypeScript の環境定義ファイルを使用して出力するようなことを試しています。
                         もし興味があるようならそちらもご覧ください。
@@ -1692,6 +1799,8 @@ class Line&lt;T extends Vector&gt;{
 
                     <h2>変更履歴</h2>
                     <ul>
+                        <li>2013/02/09 上部の navbar からすぐに　Playground や言語仕様を開けます。Twitter のウィジェットも付いた。</li>
+                        <li>2013/02/08 省略可能なプロパティをすっかり忘れていた。ほかにあの言語仕様の説明抜けてるよっていうのがあったら教えてください。</li>
                         <li>2013/02/05 清々しいまでに bootstrap のサンプル丸パクりでページデザインの再構成。ts/js の見分けがつかなくなってユーザビリティ悪化してるので要調整。</li>
                         <li>2013/02/03 サンプルコードの調整と HTML の整理。サンプルコードについては良くないものが多いので、後で全面的に見直す必要がありそう</li>
                         <li>2013/01/29 そういや、型注釈って例のポシャった ES4 には入ってたけど、ES6 では入ってないんだよね？なんか ES についてすごい適当なこと書いてた気がする。正直もう ES には期待してないのですごくどうでもいいけど。 </li>
@@ -1701,7 +1810,7 @@ class Line&lt;T extends Vector&gt;{
                         <li>2013/01/22 オーバーロードで本体の引数を any にしなければならないかのように書いていたけどそんなことはなかった。あと Number が他の型のサブタイプにならないって書いていたけど、明らかにおかしいので削除</li>
                         <li>2013/01/20 記述が増え過ぎて全然クイックじゃない件について。当初はもう少し淡白なページを考えていたんだけど、利点欠点を書き始めたあたりからどんどん記述が増えてきた</li>
                         <li>2013/01/19 お仲間の言語についての説明も追加。そろそろ長くなってきたので、ページ分けたほうがいいかな？めんどい</li>
-                        <li>2013/01/18 空の列挙型についてのケーススタディを追加＆tscのバージョンアップにしたがってインデックスシグニチャの記述を修正＆教えてもらったタイプミスを修正。Thanks f_saito!</li>
+                        <li>2013/01/18 空の列挙型についてのケーススタディを追加＆tscのバージョンアップにしたがってインデックスシグニチャの記述を修正＆教えてもらったタイプミスを修正。Thanks!</li>
                         <li>2013/01/16 クラス定義の解説で、なぜか多重継承ができるかのような書き方になっていたけど、もちろんそんなことはなかったぜ</li>
                         <li>2013/01/04 列挙型や可変長引数についての記述を追加</li>
                         <li>2012/11/?? 公開。詳しい日付忘れちゃった……</li>   
@@ -1713,24 +1822,7 @@ class Line&lt;T extends Vector&gt;{
                     <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="http://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
 
                     <hr>
-                    <div class="footer" style="text-align: center;">
-                        <p>
-                            &copy; Kon 2013 
-                            -
-                            <a href="https://github.com/kontan"><img src="../github.png" alt="github my page" style="width:36px;height:36px;" /></a>
-                            -
-                            <a href="https://twitter.com/KDKTN"><img src="../twitter-bird-blue-on-white.png" alt="twitter link" style="width:36px;height:36px;"/></a>
-                            -
-                            <a href=""><img id="gmail"   src="../gmail.png" alt="twitter link" style="width:36px;height:36px;"/></a>
-                            <img id="address" src="../mail.png" alt="gmail address" style="visibility:hidden;"/>
-                            <script type="text/javascript">
-                                $('#gmail').click(function(e){ 
-                                    $('#address').css('visibility', $('#address').css('visibility') == 'hidden' ? 'visible' : 'hidden');
-                                    e.preventDefault(); 
-                                });
-                            </script>
-                        </p>
-                    </div>
+                    <div id='footer_container'></div>
                 </div>
             </div>
         </div>

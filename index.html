@@ -65,6 +65,21 @@
 
 		<!-- Web Fonts -->
 		<link href='http://fonts.googleapis.com/css?family=Oxygen' rel='stylesheet' type='text/css'>
+
+		<script type="text/javascript" src="http://phyzkit.net/common.js"></script>
+
+		<!-- Google Analytics -->
+        <script type="text/javascript">
+          var _gaq = _gaq || [];
+          _gaq.push(['_setAccount', 'UA-28131600-1']);
+          _gaq.push(['_trackPageview']);
+
+          (function() {
+            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+          })();
+        </script>
 	</head>
 
 	<body>
@@ -124,24 +139,9 @@
 			</div>
 
 			<hr>
-			<div class="footer" style="text-align: center;">
-				<p>
-					&copy; Kon 2013 
-					-
-                	<a href="https://github.com/kontan"><img src="github.png" alt="github my page" style="width:36px;height:36px;" /></a>
-                	-
-					<a href="https://twitter.com/KDKTN"><img src="twitter-bird-blue-on-white.png" alt="twitter link" style="width:36px;height:36px;"/></a>
-                	-
-                	<a href=""><img id="gmail"   src="gmail.png" alt="twitter link" style="width:36px;height:36px;"/></a>
-					<img id="address" src="mail.png" alt="gmail address" style="visibility:hidden;"/>
-					<script type="text/javascript">
-						$('#gmail').click(function(e){ 
-							$('#address').css('visibility', $('#address').css('visibility') == 'hidden' ? 'visible' : 'hidden');
-							e.preventDefault(); 
-						});
-					</script>
-				</p>
-			</div>
+
+			<div id='footer_container'><noscript>Please enable JavaScript to view this pages. JavaScript を有効にしてご覧ください。</noscript></div>
+            
 		</div> <!-- /container -->
 
 		<!-- Le javascript

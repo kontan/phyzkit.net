@@ -1,0 +1,24 @@
+<div class="footer" style="text-align: center;">
+    <p>
+        &copy; Kon 2013 
+        -
+        <a href="https://github.com/kontan"><img src="http://phyzkit.net/github.png" alt="github my page" style="width:36px;height:36px;" /></a>
+        -
+        <a href="https://twitter.com/KDKTN"><img src="http://phyzkit.net/twitter-bird-blue-on-white.png" alt="twitter link" style="width:36px;height:36px;"/></a>
+        -
+        <a id="mail_link" href="mailto:hoge@example.com"><img id="gmail"   src="http://phyzkit.net/gmail.png" alt="twitter link" style="width:36px;height:36px;"/></a>
+        <script type="text/javascript">
+            function decript(){
+                var encrypted = '109,97,105,108,116,111,58,107,117,100,97,103,105,116,115,117,110,101,43,112,107,64,103,109,97,105,108,46,99,111,109'.split(',');
+                var addr = '';
+                for(var i = 0; i < encrypted.length; i++){
+                    addr += String.fromCharCode(encrypted[i]);
+                }
+                $('#mail_link').attr('href', addr);
+            }
+            $('#gmail').click(decript);
+            $('#gmail').hover(decript);
+            $(window).keydown(decript);
+        </script>
+    </p>
+</div>
