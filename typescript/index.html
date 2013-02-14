@@ -73,13 +73,13 @@
                             <li class=""><a href="index_old.html">(Old Version)</a></li>
                         </ul>
                         <ul class="nav">
-                            <li class=""><a href="http://www.typescriptlang.org/">typescriptlang.org</a></li>
+                            <li class=""><a href="http://www.typescriptlang.org/" target="_blank">typescriptlang.org</a></li>
                         </ul>
                         <ul class="nav">
-                            <li class=""><a href="http://www.typescriptlang.org/Content/TypeScript%20Language%20Specification.pdf">Language Specification</a></li>
+                            <li class=""><a href="http://www.typescriptlang.org/Content/TypeScript%20Language%20Specification.pdf" target="_blank">Language Specification</a></li>
                         </ul>
                         <ul class="nav">
-                            <li class=""><a href="http://www.typescriptlang.org/Playground/">TypeScript Playground</a></li>
+                            <li class=""><a href="http://www.typescriptlang.org/Playground/" target="_blank">TypeScript Playground</a></li>
                         </ul>
                     </div>
                 </div>
@@ -415,7 +415,7 @@ piyo.apply(null);           // ()=>void な式に対して apply も呼べる
 
 
                         <h4>省略可能な引数</h4>                
-                        <p>省略可能な引数には、引数の直後に ? を書きます。たとえば、String.indexOf の第２引数は省略可能なので、
+                        <p>省略可能な引数には、引数名の直後に ? を書きます。たとえば、String.indexOf の第２引数は省略可能なので、
                         indexOf は次のように定義されています。</p>
                         <pre class="prettyprint linenums">indexOf(searchString: string, position<strong>?</strong>: number): number;</pre>
                         <p>また、省略可能な引数には省略した場合のデフォルト値を、　= を使って次のように与えることができます。</p>
@@ -1390,7 +1390,7 @@ module Box2D{
 var b2Vec2 = Box2D.Dynamics.b2Vec2; 
 
 // コンパイルエラー。b2Vec2 というコンストラクタはあっても b2Vec2 という型はない
-var v : b2Vec2; = new b2Vec2(); 
+var v : b2Vec2 = new b2Vec2(); 
 </pre>                
                         <p>コンストラクタの呼び出しだけならできるのですが、b2Vec2 は単なる変数で型の名前空間にあるわけではなく、
                         型注釈の位置では使うことができません。かと言って直接クラス名の別名を定義する機能はないようです。
@@ -1410,6 +1410,10 @@ var v : B2D.b2Vec2 = new B2D.b2Vec2();
 THREE.FrontSide = 0;
 THREE.BackSide = 1;
 THREE.DoubleSide = 2;
+</pre>
+<pre class="prettyprint linenums">
+var material:THREE.BasicMaterial = new THREE.BasicMaterial();
+material.side = THREE.FrontSide;  // こういうふうに使う
 </pre>
                         <p>これらの定数シンボルはつまり列挙型のメンバに相当し、本来なら列挙型を用いて定義されるべきでしょう。しかし、THREE はあくまでモジュールであり、これを列挙型として定義するのは不可能です。
                         かといって、</p>
@@ -1478,7 +1482,39 @@ UploadError.prototype.getCode = (): number => {
                         TypeScript の instanceof は JavaScript と同じなので、instanceof で調べることももちろん可能です。型チェックが邪魔だと思ったら、とりあえず &lt;any&gt; つけとけば全部回避できます。TypeScript が JavaScript で培ったノウハウの使用を妨げることはほとんどありません。 
                         </p>
 
+                        <h3>Date の演算</h3>
+                        <p>TypeScript の Issue Trackerに <a href="http://typescript.codeplex.com/workitem/156">Date どうしの引き算ができないんだけど</a>というものがあります。</p>
 
+                        <pre class="prettyprint linenums">var millis = new Date() - new Date(1970, 0, 1); // Operator '-' cannot be applied to types 'Date' and 'Date'</pre>                        
+
+                        <p>JavaScript に精通したひとなら当然コンパイルが成功すべきコードに思えるのでしょうが、静的型付けにどっぷりな筆者としてはコンパイルエラーで異議なしです。
+                        素直に</p>
+                        <pre class="prettyprint linenums">var millis = new Date().getTime() - new Date(1970, 0, 1).getTime(); </pre>
+                        <p>って書けばいいのでは？と思いますが、これが煩わしいと思う人も結構いるのかもしれませんね。
+                        JavaScript で Date が減算できるのは、別に - がオーバーロードされてるだとかいうことではありません。
+                            <a href="http://www.ecma-international.org/ecma-262/5.1/Ecma-262.pdf">EcmaScript 262</a>を調べてみると、</p>
+
+                        <blockquote>15.9.6 Properties of Date Instances <br/> 
+Date instances inherit properties from the Date prototype object and their [[Class]] internal property value is 
+"Date". Date instances also have a [[PrimitiveValue]] internal property.
+The [[PrimitiveValue]] internal property is time value represented by this Date object.</blockquote>
+
+                        <p>とのこと。 - 演算子を適用すると、ToPrimitive と呼ばれている操作と ToNumber と呼ばれる操作を適用して number に自動的に変換されるのですが、
+                            このときに ToPrimitive はオブジェクトの [[PrimitiveValue]] を参照します。Date の場合は "time value" すなわち getTime() や valueOf() で得られる数と同じものが [[PrimitiveValue]] なので、さきほどのコードは JavaScript では geTime() したのと同じ振る舞いになるわけです。つまり、これは JavaScript が型を自動的に変換するのが原因なのですが、
+                        型に厳格な TypeScript がそうホイホイと型を変換したりするはずがありません。そこで、次のような回避策が紹介されています。</p>
+
+                        <pre class="prettyprint linenums">var millis = Date.now() - +(new Date(1970, 0, 1));</pre>
+
+                        <p>演算子が並んでいてちょっと奇妙ですが、TypeScript では単項の + や - をつけた場合はちゃんと number に変換できます(4.14.2 The +, –, and ~ operators)。
+                            なるほどそういう回避策もありますが、前の Error の継承のところで説明した通り、&lt;any&gt; をつければ型の不一致はすべて解決します。
+                            なので、こういう手もあります。</p>
+
+                        <pre class="prettyprint linenums">var millis = &lt;any&gt;Date.now() - new Date(1970, 0, 1);</pre>
+
+                        <p>さきほどの単項 +/- をつける方法だとコンパイル後の JavaScript に余計な + が残ってしまいますが、
+                            &lt;any&gt; をつけるとそれがないのですっきりするし、何より &lt;any&gt; は万能なのであれこれ回避策で頭を巡らせる必要がありません。
+                            TypeScript で JavaScript と同じことをしようとして型エラーが出たら、とりあえず &lt;any&gt; をつける。
+                            これでだいたい解決するので覚えておきましょう。</p>
 
                         <h3>クラスやインターフェイスの別名</h3>
                         <p>現状の TypeScript の言語仕様の大きな問題として、型の別名が定義できないというものがあります。
@@ -1508,7 +1544,7 @@ h = g;
 
                         <pre class="prettyprint linenums">var XHR = XMLHttpRequest;</pre>
 
-                        <p>クラスの場合はインターフェイスのようにはいきません。もとのクラスを継承するような空のクラスを作ったとしても、
+                        <p>ですが、クラスの場合はインターフェイスのようにはいきません。もとのクラスを継承するような空のクラスを作ったとしても、
                         別名のクラスのオブジェクトをもとのクラスの変数に代入できないので、これはとても別名とは言えません。
                         </p>
 
@@ -1571,7 +1607,7 @@ var v:new Long.Long.Annoying.Namespace.IVector2 = new Long.Long.Annoying.Namespa
 interface IVector2 extends Long.Long.Annoying.Namespace.IVector2 {}
 
 // コンストラクタの別名の定義
-var IVector2 = Long.Long.Annoying.Namespace.Vector2;
+var Vector2 = Long.Long.Annoying.Namespace.Vector2;
 </pre>
 
                         <p>これで、次のように本名でも別名でも型注釈をつけたりコンストラクタを呼んだりすることができます。</p>
@@ -1581,7 +1617,7 @@ var IVector2 = Long.Long.Annoying.Namespace.Vector2;
 var v: Long.Long.Annoying.Namespace.IVector2 = new Long.Long.Annoying.Namespace.Vector2(10, 20);
 
 // 別名での型注釈とコンストラクタ呼び出し。おお！短い！
-var u: IVector2 = new IVector2(10, 20);
+var u: IVector2 = new Vector2(10, 20);
 </pre>
 
                         <p>さて、問題は本名の型と別名の型の変数に互換性があるのか？ということですが、
@@ -1652,7 +1688,7 @@ class Line{
     }
 
     // 線分の両端の中央の点を返す関数
-    // 両端　u, v を足して2で割る。Vector2 でも Vector3 でも使える
+    // 両端　u, v を足して2で割る。Vector2 でも Vector3 でも使えるようにしたい
     getMiddlePoint():Vector{   
         return this.v.add(this.u).multiplyScalar(0.5);
     }
@@ -1725,54 +1761,6 @@ class Line&lt;T extends Vector&gt;{
 
 
                     </section>
-
-                    <section>    
-                        <h2>類似のコンセプトをもつ言語</h2>
-                        <p>冒頭で説明したとおり、JavaScript へトランスコンパイルする系統の言語は他に山ほど存在します。
-                        これまで長々と TypeScript の紹介をしてきましたが、TypeScript だけが選択肢ではありませんし、
-                        当然他の言語のほうが向いているケースもたくさんあるでしょう。
-                        そのなかでも TypeScript とコンセプトが近い幾つかのシステムについても紹介しておきます。
-                        ただし筆者は以下の言語について十分使い込んでいるわけではないので、第一印象という程度だと思っていてください。
-                        </p>
-
-                        <dl>
-                            <dt><a href="http://haxe.org/">Haxe</a></dt>
-                            <dd><p>Haxeも TypeScript と同様に JavaScript を出力できる系統の言語です。しかも JavaScript にかぎらず、Flash や C# など多数の言語へコンパイルすることができる点が特徴的です（まあ Web という環境がすでに十分すぎるほどマルチプラットフォームではありますが）。言語仕様も非常に現代的で、ジェネリクスが導入されたまともなクラスベースオブジェクト指向や型推論、データを保持できる直和型的な列挙型、Structual Subtyping など、言語仕様においては最高クラスの完成度です。インラインで JavaScript を埋め込むこともできるし、コンパイラの最適化の性能も優れておりドキュメントも十分に揃っているなど、現時点で最も実用的な環境といえるのではないでしょうか。
-                            これだけ TypeScript を推しておいてアレなんですけれど、
-                            <strong>ちゃんとした言語仕様のものを使いたければ、 TypeScript より Haxe 選ぶほうがいい</strong>と思います。</p>
-                            <p>
-                            欠点らしい欠点は見当たりませんが、あえていうなら単に静的型付けがされた JavaScript という範囲を踏み越えてしまうことでしょうか？たとえば、HTML の要素は js.HtmlDom という型になっていて、JavaScript の HTMLElement という名前とは異なっていたり、number がなくて Int や Float になるなど、JavaScript そのままという雰囲気にはなりません。
-                            とにかく JavaScript のスーパーセットという立ち位置にこだわる TypeScript とは少し理念が異なります。
-                            JavaScript からの移植をするさいも、TypeScript のように型注釈を加えればだいたい移植できる、というほどの移植性はありません。</p>
-                            <p>筆者が書いている three.d.ts は TypeScript から three.js を使えるようにする、という目的はもちろんのことですが、
-                            three.js は API リファレンスが古かったり型付けという面では曖昧な記述が多いので、
-                            TypeScript の定義ファイルを利用してちゃんとした API リファレンスを提供しよう、というものもあったりします。
-                            そのためにはあらゆる型名や API が JavaScript のものと一致していないと意味がないわけで、
-                            この目的においては Haxe より TypeScript のほうが適していると言えるのではないでしょうか。</p>
-                            </dd>
-                            <dt><a href="http://jsx.github.com/">JSX</a></dt>
-                            <dd>こちらもジェネリクスのあるクラスベースオブジェクト指向を備えた言語。とにかく最適化の性能が最重視されているようで、最適化オプションをつけると非常にコンパクトで高速な JavaScript を出力することができます。Google Closure Compiler の Advanced Optimizations を使える場面は非常に限られるので、こっちのコンパイラの側で minify ができるのは地味に便利だったりします。Nullable を導入するなどかなり堅実な型システムを持つ一方で、性能を優先して配列の要素に null を許容するような妥協も結構見られるようです。ちなみに、最適化の性能は Haxe と拮抗するくらいらしいですが、
-                            JSX 自身の開発も活発なので他の言語を突き放す日も来るかもしれません。</dd>
-                            <dt><a href="http://www.dartlang.org/">Dart</a></dt>
-                            <dd>クラスベースオブジェクト指向はもちろん、ラムダ式やジェネリクスもあるなかなか優れた言語仕様を持ちます。
-                            型注釈を付けないと型チェックがされない緩い型付けは TypeScript とも比較的似通った面も感じますが、
-                            独自の標準ライブラリが用意し API ごと既存の JavaScript 環境を置き換えることを目論むあたりが TypeScript と違ってやたら野心的です。実行時にも型エラーが出る Checked モードと静的な型チェックのみで効率優先の Production モードという2種類のモードを用意しているのは、実際の開発にはとても便利そうです。ただ、出力される JavaScript ソースコードはかなり大きく読み解くのも難しいコードになってしまうので、筆者としてはちょっと導入に躊躇してしまいます。
-                            万が一主要なブラウザにエンジンが搭載されたら喜んで使いますが、果たしてそんな日が来るのだろうか……。
-                            </dd>                 
-                        </dl>
-                        <p>(ほかにも JavaScript トランスコンパイルな言語には CoffeeScript や　ClosureScript のような言語がありますが、これらは動的な型付けの言語であり競合するような存在ではまったくありません。
-                            GWT や Processing なども静的型付けという面では上記の３言語とは似ていますが、やはり Web クライアントサイドスクリプトの置き換えというコンセプトとは異なるものがあります。)</p>
-                        <p>正直なところ、TypeScript はこれら３つの言語の中でももっとも言語仕様が貧弱なほうだといえます。
-                            TypeScript もさまざまな問題を抱えており筆者も手放しで TypeScript を褒めるわけではありませんが、
-                            それでも筆者が TypeScript を推すのは、それが既存の JavaScript 環境との親和性を最重視しているからです。
-                            奇しくも JavaScript は現在最も普及している言語であり、すでに標準化された仕様や多数のライブラリ、数えきれないノウハウの蓄積があります。
-                            新しい言語に乗り換えるということはそれらの資産が失われかねないわけですが、
-                            <strong>TypeScript　なら JavaScript の遺産を他のどの言語より素直に引き継げる</strong>のです。
-                            あまり理想に囚われず、とにかく現実的に今すぐ役に立つべくして作られたシステムが TypeScript だというわけです。
-                        </p>
-
-                    </section>
-
                         
                     <section>    
                         <h2>おわりに</h2>
@@ -1799,7 +1787,8 @@ class Line&lt;T extends Vector&gt;{
 
                     <h2>変更履歴</h2>
                     <ul>
-                        <li>2013/02/09 上部の navbar からすぐに　Playground や言語仕様を開けます。Twitter のウィジェットも付いた。</li>
+                        <li>2013/02/03 ほかの JavaScript トランスコンパイル系言語の紹介をしようかと思ったけど、うまく比較して説明できなかったので結局削除。
+                        <li>2013/02/09 上部の navbar からすぐに　Playground や言語仕様を開けます。Twitter のウィジェットも付いた。そしてやばいどんどん長くなってる</li>
                         <li>2013/02/08 省略可能なプロパティをすっかり忘れていた。ほかにあの言語仕様の説明抜けてるよっていうのがあったら教えてください。</li>
                         <li>2013/02/05 清々しいまでに bootstrap のサンプル丸パクりでページデザインの再構成。ts/js の見分けがつかなくなってユーザビリティ悪化してるので要調整。</li>
                         <li>2013/02/03 サンプルコードの調整と HTML の整理。サンプルコードについては良くないものが多いので、後で全面的に見直す必要がありそう</li>
