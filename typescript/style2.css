@@ -20,7 +20,11 @@ dfn{
   overflow: hidden;
 }
 
-
+p.translatorsnote{
+  color: grey;
+  margin-left: 4em;
+  margin-right: 4em;
+}
 
 
 /* Add additional stylesheets below
