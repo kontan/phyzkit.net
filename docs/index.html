@@ -1,16 +1,73 @@
 <!DOCTYPE html>
-<html>
+<html lang="en"  ng-app>
 	<head>
 		<meta charset="utf-8">
+		
+        <!-- Twitter Cards -->
+        <meta name="twitter:card"         content="summary">
+        <meta name="twitter:site"         content="@KDKTN">
+        <meta name="twitter:url"          content="http://phyzkit.net/typescript/">
+        <meta name="twitter:title"        content="TypeScript API Document Repository">
+        <meta name="twitter:description"  content="TypeScript API document repository generated from type definitions of DefinitelyTyped. Those documents are for TypeScript but also you can refer to them as specific JavaScript API references.">
+        <meta name="twitter:image"        content="http://phyzkit.net/typescript/logo_small.png">
+
+        <!-- Styles -->
+		<link href="/bootstrap/css/bootstrap.css" rel="stylesheet">
 		<style type="text/css">
-			h5{ text-align: center; }
+			body {
+				padding-top:60px;
+			}
+			/* @media (max-width: 980px) {
+				body {
+					padding-top: 0;
+				}      
+			} */
 		</style>
-		<link rel="STYLESHEET" href="style.css" type="text/css"></link>
+
+		<script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.js"></script>
+		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.5/angular.js"></script>
+		<script type="text/javascript">
+			function DocList($scope, $http){
+				$http.get('/docslist.cgi').success(function(data, status, headers, config){
+					$scope.files = data;
+				});
+			}
+		</script>
+
+		<script type="text/javascript">
+          var _gaq = _gaq || [];
+          _gaq.push(['_setAccount', 'UA-28131600-1']);
+          _gaq.push(['_trackPageview']);
+
+          (function() {
+            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+          })();
+        </script>
 	</head>
 	<body>
-		<h1>TypeScript Ambient Source File Docs Repository</h1>
-		<ul>
-			<li><a href="three.d.ts.html">three.d.ts</a></li>
-		</ul>
+		<!-- Navbar -->
+        <div class="navbar navbar-inverse navbar-fixed-top">
+            <div class="navbar-inner">
+                <div class="container">
+                    <div class="nav-collapse collapse">
+                        <ul class="nav">
+                            <li class=""><a href="../">Home</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+		<!-- Contents -->		
+		<div class="container">
+			<h1>TypeScript Documantation Repository</h1>
+			<p>Repository of API documents automatically generated from <a target="_blank" href="https://github.com/borisyankov/DefinitelyTyped">DefinitelyTyped</a> definitions. Those docs are informative for JavaScript users too.</p>
+			<p></p>
+		    <ul ng-controller="DocList">
+				<li ng-repeat="file in files"><a ng-href="/docs/{{file}}">{{file}}</a></li>
+		    </ul>
+		</div>
 	</body>
 </html>
