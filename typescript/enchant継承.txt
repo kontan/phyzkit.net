@@ -1,0 +1,121 @@
+<a target="_blank" href="http://d.hatena.ne.jp/derui/comment?date=20130210&section=1360478426#c">こちらのブログ</a>、enchant.js で動的に定義されるクラスをは、TypeScript ではどのように扱えばよいか、ということについて検討されています。そこで提案されている方法なのですが、どうもかなり不必要に遠回りの解決策になっているように思います。この節では　enchant.js を例としてこの問題を説明していますが、ほかのフレームワークでも同じことが言えます。
+
+## enchant.js の『クラス』に対して TypeScript の継承はできない
+
+enchant.js のようなフレームワークでは、独自に『クラス』を定義する機構が用意されていることがあります。enchant.js の場合は、enchant.Class.create という関数を呼ぶことで『クラス』を定義することができるようになっています。
+まず気をつけなくてはならないのは、基本的に各フレームワークで独自に用いられている『クラス』を TypeScript の extends で継承することはできない、ということです。TypeScript のクラスを各フレームワークの継承の機構で拡張することもできません。TypeScript の extends で継承できるのは　TypeScript で定義されたクラスのみです。
+
+JavaScript には本来クラスは存在せず、各フレームワークで独自に導入された『クラス』になにか統一された規約があるわけではありません。JavaScript で『継承』っぽいものを実現する手段にもいろいろあります。各フレームワークの『クラス』が異なるものである以上、これらを混ぜて使用するようなことは原則的にできません。そのような混乱を避けるために統一されたクラスの機構を用意するというのも、TypeScript の意義のひとつです。各フレームワーク用意された『クラス』を継承するには、そのフレームワークで用意された方法で継承するしかないのです。
+
+## JavaScript と同じコードを基準に考える
+
+あちらのブログの例では、TypeScript で動的にプロパティに追加をするようなことを実現するために、JavaScript のときには存在しなかった関数 Hoge.create が新たに定義され、_singleton という静的なプロパティも追加されています。しかしながら、TypeScript で JavaScript と同じ処理を実現しようとするとき、追加の処理が必要になることはまずありません。今回やりたいことを、まず JavaScript で考えてみましょう。enchant.Sprite を継承し、新たなプロパティ color が追加されたクラス Hoge を定義したいとします。これを実現するには次のようなコードになるでしょう(わかりやすくするため、あちらのブログの例より単純化しています)。
+
+	var Hoge = enchant.Class.create(enchant.Sprite, {
+	    initialize : function () {                // 『コンストラクタ』的なもの
+	        enchant.Sprite.call(this, 64, 64);
+	        this.color = "#000000";	              // Hoge に追加されたプロパティ
+	    }
+	});
+
+	var hoge = new Hoge();	    // Hoge をインスタンス化
+    hoge.color = "#ff0000";	    // Sprite にはない新たなプロパティ color にアクセスできる
+
+この JavaScript ソースコードにはもちろん Hoge.create や _singleton は存在しませんが、同じものを TypeScript で実現するときもこれらは不要です。この JavaScript ソースコードに型注釈だけが付け加えられたものが、TypeScript ソースコードだと考えればいいのです。**異なるのは型注釈のみ**です。なぜなら、TypeScript は JavaScript のスーパーセットであり、JavaScript とまったく同じことができるからです。
+
+## 何が問題か
+
+さて、では先ほどの JavaScript ソースコードを TypeScript に移植することを考えます。上記のコードをそのままコピーして hoge.ts というファイル名で保存、tsc hoge.ts でコンパイルすると、もちろんコンパイルエラーになります。コンパイルエラーの内容は　"The name 'enchant' does not exist in the current scope" すなわち enchant や Sprite というオブジェクトが見つからない、というものです。従って、これらのオブジェクトのアンビエント宣言を行わなければなりません。enchant はモジュール、Class はクラス、create は Class のプロパティだと考えるのが自然でしょう。最低限のアンビエント宣言の例は次のようなものになります。
+
+    declare module enchant {
+    	export var Class: {
+    		create(superClass: Function, definition: any): new(...args: any[])=>Object;
+    	};
+
+    	interface ISprite {}
+	    var Sprite;
+    }
+
+さて、このアンビエント宣言を使って先ほどのコードをコンパイルしてみましょう。すると、
+
+	hoge.color = "#ff0000";
+
+の行で "The property 'color' does not exist on value of type 'Object'" つまり hoge には color というプロパティが見つからない、というエラーになります。これは、create の返り値が 
+
+    new(...args: any)=>Object;
+
+という型になっているため、hoge の型が Object となっているからです。しかし、実際には enchant.Class.create の機構によって new Hoge() で作成されたオブジェクトが color というプロパティを持っているのは間違いありません。これが、TypeScript で動的に定義されたプロパティにアクセスできない、という問題です。では、create の返り値を color というプロパティを持っているようなオブジェクトとなるようにアンビエント宣言を変えればよいのでしょうか？create は Hoge 以外のクラスを定義するのにもつかわれますから、勝手に返り値を 
+
+    new(...args: any)=>Hoge;
+
+というように特定の型に制限するわけにはいきません。そのようにすると、例えば Sprite を拡張する別のクラス Piyo を　enchant.Class.create て定義することができなくなってしまうからです。それに、enchant.Class.create で作られるクラスがどんな型を持つか事前にはわからないので、Object にするしかないのです。
+
+## プロパティが追加されたオブジェクトの性質は、新たなインターフェイスで表現される
+
+この問題を解決するには、new Hoge() で作られたオブジェクトがどんな性質を持っているか、という原則に立ち返って考えればいいと思います。new Hoge() で作られるオブジェクトは Sprite のプロパティに新たなプロパティ　color を付け加えたものです。これは新たな型ですから、次のようなインターフェイスであらわすことができます。
+
+    interface IHoge extends enchant.ISprite{
+        color: string;
+    }
+
+そして、enchant.Class.create で作られる『クラス』は、この Hoge であるようなオブジェクトを new で作ることができるコンストラクタです。しかし、enchant.Class.create の型は 
+
+    new(...args: any)=>Object; 
+
+で、ただの Object を作るコンストラクタです。ここに型の特殊化の不足が生じています。従って、この型の特殊化をキャストで TypeScript コンパイラに教えてしまえばいいのです。
+
+    var Hoge = <new()=>IHoge> enchant.Class.create(Sprite, {
+	    initialize : function () {
+	        Sprite.call(this, 64, 64);
+	        this.color = "#000000";	// Hoge に追加されたプロパティ
+	    }
+	});
+
+	var hoge = new Hoge();
+    hoge.color = "#ff0000";	// Sprite にはない新たなプロパティ color にアクセスできる
+
+これで無事に enchant.Class.create で定義されたクラスのプロパティにアクセスできるようになりました。完全なコードは次のようになります。
+
+    declare module enchant {
+    	export var Class: {
+    		create(superClass: Function, definition: any): new(...args: any[])=>Object;
+    	};
+
+    	interface ISprite {}
+	    var Sprite;
+    }
+
+    interface IHoge extends enchant.ISprite{
+        color: string;
+    }
+
+
+	var Hoge = <new()=>IHoge>enchant.Class.create(enchant.Sprite, {
+	    initialize : function () {                // コンストラクタ
+	        enchant.Sprite.call(this, 64, 64);
+	        this.color = "#000000";	              // Hoge に追加されたプロパティ
+	    }
+	});
+
+
+	var hoge = new Hoge();	    // Hoge をインスタンス化
+    hoge.color = "#ff0000";	    // Sprite にはない新たなプロパティ color にアクセスできる
+
+
+これをコンパイルすると、型注釈がきれいに取り除かれて、本来の JavaScript だけが残ります。これは JavaScript で直接書いた場合とほぼ同一です。
+
+	var Hoge = enchant.Class.create(enchant.Sprite, {
+	    initialize: function () {
+	        enchant.Sprite.call(this, 64, 64);
+	        this.color = "#000000";
+	    }
+	});
+	var hoge = new Hoge();
+	hoge.color = "#ff0000";
+
+必要なのは型注釈だけで、静的な型付けを実現するために追加の処理はまったく不要なのです。重要なのは、enchant.Class.create で型にプロパティが追加されることを TypeScript に教えるということです。
+
+## まとめ
+* フレームワーク独自の『クラス』は TypeScript の『クラス』とは異なるので、TypeScript の exxtends で継承してはいけない。
+* TypeScript でも JavaScript で書くときと同じ処理を行う。違うのは型注釈だけ。
+
