@@ -61,7 +61,7 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="brand" href="./index.html">Bootstrap</a>
+                    <a class="brand" href="./index.html">phyzkit.net</a>
                     <div class="nav-collapse collapse">
                         <ul class="nav">
                             <li class=""><a href="../index.html">Home</a></li>
@@ -81,9 +81,11 @@
                         <ul class="nav">
                             <li class=""><a href="http://typescript.codeplex.com/" target="_blank">codeplex</a></li>
                         </ul>
+                        <!--
                         <ul class="nav">
                             <li class=""><a href="index_old.html">(Old Version)</a></li>
                         </ul>
+                        -->
                     </div>
                 </div>
             </div>
@@ -167,8 +169,8 @@
                             <dt>ほぼ同じ構造の JavaScript へと変換される</dt>
                             <dd>出力される JavaScript コードは元の TypeScript コードの構造をほぼそのまま保っており、出力されたコードから元のコードとの対応を把握するのは容易です。
                             このため、出力後の JavaScript をデバッグするのが容易になっています。
-                            Source Map などの手段も提案されてはいますが、ときには JavaScript のレベルでデバッグすることも必要な場合があるため、構造を保つのは実用的には重要なポイントです。
                             また、どうしても必要なら出力後の JavaScript を修正することも難しくありません。
+                            出力したコードのサイズが膨らむことも一切ありません。
                             </dd>
                             <dt>標準化されたコードを生成できる</dt>
                             <dd>JavaScript にはモジュールやクラスを始め多数の機能が欠けているため、しばしば JavaScript フレームワークは
@@ -187,7 +189,7 @@
                             感覚としてはコンパイルを通すだけなら 100 行に 2～3 行程度の修正で済むという程度です。
                             その修正というのも、宣言のない変数や、型の異なるオブジェクトの間での変数の使い回しのような、
                             JavaScript としても明らかに問題がある部分の修正が主だったりします。
-                            "use strict" を使っているなどして丁寧に書かれている JavaScript の移植では、まったく修正が不要の場合すらあります。</dd>
+                            "use strict" を使っているなどして丁寧に書かれている JavaScript の移植では、まったく修正が不要で、拡張子を変えるだけでコンパイルが通る場合すらあります。</dd>
                             <dt>JavaScript との高い相互運用性</dt>
                             <dd>
                             静的に型チェックされるという点以外はあらゆる API は JavaScript そのままですし、データ型もまったく同じなので特別なデータ型の変換を施さなくてもそのまま相互にデータをやり取りできます。
@@ -235,6 +237,7 @@
                             <dd>近く導入する予定はあるようですが、現在のところジェネクリクスのような重要な機能が欠けています。
                             また、型の別名やプリプロセッサも実用上はあると便利ですが、現在の TypeScript には存在しません。
                             ヒアドキュメントあたりも矛盾なくすぐに導入できる機能なので、せっかく新しい言語を導入したのにもったいないところです。
+                            ジェネリクスがない現時点では、言語仕様としてはあきらかに JSX/Haxe/Dart に遅れをとっています。
                             </dd>
                             <dt>コンパイラが不安定</dt>
                             <dd>筆者にとっての現在の TypeScript 最大の不安材料はコレです。
@@ -353,16 +356,16 @@ Hello, World!
                         あとはすべて JavaScript で書くときと同じです。
                         </p>
                         
-                        <h4>Any</h4>
-                        <p>JavaScript の変数の型に対応するものとして、<dfn>Any</dfn>が存在します。Any はコード中では<dfn>any</dfn>として参照できます。
+                        <h4>any</h4>
+                        <p>JavaScript の変数の型に対応するものとして、<dfn>any</dfn>が存在します。
                         any である式はどんなプロパティにアクセスしてもコンパイルエラーになりませんし、
                         any な変数に何を代入してもコンパイルエラーにならないので、
                         JavaScript の通常の変数と同じように扱うことができます。
-                        ただし Any を使うと TypeScript の静的な型チェックのメリットが失われてしますので、濫用すべきではないでしょう。
-                        any は既存の JavaScript コードを移植するようなときに便利なことがあります。</p>
+                        ただし any を使うと TypeScript の静的な型チェックのメリットが失われてしますので、濫用すべきではないでしょう。
+                        any は既存の JavaScript コードを移植するようなときに便利なことがあります。また、後に説明するように any にキャストするとどんな式でもあらゆる型チェックを回避できるので、どうしてもうまく書けない時の回避策としても重要です。</p>
                         
-                        <h4>Void</h4>
-                        <p><dfn>Void</dfn> は関数の返り値がないことを示す型です。関数の返り値がないとき、代わりに<dfn>void</dfn>を書きます。
+                        <h4>void</h4>
+                        <p><dfn>void</dfn> は関数の返り値がないことを示す型です。
                         void の変数を定義するようなことはできません。</p>
                         
                         <h3>変数の型注釈</h3>
@@ -438,7 +441,7 @@ piyo.apply(null);           // ()=>void な式に対して apply も呼べる
                         また、省略可能な引数のあとには通常の引数を書くことはできません。このあたりは他の言語と同じです。</p>
 
                         <h4>可変長引数</h4>
-                        <p>可変長引数は、その引数の識別子の前に ... を書くことで表します。その場合、その変数は複数の値を受け取るわけですから、その型は配列型になります。また、可変長引数はその関数の引数のうち、最後に位置しなければなりません。可変長引数については仕様書にもまだあまり詳しく書かれていませんが、コンパイラ本体のソースコードや JQuery などの外部ライブラリ用の定義ファイルなどでもすでにあちこちで使われているようです。たとえば、JQuery の append は次のように定義されています。</p>
+                        <p>可変長引数は、その引数の識別子の前に ... を書くことで表します。その場合、その変数は複数の値を受け取るわけですから、その型は配列型になります。また、可変長引数はその関数の引数のうち、最後に位置しなければなりません。可変長引数については仕様書にもまだあまり詳しく書かれていませんが、コンパイラ本体のソースコードや JQuery などの外部ライブラリ用の定義ファイルなどでもすでにあちこちで使われているようです。たとえば、JQuery の append には文字列か HTMLElement および jQuery のいずれかをいくつでも渡せるので、次のように定義されています。</p>
 
                         <pre class="prettyprint linenums">append(...content: any[]): JQuery;</pre>
 
@@ -533,7 +536,7 @@ x => Math.sin(x)
                         <p>あるオブジェクトがどんなプロパティをもっているか、
                         関数として呼び出せるか、配列のようにインデックスで参照できるか、コンストラクタとして new できるかなどは、
                         <dfn>オブジェクト型リテラル</dfn> (Object Type Literal)を使用して表現できます。(3.5.3 Object Type Literals)。
-                        オブジェクト型リテラルは型リテラルの一種で、以降に説明するいくつかのシグニチャのセットを { } でまとめたものです。              このオブジェクト型リテラルは、変数の型注釈や関数の返り値の型など、型を書くところならどこにでも書くことができます。
+                        オブジェクト型リテラルは型リテラルの一種で、以降に説明するいくつかのシグニチャのセットを { } でまとめたものです。これらのシグニチャをいくつでも自由に組み合わせることができ、その型のオブジェクトの性質を柔軟に記述することができます。このオブジェクト型リテラルは、変数の型注釈や関数の返り値の型など、型を書くところならどこにでも書くことができます。
                         </p>
 
                         <h4>プロパティシグニチャ</h4>
@@ -1547,19 +1550,25 @@ var v : B2D.b2Vec2 = new B2D.b2Vec2();
 </pre>    
                         
                         <h3>予約語との衝突の回避</h3>
-                        <p>TypeScript では JavaScript の予約語に加えていくつかの予約語が追加されます。interface や public あたりは JavaScript でも予約されているので衝突は起きないはずですし（strict モードでなければエラーにはならないみたいですが……使ってませんよね？）、TypeScript で追加される予約語でも any や constructor あたりは問題になりません。
+                        <p>TypeScript では JavaScript の予約語に加えていくつかの予約語が追加されます。interface や public あたりは JavaScript でも予約されているので衝突は起きないはずですし（strict モードでなければエラーにはならないみたいですが……もちろん予約語は使ってませんよね？）、TypeScript で追加される予約語でも any や constructor あたりは問題になりません。
                         これらのトークンはちゃんと文脈によって解釈されるので、変数名やクラス名にも普通に使えます。</p>
 <pre class="prettyprint linenums">
+// まさにカオス
 var any: any = 10;    
-
-any = 10;            
-
 class constructor{   
 }
-
 new constructor();   
+var number:any;
+class module{
+}
+module interface{
+}
+interface declare{
+}
+interface implements extends declare{
+}
 </pre> 
-                        <p>ただし、ちょっと困るのが module あたりのキーワードです。module は JavaScript の予約語になっていませんし、
+                        <p>ちょっと気を付けなければならないのが module あたりのキーワードです。module は JavaScript の予約語になっていませんし、
                             モジュールの定義では行頭に module が来るので、そのまま書こうとするとエラーになる場合があります。</p>
 <pre class="prettyprint linenums">
 var module = 10;        
@@ -1670,7 +1679,7 @@ UploadError.prototype.getCode = (): number => {
                         </p>
 
                         <h3>enchant.js の動的なクラスの扱い</h3>
-                        <p><a target="_blank" href="http://d.hatena.ne.jp/derui/comment?date=20130210&section=1360478426">こちらのブログ</a>では、enchant.js で動的に定義されるクラスを TypeScript ではどのように扱えばよいかということについて検討されています。そこで提案されている方法なのですが、どうもかなり遠回りの解決策になっているように思いますので、本来の解決策と思われるものを説明しておきます。この節では　enchant.js を例としてこの問題を解説していますが、ほかのフレームワークでも同じことが言えます。</p>
+                        <p><a target="_blank" href="http://d.hatena.ne.jp/derui/comment?date=20130210&section=1360478426">こちらのブログ</a>では、enchant.js で動的に定義されるクラスを TypeScript ではどのように扱えばよいかということについて検討されています。そこで提案されている方法なのですが、どうもかなり遠回りの解決策になっているように思いますので、本来の解決策と思われるものを説明しておきます。<a target="_blank" href="http://naosim.blog16.fc2.com/blog-entry-384.html">こちら</a>でも enchant.js のクラスを継承しようとしてうまくいかなかったようです。TypeScript のコンセプトをよく理解しておかないと、このあたりは相当に迷いやすいと思われます。 この節では　enchant.js を例としてこの問題を解説していますが、ほかのフレームワークでも同じことが言えます。</p>
 
                         <h4>enchant.js の『クラス』に対して TypeScript の継承はできない</h4>
 
@@ -1681,28 +1690,28 @@ UploadError.prototype.getCode = (): number => {
 
                         <p>筆者の書いている three.js のアンビエント宣言 three.d.ts には、JavaScript で表現された『クラス』をそのまま TypeScript のクラスとしてアンビエント宣言を書いている箇所が多くあります。これは原則的には安全な定義とはいえず、これらのアンビエント宣言のクラスを継承して新たなクラスを定義しようとすると予期せぬトラブルを招く可能性があります。ただ、これをインターフェイスとコンストラクタの組み合わせで表現しようとすると、これが『クラス』とは認識しづらくなり、また型階層を自動的に認識するようなことが難しくなります。また、three.js の設計上 three.js のクラスの継承が必要になることはまずないため、安全でないことを知りつつあえてわかりやすさを優先した定義になっています。</p>
 
-                        <h4>JavaScript と同じコードを基準に考える</h4>
+                        <h4>JavaScript に始まる</h4>
 
                         <p>あちらのブログの例では、TypeScript で動的にプロパティに追加をするようなことを実現するために、JavaScript のときには存在しなかった関数 Hoge.create が新たに定義され、_singleton という静的なプロパティも追加されています。しかしながら、TypeScript で JavaScript と同じことを実現しようとするとき、追加の処理が必要になることはまずありません。なぜなら、TypeScript は JavaScript のスーパーセットであり、JavaScript とまったく同じことができるからです。</p>
 
-                        <p>今回やりたいことを、まず JavaScript で考えてみましょう。enchant.Sprite を継承し、新たなプロパティ color が追加されたクラス Hoge を定義したいとします。これを実現するには次のようなコードになると思います(わかりやすくするため、あちらのブログの例より単純化しています)。</p>
+                        <p>今回やりたいことを、まず JavaScript で考えてみましょう。enchant.Sprite を継承し、新たなプロパティ color が追加されたクラス Hoge を定義したいとします。これを JavaScript で実現すると次のようなコードになると思います(わかりやすくするため、あちらのブログの例より単純化しています)。</p>
 
 <pre class="prettyprint linenums">
 var Hoge = enchant.Class.create(enchant.Sprite, {
     initialize : function (width, height) {        // enchant.js のコンストラクタ的なモノ
-        enchant.Sprite.call(this, width, height);  // スーパークラスのコンストラクタ的なモノを呼び出す
-    },
-    color: "#000000"  　　　　　 // Hoge に追加されるプロパティ
+        enchant.Sprite.call(this, width, height);  // スーパークラスのコンストラクタ的なモノ
+        this.color = "#000000";                    // Hoge に追加されるプロパティ
+    }
 });
 
 var hoge = new Hoge();       // Hoge をインスタンス化
 console.log(hoge.color);     // Sprite にはない新たなプロパティ color にアクセスできる
 </pre>
-                        <p>この JavaScript ソースコードには Hoge.create や _singleton は存在しませんが、同じものを TypeScript で実現するときもこれらは不要です。この JavaScript ソースコードをどうやって TypeScript に移植するか、ということを検討していきます。</p>
+                        <p>この JavaScript ソースコードには Hoge.create や _singleton は存在しませんが、同じものを TypeScript で実現するときもこれらは不要です。次はこの JavaScript ソースコードをどうやって TypeScript に移植するか、ということを検討していきます。</p>
 
                         <h4>何が問題か</h4>
 
-                        まず、上記のコードをそのままコピーして Playground に突っ込むと案の定コンパイルエラーになりますが、そのエラーの内容は　"The name 'enchant' does not exist in the current scope" すなわち enchant や Sprite というオブジェクトが見つからない、というものです。従って、これらのオブジェクトのアンビエント宣言を行わなければなりません。TypeScript では enchant はモジュール、Class はオブジェクト、create は Class のプロパティの関数だと考えるのが自然でしょう。最低限のアンビエント宣言の例は次のようなものになります。
+                        まず、上記のコードをそのままコピーして Playground に突っ込んでみると案の定コンパイルエラーになりますが、まず出てくるエラーは　"The name 'enchant' does not exist in the current scope" すなわち enchant や Sprite というオブジェクトが見つからない、というものです。従って、これらのオブジェクトのアンビエント宣言を行わなければなりません。TypeScript では enchant はモジュール、Class はオブジェクト、create は Class のプロパティの関数だと考えるのが自然でしょう。最低限のアンビエント宣言の例は次のようなものになります。
 <pre class="prettyprint linenums">
 declare module enchant {
     var Class: {
@@ -1719,41 +1728,43 @@ new(...args: any[])=>Object
 </pre>
                         という型リテラルは、このような型をもつオブジェクトがコンストラクタであることを示す『コンストラクタ型リテラル』です。このような型をもつオブジェクトは new でインスタンス化できるので、new Hoge() というコードがコンパイルできるようになります。さて、このアンビエント宣言を先ほどのコードの先頭に追加してみましょう。すると、先ほど出ていたエラーが解決するものの、その代わりに
 <pre class="prettyprint">
-hoge.color = "#ff0000";
+console.log(hoge.color);
 </pre>
 
                         の行で "The property 'color' does not exist on value of type 'Object'" つまり hoge には color というプロパティが見つからない、というエラーが出るようになります。これは、create の返り値が 
 <pre class="prettyprint">
-new(...args: any)=>Object;
+new(...args: any[])=>Object;
 </pre>
-                        という型で、hoge の型が Object となっているからです。しかし、実際には enchant.Class.create の機構によって new Hoge() で作成されたオブジェクトが color というプロパティを持っているのは間違いありません。これが、TypeScript で動的に定義されたプロパティにアクセスできない、という問題です。では、create の返り値を color というプロパティを持っているようなオブジェクトとなるようにアンビエント宣言を変えればよいのでしょうか？create は Hoge 以外のクラスを定義するのにもつかわれますから、返り値を 
+                        という型であり、hoge の型が Object となっているからです。しかし、実際には enchant.Class.create の機構によって new Hoge() で作成されたオブジェクトが color というプロパティを持っているのは間違いありません。これが、TypeScript で動的に定義されたプロパティにアクセスできない、という問題です。では、create の返り値を color というプロパティを持っているようなオブジェクトとなるようにアンビエント宣言を変えればよいのでしょうか？create は Hoge 以外のクラスを定義するのにもつかわれますから、返り値を 
 <pre class="prettyprint">
 create(superClass: Function, definition: any): new()=>Hoge;
 </pre>
-                        というように特定の型に制限するわけにはいきません。そのようにすると例えば Sprite を拡張する別のクラス Piyo を　create で定義することができなくなってしまうからです。それに create で作られるクラスがどんな型を持つかは事前にはわからないので、Object にするしかないのです。create が Hoge に依存しているのは明らかにおかしいです。また、create で作られた『クラス』から新たなオブジェクトを作り出す時のコンストラクタの引数は ...args: any[] というどんな引数でも渡せる定義になっていますが、create がどのようなクラスに対して使われるのかわからないため、このようにどんなものでも渡せるように定義せざるをえません。これでは、Hoge のコンストラクタにどんな引数でも渡せることになるので、引数の個数や型をミスする可能性も生じてしまっています。
+                        <p>というように特定の型に制限するわけにはいきません。そのようにすると例えば Sprite を拡張する別のクラス Piyo を　create で定義することができなくなってしまうからです。それに create で作られるクラスがどんな型を持つかは事前にはわからないので、Object にするしかないのです。create が Hoge に依存しているというのも明らかにおかしいです。</p>
+
+                        <p>また、create で作られた『クラス』から新たなオブジェクトを作り出す時のコンストラクタの引数は ...args: any[] というどんな引数でも渡せる定義になっていますが、create がどのようなクラスに対して使われるのかわからないため、このようにどんなものでも渡せるように定義せざるをえません。これでは、Hoge のコンストラクタにどんな引数でも渡せることになるので、引数の個数や型をミスする可能性が生じるという問題も起こっています。</p>
 
 <pre class="prettyprint">
 new Hoge("100", "200");      // 引数の型がおかしいのに、コンパイルエラーにならない
 </pre>
 
-                        <h4>プロパティが追加されたオブジェクトの性質は、新たなインターフェイスで表現される</h4>
+                        <h4>コンパイラに型を教える</h4>
 
-                        これらの問題を解決するには、create や new Hoge() で作られたオブジェクトがどんな性質を持っているか、という原則に立ち返って考えればいいと思います。new Hoge() で作られるオブジェクトは Sprite のプロパティに新たなプロパティ　color を付け加えたものです。これは新たな型ですから、次のようなインターフェイスであらわすことができます。
+                        <p>これらの問題を解決するには、create や new Hoge() で作られたオブジェクトがどんな型を持っているかをうまく表現する必要があります。new Hoge() で作られるオブジェクトは Sprite のプロパティに新たなプロパティ　color を付け加えたものです。これは新たな型ですから、次のようなインターフェイスであらわすことができます。</p>
 <pre class="prettyprint linenums">
 interface IHoge extends enchant.ISprite{
     color: string;
 }
 </pre>
-                        IHoge は enchant.ISprite のすべてのプロパティを継承しており、なおかつ color というプロパティも持っているというわけです。そして、enchant.Class.create で作られる『クラス』は、この IHoge であるようなオブジェクトを new で作ることができるコンストラクタです。enchant.js で定義される『クラス』であっても、その性質を TypeScript のインターフェイスで示すことはもちろん構わないわけです。しかし、enchant.Class.create の型は 
+                        IHoge は enchant.ISprite のすべてのプロパティを継承しており、なおかつ color というプロパティも持っているというわけです。そして、enchant.Class.create で作られる『クラス』は、この IHoge であるようなオブジェクトを new で作ることができるコンストラクタです。enchant.js で定義される『クラス』であっても、その型を TypeScript のインターフェイスで示すことはもちろん構わないわけです。しかし、enchant.Class.create の型は 
 <pre class="prettyprint">
-new(...args: any)=>Object; 
+new(...args: any[])=>Object; 
 </pre>
-                        で、ただの Object を作るコンストラクタになっています。<strong>この　enchant.Class.create　の呼び出しで作成されるコンストラクタの型は new()=>IHoge　であるはずですが、TypeScript コンパイラはもちろんそんなことは知らないので　new(...args: any)=>Object　という型だとみなしています。</strong>ここに型の特殊化の不足が生じており、これが color のプロパティにアクセスできない原因です。従って、次のようにキャストで TypeScript コンパイラに教えてしまえばいいのです。
+                        で、ただの Object を作るコンストラクタになっています。<strong>Hoge を定義するこの　enchant.Class.create　の呼び出しで作成されるコンストラクタの型は new(width: number, height: number)=>IHoge　であるはずですが、TypeScript コンパイラはもちろんそんなことは知らないので　new(...args: any[])=>Object　という型だとみなしています。</strong>ここで型の特殊化が不足しており、これが color のプロパティにアクセスできない原因となっています。従って、次のようにキャストで TypeScript コンパイラに教えてしまえばいいのです。
 <pre class="prettyprint linenums">
-var Hoge = &lt;new()=>IHoge&gt; enchant.Class.create(Sprite, {
-    initialize : function (width, height) {
-        Sprite.call(this, width, height);
-        this.color = "#000000"; // Hoge に追加されたプロパティ
+var Hoge = &lt;new(width: number, height: number)=>IHoge&gt; enchant.Class.create(enchant.Sprite, {
+    initialize : function (width: number, height: number): void {
+        enchant.Sprite.call(this, width, height);
+        this.color = "#000000"; 
     }
 });
 </pre>
@@ -1774,34 +1785,46 @@ interface IHoge extends enchant.ISprite{
     color: string;
 }
 
-// この型を enchant.js の create で定義する
-var Hoge: new()=>IHoge = &lt;new()=>IHoge&gt; enchant.Class.create(enchant.Sprite, {
+// Hoge を参照するための変数を宣言する
+var Hoge: new(width: number, height: number)=>IHoge;
+
+// 『クラス』を enchant.js の create で実際に作成する
+Hoge = &lt;new(width: number, height: number)=>IHoge&gt; enchant.Class.create(enchant.Sprite, {
     initialize : function (width: number, height: number): void {
         enchant.Sprite.call(this, width, height);
-    },
-    color: "#000000"
+        this.color = "#000000"; 
+    }
 });
 
 // Hoge を使ってみる
-var hoge: IHoge = new Hoge();
+var hoge: IHoge = new Hoge(100, 200);
 console.log(hoge.color);
 </pre>
 
                         これをコンパイルすると、型注釈がきれいに取り除かれて、本来の JavaScript だけが残ります。これは JavaScript で直接書いた場合とほぼ同一です。
+                        TypeScript では JavaScript と同じことを型安全に行えるということがわかります。
 <pre class="prettyprint linenums">
-var Hoge = enchant.Class.create(enchant.Sprite, {
+var Hoge;
+Hoge = enchant.Class.create(enchant.Sprite, {
     initialize: function (width, height) {
         enchant.Sprite.call(this, width, height);
-    },
-    color: "#000000"
+        this.color = "#000000";
+    }
 });
-var hoge = new Hoge();
+var hoge = new Hoge(100, 200);
 console.log(hoge.color);
 </pre>
                         <p>TypeScript は JavaScript でやっていたことを安全にできるようにするものなので enchant.js の『クラス』の扱いは　TypeScript でも JavaScript とまったく同じですが、
                         enchant.js の『クラス』や『継承』を TypeScript コンパイラは認識できないので TypeScript コンパイラの型チェックを納得させるためには適切な型注釈が必要になる、ということです。</p>
+
+                        <h4>そもそも継承は必要なのか</h4>
+                        <p>enchant.js を使うときには、実際には enchant.js 組み込みの『クラス』を継承する必要はほとんどないでしょう。でも、自分でクラスのような機構が欲しくなることは頻繁にあるでしょうから、そのために enchant.Class.create を流用するという方法も、enchant.js を JavaScript から使う場合は悪くはありません。しかし、TypeScript から使う場合は、TypeScript に使いやすいクラス定義の方法が用意されているので、わざわざ enchant.Class.create を使う必要はありません。</p>
+                        <p>それでも enchant.js 組み込みの enchant.Sprite のような『クラス』を継承したいという要求が生じたなら、TypeScript の継承を使うことはできませんから、これまで説明した方法で解決するのが普通だと思います。ただ、先ほどの例でいえば color をもつスプライトを作りたいというためだけに継承はすべきではありません。上記の例は非常に単純化されているため継承の必要はなくなっていますが、例としてわかりやすくするためにこのようにしています。目安としては、サブクラスの定義がスーパークラスのメソッドのオーバーライドやインターフェイスの実装を伴わないのであれば、その継承は必要ではないことがほとんどです。</p>
+                        <p>例えば、マリオのようなアクションゲームで、主人公や敵キャラクターがそれぞれスプライトに表示されるとしましょう。各キャラクターが自身の残りライフポイントのようなパラメータを持っているとき、スプライトのクラスを拡張して残りライフポイントを表すプロパティを追加すべきでしょうか。いかにも直感的なので思わずそのようなことをやってしまいそうになりますが、型安全性を考えるなら原則的には継承すべきではありません。ではどのように設計すべきなのか、というのはこの節の主旨とは外れてしまうので説明しませんが、要は継承はする前にそれが必要なのかよく考えるべき、ということです。もちろん、検討の結果継承が必要だと判断されたのであれば、上記のように型注釈を加えて行えば継承を行ってもまったく構わないと思います。</p>
+
+                        <h4>まとめ</h4>
                         <ul>
-                            <li>フレームワーク独自の『クラス』は TypeScript のクラスとは異なるので、TypeScript の exxtends で継承することはできない。</li>
+                            <li>フレームワーク独自の『クラス』は TypeScript のクラスとは異なるので、TypeScript の extends で継承することはできない。</li>
                             <li>フレームワーク独自の『クラス』や『継承』については TypeScript は何も知らないので、インターフェイスとキャストで型を教えればよい。</li>
                         </ul>
 
@@ -2163,7 +2186,7 @@ var hoge:Hoge = new Hoge(); // OK!　わりとどうでもいい
 
                     <h2>変更履歴</h2>
                     <ul>
-                        <li>2013/03/17 enchant.js のクラスの扱いについて。</li>
+                        <li>2013/03/17 enchant.js のクラスの扱いについて。このテキストは『クイックガイド』と名付けられているけど、『短くまとめられているので素早く読めるガイド』という意味ではなく『長いので急いで読まないと日が暮れちゃうガイド』という意味。</li>
                         <li>2013/03/08 0.8.3 での reference path まわりの変更について。いいから早くジェネリクスだ！はやくしろ！間に合わなくなっても知らんぞー！</li>
                         <li>2013/02/17 モジュール周りの説明を直したけど、まだ説明しきれていない気もする。</li>
                         <li>2013/02/16 ほかの JavaScript トランスコンパイル系言語の紹介をしようかと思ったけど、うまく比較して説明できなかったので結局削除。モジュール周りの説明が全然足りてないのでちゃんとしたい。
