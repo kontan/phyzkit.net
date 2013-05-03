@@ -1,27 +1,49 @@
 $(function () {
-    var ol = $('<ol class="chapters" />');
-    $.each($("section"), function (i, section) {
-        var h2 = $(section).children("h2");
-        var chapter_title = h2.text();
-        var chapter_index = i + 1;
-        h2.text(chapter_index + ". " + chapter_title);
-        var chapter_anchor = "chapter" + chapter_index;
-        var li = $('<li class="chapter"/>').append($("<a></a>").attr("href", "#" + chapter_anchor).text(chapter_title));
-        ol.append(li);
-        $(h2).wrap($("<a></a>").attr("name", chapter_anchor));
-        var section_ol = $('<ol class="sections" />');
-        $.each($(section).children("h3"), function (k, h3) {
-            var section_title = $(h3).text();
-            var section_index = k + 1;
-            $(h3).text(section_index + ". " + section_title);
-            var sli = $('<li class="section"/>').text(section_title);
-            var section_anchor = chapter_anchor + "_section" + section_index;
-            var a = $("<a></a>").attr("href", "#" + section_anchor).append(sli);
-            section_ol.append(a);
-            ol.append(section_ol);
-            $(h3).wrap($("<a></a>").attr("name", section_anchor));
-        });
+    var ol = $('<ul class="nav nav-list bs-docs-sidenav" />');
+    var chapter_index = 0;
+    var section_index = 0;
+    var chapter_anchor = '';
+    $('.markdown').children().each(function () {
+        var _this = $(this);
+        switch(this.nodeName.toLowerCase()) {
+            case 'h2':
+                chapter_index++;
+                section_index = 0;
+                var chapter_title = _this.text();
+                chapter_anchor = "chapter" + chapter_index;
+                var link = $('<a/>');
+                link.attr('id', chapter_anchor);
+                link.attr('href', '#' + chapter_anchor);
+                link.text(chapter_index + ". " + chapter_title);
+                _this.html('');
+                _this.append(link);
+                var item = $("<a></a>");
+                item.attr("href", "#" + chapter_anchor);
+                item.text(chapter_index + '. ' + chapter_title);
+                var li = $('<li class="chapter"/>');
+                li.append(item);
+                ol.append(li);
+                break;
+            case 'h3':
+                section_index++;
+                var section_title = _this.text();
+                var section_anchor = chapter_anchor + "_section" + section_index;
+                var link = $('<a/>');
+                link.attr('id', section_anchor);
+                link.attr('href', '#' + section_anchor);
+                link.text(section_index + ". " + section_title);
+                _this.html('');
+                _this.append(link);
+                var a = $("<a/>");
+                a.attr("href", "#" + section_anchor);
+                a.text(chapter_index + '-' + section_index + '. ' + section_title);
+                var sli = $('<li class="section"/>').append(a);
+                ol.append(sli);
+                break;
+            default:
+                break;
+        }
+        return true;
     });
     $('div.menu').append(ol);
 });
-//@ sourceMappingURL=indexer.js.map

@@ -27,6 +27,13 @@ p.translatorsnote{
 }
 
 
+@media (max-width:767px){
+  .twitter-widgets{
+    display: none;
+  }
+}
+
+
 /* Add additional stylesheets below
 -------------------------------------------------- */
 /*
