@@ -18,15 +18,15 @@
         <meta name="twitter:image"        content="http://phyzkit.net/typescript/logo_small.png">
 
         <!-- bootstrap -->
-        <link href="../bootstrap/css/bootstrap.css" rel="stylesheet">
-        <link href="../bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+        <link href="../assets/bootstrap/css/bootstrap.css" rel="stylesheet">
+        <link href="../assets/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
 
         <!-- Google Code Prettify -->
-        <link href="../google-code-prettify/prettify.css" rel="stylesheet">
-        <script type="text/javascript" src="../google-code-prettify/prettify.js"></script>
+        <link href="../assets/google-code-prettify/prettify.css" rel="stylesheet">
+        <script type="text/javascript" src="../assets/google-code-prettify/prettify.js"></script>
         <link href="style.css" rel="stylesheet">
 
-        <script type="text/javascript" src="../jquery-1.9.0.js"></script>        
+        <script type="text/javascript" src="../assets/jquery-2.0.0.js"></script>        
         <script type="text/javascript" src="http://phyzkit.net/common.js"></script>
 
         <!-- Google Analytics -->
@@ -66,7 +66,7 @@
                             <li class=""><a href="http://www.typescriptlang.org/" target="_blank">typescriptlang.org</a></li>
                         </ul>
                         <ul class="nav">
-                            <li class=""><a href="http://www.typescriptlang.org/Content/TypeScript%20Language%20Specification.pdf" target="_blank">Language Specification</a></li>
+                            <li class=""><a href="TypeScript%20Language%20Specification.pdf" target="_blank">Language Specification</a></li>
                         </ul>
                         <ul class="nav">
                             <li class=""><a href="http://www.typescriptlang.org/Playground/" target="_blank">Playground</a></li>
@@ -121,8 +121,10 @@
                     <pre id="content" class="markdown">
 # TypeScript クイックガイド
 
-[プログラミング言語 TypeScript](http://www.typescriptlang.org/) のチュートリアルです。
+このテキストは [プログラミング言語 TypeScript](http://www.typescriptlang.org/) のチュートリアルです。
 現在 JavaScript を利用して開発している開発者が、スムーズに TypeScript へと移行するために必要な情報を解説しています。
+
+#### 前提条件
 
 本稿を読み進めるためには、おおまかに以下の項目についての知識が必要です：
 
@@ -130,17 +132,24 @@
 * 静的型付け
 * クラスベースオブジェクト指向
 
-JavaScript に加えて Java や C#, C++ のような言語からひとつを使用したことがあれば、事前の知識としては十分です。冗長になるのを避けるため、JavaScript と共通する内容やオブジェクト指向一般についての説明は意図的に省いていますが、その代わり TypeScript で新たに導入される言語仕様についてはなるべく網羅するようにしています。
+JavaScript に加えて Java や C#, C++ のような言語からひとつを使用したことがあれば、事前の知識としては十分です。ただし、JavaScript に関してはある程度高度な内容に関しても断りなく文中で言及されますので、JavaScript の入門書を読んだだけのような段階の読者には理解しにくい説明が含まれます。たとえば、`Object.defineProperty` や Strict モードのような JavaScript の比較的新しい機能、Canvas 要素のようなまだ W3C 勧告の段階にない仕様や jQuery のようなライブラリ、node.js のような実行環境についても説明に登場ことがありますが、これらについての説明は本テキストにありませんので、必要に応じてほかの資料を参照してください。
+冗長になるのを避けるため、JavaScript と共通する内容やオブジェクト指向一般についての説明は意図的に省いていますが、その代わり TypeScript で新たに導入される言語仕様についてはなるべく網羅するようにしています。
 
-現時点での仕様の最新版は [こちら](http://www.typescriptlang.org/Content/TypeScript%20Language%20Specification.pdf)　です。本稿中にも仕様書の該当する位置が示されていますので、必要に応じて参照してください。文中のサンプルコードも一部は言語仕様からの引用です。本稿の正確性については一切無保証です。正確な言語仕様については仕様書を確認してください。また、本稿のすべての所見は筆者個人の主観によるもので、Microsoft の見解とは一切関係ありません。
+言語仕様書は以下のどちらかを参照してください。
+
+* [TypeScript　Language　Specification Version 0.9](http://www.typescriptlang.org/Content/TypeScript%20Language%20Specification.pdf)
+
+* [~~TypeScript　Language　Specification Version 0.8~~](http://www.typescriptlang.org/Content/TypeScript%20Language%20Specification.pdf)
+
+TypeScript 0.9 で大幅に言語仕様が変更されましたが、今後 TypeScript 0.8 で新しくコードを書く理由はまずありませんので基本的には 0.9 の仕様書を参照してください。本ページは 0.9 への対応に向けて改稿中ですが、一部に 0.8 以前の古い記述が残っていることにも注意して頂きたいと思います。本稿の正確性については一切無保証ですので、正確な言語仕様については仕様書を確認してください。また、本稿のすべての所見は筆者個人の主観によるものであり、Microsoft の見解とは一切関係ありません。
 
 ## 概要
       
 （能書きが長いですので、TypeScript つかうぞーっていうモチベーションがすでにある方はこの章は読み飛ばしてくださって結構です。）
 
-現在、ほぼすべての Web ブラウザには JavaScript が搭載され動的なページの構築に使われていますが、Web ページがより高度化、複雑化するにつれ [JavaScript の機能の限界](http://www.haskell.org/haskellwiki/The_JavaScript_Problem) が明らかになってきました。より大きく複雑なアプリケーションの開発に耐えられるように JavaScript をさらに発展させようとする試みは今も進められていますが、互換性の維持や各ソフトウェアベンダの利害関係の調整により遅々として進まず、JavaScript による貧弱なプログラミング環境での開発が強いられているこの状況が改善される見込みはありませんでした。JavaScript を代替すべく [多くの言語](https://github.com/jashkenas/coffee-script/wiki/List-of-languages-that-compile-to-JS) が提案されてきたもののいずれも一長一短あり、未だに根本的な解決には至っていません。
+現在、ほぼすべての Web ブラウザには JavaScript が搭載され動的なページの構築に使われていますが、Web ページがより高度化、複雑化するにつれ [JavaScript の機能の限界](http://www.haskell.org/haskellwiki/The_JavaScript_Problem) が明らかになってきました。より大きく複雑なアプリケーションの開発に耐えられるように JavaScript をさらに発展させようとする試みは今も進められていますが、互換性の維持や各ソフトウェアベンダの利害関係の調整により遅々として進まず、JavaScript による貧弱なプログラミング環境での開発が強いられているこの状況が改善される見込みはありませんでした。そのような JavaScript の欠点を補うべく [多くの言語](https://github.com/jashkenas/coffee-script/wiki/List-of-languages-that-compile-to-JS) が提案されてきたもののいずれも一長一短あり、未だに根本的な解決には至っていません。
 
-JavaScript が抱える多数の問題とそれを取り巻く現状に対して、TypeScript は他のどの言語よりも現実的なアプローチでの解決手段を提供します。TypeScript もまたコンパイラによって JavaScript 出力することでその代替を目指すシステムのひとつですが、JavaScript に比べ TypeScript には以下の様な長所があります。
+JavaScript が抱える多数の問題とそれを取り巻く現状に対して、TypeScript は他のどの言語よりも現実的なアプローチでの解決手段を提供します。TypeScript もまたコンパイラによって JavaScript 出力することでその代替を目指すシステムのひとつですが、TypeScript には以下の様な長所があります。
 
 #### 静的型付け
 
@@ -173,30 +182,39 @@ Node.js が提供するパッケージシステムで容易にインストール
 
 #### 自由なライセンス
 
-TypeScript コンパイラは Apache License で提供されています。
+TypeScript コンパイラ (tsc) は Apache License で提供されています。また、仕様は[Open Web Foundation
+Final Specification Agreement](http://www.openwebfoundation.org/legal/the-owf-1-0-agreements/owfa-1-0) で提供されています。
 
 その一方で、欠点や解決できない問題としては次のようなものが挙げられます。
 
 #### JavaScript の知識が必要
 
-発表間もない言語なので書籍はもちろんチュートリアルテキストも少なく、ブラウザオブジェクトの使い方などについては JavaScript におけるノウハウをそのまま流用することになります。SourceMap によって TypeScript ソースコードでのデバッグも可能ですが、Source Map のでみで完全にデバッグできるとは限りませんから、SourceMap でうまくいかない場合はデバッグも JavaScript のレベルで行わざるをえなくなります。よく言えば『JavaScript の知識を流用できる』といえますが、悪いくいえば『結局 JavaScript の知識は必要』ということです。
+発表間もない言語なので書籍はもちろんチュートリアルテキストも少なく、ブラウザオブジェクトの使い方などについては JavaScript におけるノウハウをそのまま流用することになります。TypeScript で直接書かれたライブラリもほとんどありませんので、通常は JavaScript で書かれたものを使います。SourceMap によって TypeScript ソースコードを参照しながらのステップイン/ステップオーバーのデバッグも可能ですが、SourceMap でうまくいかない場合はデバッグも JavaScript のレベルで行わざるをえなくなります。よく言えば『JavaScript の知識を流用できる』といえますが、悪いくいえば『結局 JavaScript の知識は必要』ということです。
 
 #### 最適化はされない
 
-JSX や Haxe のような最適化を多数施すシステムと異なり、現在のところ TypeScript コンパイラにはまったく最適化の機能がありません。従って、実行効率は JavaScript より低下こそしませんが、向上もしません。( とはいえ、最大のボトルネックは JavaScript そのものにあり、JavaScript を生成するレベルで頑張って最適化してもあんまり報われないと思うので、筆者は別に最適化はなくてもいいかなとは思っています。) 
+最適化を多数施す JSX や Haxe のようなシステムと異なり、現在のところ TypeScript コンパイラにはまったく最適化の機能がありません。従って、実行効率は従来の JavaScript より低下こそしませんが、まったく向上もしません。
 
+#### いくつかの JavaScript の言語仕様上の欠陥を克服できない
+TypeScript は JavaScript のスーパーセットとして設計されているため、言語仕様の設計上大きな制約が加わっています。そのため JavaScript に存在する言語仕様上の欠点をすべて解消することはできず、一部は引き続き TypeScript においても存在しています。
 
-#### いくつかの JavaScript の欠陥を克服できない
-
-JavaScript の this キーワードは文脈によるため、コールバックで this が直感的に機能しないなどの問題がありましたが、TypeScript が JavaScript のスーパーセットとしての立場を堅持する以上、TypeScript がこのような欠陥を根本的に解決するわけではありません。int や char のようなプリミティブ型がない貧弱な型システムや標準ライブラリも JavaScript と同じですし、typeof がいまいち役に立たないのも JavaScript そのままだったりします。typeof なんかはなるべく使わなければいい話ではありますが、深刻なのはクラスのカプセル化やイミュータブル(不変)なオブジェクトがほとんど実現できないという点です。readonly や const に関してはまったく未定のようで、開発者たちからは getter を使ったら？みたいな提案もされているものの、筆者としては readonly は getter で置き換えられるような機能ではないと思います(readonly の導入に前向きでないのは、ECMAScript 6 の型システムと互換性がとれなくなるから、というのが理由のようです)。クラスの public なプロパティは外からでも書き換え放題で、つまり public な『メソッド』を外から実装を差し替えるようなことも可能であるなど、他のクラスベースオブジェクト指向言語では当たり前の安全性は TypeScript ではいまいち不足しています。
+* **this** - JavaScript の `this` キーワードの参照は関数の呼び出しかたに左右されるため、コールバックで this が直感的に機能しないなどの問題がありましたが TypeScript でも同じ欠点があります。ただし、クラス関数(インスタンスメソッド)内でインスタンス自身を参照しやすくするために、部分的に `this` の意味は変更されています。
+* **プリミティブ型** - int や char のようなプリミティブ型がない貧弱な型システムや標準ライブラリも JavaScript と同じです。
+* **typeof** - `typeof` や `instanceof` は寸分の違いもなくまったくそのまま JavaScript へコンパイルされます。従って、`typeof null === 'object'` のような困った仕様も当然そのままです。
+* **変数のスコープ** - 変数のスコープは JavaScript と同じで、変数宣言の巻き上げ(hoisting)も引き続き行われます。for 文などの制御文はスコープを作らないので、即時関数パターン(immediate function pattern)のような面倒なイディオムも引き続き必要になります。
+* **const/readonly** - クラスのカプセル化やイミュータブル(不変)なオブジェクトがほとんど実現できないというのはかなり深刻です。クラスの public なプロパティは外からでも書き換え放題で、つまり public なクラス関数(つまりインスタンスメソッド)を外から実装を差し替えるようなことも可能であるなど、他のクラスベースオブジェクト指向言語では当たり前の安全性は TypeScript ではいまいち不足しています。readonly の導入に前向きでないのは、ECMAScript 6 の型システムと互換性がとれなくなるから、というのが理由のようです。
+* **import** - Java の `import` や C# の `using` に相当する、モジュールのシンボルをまとめてインポートするような機能はありません。`import` を導入すると変数のスコープが大幅に変更されることになるため、TypeScript に導入される見込みは薄いと思います。
+* **型の別名** - モジュール名の別名は定義できるものの、型の別名を直接定義することはできません。
 
 #### 言語仕様が貧弱
 
-近く導入する予定はあるようですが、現在のところジェネクリクスのような重要な機能が欠けています。また、型の別名やプリプロセッサも実用上はあると便利ですが、現在の TypeScript には存在しません。ヒアドキュメントあたりも矛盾なくすぐに導入できる機能なので、せっかく新しい言語を導入したのにもったいないところです。ジェネリクスがない現時点では、言語仕様としてはあきらかに JSX/Haxe/Dart に遅れをとっています。
+プリプロセッサも実用上は便利なときがありますが、現在の TypeScript には存在しません。ヒアドキュメントあたりも矛盾なくすぐに導入できる機能なので、せっかく新しい言語を導入したのにもったいないところです。とはいえ、0.9 でジェネリクスや Overload on Constants などが導入されそうで、ようやく JSX/Haxe/Dart となんとか肩を並べられる位置にまで達したのではないかと思います。
 
 #### コンパイラが不安定
 
 筆者にとっての現在の TypeScript 最大の不安材料はコレです。登場した当初よりは少しは安定してきましたが、現時点 (0.8.3) でもコンパイラの完成度に対する不安は拭えません。現在はプレビューの段階なので不安定なのは当たり前で、今すぐ実際に使おうとしている筆者のようなユーザはいくらなんでも気が早すぎではあります。あくまでプレビュー版だということを考慮に入れて、割りきって使いましょう。コンパイラの安定性については間違いなく今後改善されていくので、辛抱強く待つのがよいと思います。
+
+TypeScript 0.9 でプリミティブ型 bool の名前が boolean に変更される、ジェネリクスが導入されるといった大きな変更がありました。どんなソフトウェアに変更とバージョンアップはつきものですが、もちろん TypeScript コンパイラも例外ではありませんから、言語仕様の変更についてはある程度覚悟しておくことが必要です。
 
 ## コンパイラの使用
 
@@ -204,7 +222,7 @@ TypeScript をコンパイルするには、おおまかに次の３つの方法
 
 ### Playground
 
-ブラウザ上で TypeScript のコンパイルと実行を試すことができる[Playground](http://www.typescriptlang.org/Playground/)が公開されています。ちょっとしたコードを試すにはこれが一番お手軽でしょう。入力されたコードはリアルタイムでコンパイルされ、コンパイル後の JavaScript が即座に確認できます。ソースコードはトークンに応じて色分けされ、変数にカーソルを合わせるとその型が表示されたり、なんとインテリセンスも効いたりします。とても良くできているので、TypeScript に慣れるにはまずは Playground でいろいろ試してみるのがいいでしょう。
+ブラウザ上で TypeScript のコンパイルと実行を試すことができる[Playground](http://www.typescriptlang.org/Playground/)が公開されています。ちょっとしたコードを試すにはこれが一番お手軽でしょう。入力されたコードはリアルタイムでコンパイルされ、コンパイル後の JavaScript が即座に確認できます。ソースコードはトークンに応じて色分けされ、変数にカーソルを合わせるとその型が表示されたり、なんとインテリセンスも効いたりします。とても良くできているので、TypeScript に慣れるにはまずは Playground でいろいろ試してみるのがいいでしょう。ちなみに、本ページ最上部のメニューバーにある「Playground」をクリックすると Playground をすぐ開くことができます。
 
 ### tsc
 
@@ -293,10 +311,27 @@ Hello, World!
 
 Visual Studio で TypeScript の開発が可能になるプラグインも提供されています。統合開発環境のサポートが欲しい人はこれを使うのがいいでしょう。変数名にカーソルを合わせると型や jsdoc スタイルのインラインドキュメントが表示されたり、Internet Exploler と連携してデバッグを行ったり、名前変更のような基本的なリファクタリング機能もあります。
 
-* [TypeScript 0.8.3](https://typescript.codeplex.com/releases/view/98308)
-* [TypeScript 0.9.0 Alpha](https://typescript.codeplex.com/releases/view/105503)
+* [TypeScript for Visual Studio 2012](http://www.microsoft.com/en-us/download/details.aspx?id=34790)
+* [~~TypeScript 0.8.3~~](https://typescript.codeplex.com/releases/view/98308)
+* [~~TypeScript 0.9.0 Alpha~~](https://typescript.codeplex.com/releases/view/105503)
 
 0.8 までと 0.9 以降ではかなり言語仕様に違いがありますが、基本的にはなるべく新しいものを使うのがよいと思います。
+
+### WebStorm
+
+JavaScript IDE として有名な [WebStorm](http://www.jetbrains.com/webstorm/) はすでに TypeScript に対応しており、WebStorm 上で TypeScript ソースコードの編集が行えるようです。筆者は WebStorm を使っていないのでここでは解説できませんが、WebStorm をすでに使っている方や Visual Studio 以外の IDE を探しているかたは WebStorm の利用を検討してみるのもよいのではないかと思います。
+
+* 参考: [TypeScript Support](http://www.jetbrains.com/webstorm/webhelp/typescript-support.html)
+
+### git リポジトリの clone
+
+なるべく新しいコンパイラを使いたければ、[Codeplex](https://typescript.codeplex.com/) 上の TypeScript コンパイラのリポジトリを clone して tsc を使うのがいいでしょう。git がインストールされていれば、
+
+```bash
+git clone https://git01.codeplex.com/typescript
+```
+
+で clone できます(なぜか clone できないという場合もあるらしい？)。ビルトには [jake](https://npmjs.org/package/jake) が必要ですが、コンパイル済みの tsc も bin ディレクトリに入っているので、コンパイラを改造するのでなければこれをそのまま使ってもいいと思います。
 
 ## 言語仕様
 
@@ -309,7 +344,7 @@ TypeScript のデータ型は概ね JavaScript のものと同じです。プリ
 
 **TypeScript 0.8 以前では Boolean 型の型リテラルは `bool` でしたが、TypeScript 0.9 以降では `boolean` に変更されました。0.9 以降を使う場合は、常に `boolean` と書くようにしたほうがいいでしょう。本稿でもすでに `boolean` を使うように変更してありますが、0.8 でコンパイルする必要がある場合は、`bool` と書かなければならないことに注意してください。**
 
-いきなり少々わかりづらいのですが、プリミティブ型 `number`, `boolean`, `string` と別にインターフェイスとして定義された `Number`, `Boolean`, `String` という型が存在しています。`number` は `Number` へと、`boolean` は `Boolean` へと、`string` は `String` へと暗黙に変換されるので、`number` と `Number`、 `boolean` と `Boolean`、`string` と `String` はそれぞれまったく同じプロパティを持っているかのように見えます。ただし、これも後述する『ブランド』により、暗黙に逆方向の `Number` を `number` に変換するようなことはできないようになっています。さらにわかりづらいことに `Nnumber`, `Boolean`, `String` という関数（要するにコンストラクタ）も存在しています。
+いきなり少々わかりづらいのですが、プリミティブ型 `number`, `boolean`, `string` と別にインターフェイスとして定義された `Number`, `Boolean`, `String` という型が存在しています。`number` は `Number` へと、`boolean` は `Boolean` へと、`string` は `String` へと暗黙に変換されるので、`number` と `Number`、 `boolean` と `Boolean`、`string` と `String` はそれぞれまったく同じプロパティを持っているかのように見えます。さらにわかりづらいことに `Nnumber`, `Boolean`, `String` という関数（要するにコンストラクタ）も存在しています。
 
 このあたりの複雑さは JavaScript の仕様そのものなのでやむをえません。プリミティブ型に関してこのあたりは一見わかりづらいですが、**型注釈で型名を書くときには、ほとんどの場合は `Number`, `Boolean`, `String` ではなく `number`, `boolean`, `string` のほうを書いておけばよい**とだけ覚えておけばだいたい問題ないと思います。あとはすべて JavaScript で書くときと同じです。
 
@@ -495,6 +530,46 @@ function createVector(x:number, y:number):Vector2;
 ```
 
 
+#### 定数によるオーバーロード
+
+`document.createElement` は引数に渡した HTML タグ名から該当する HTMLElement オブジェクトを新しく作成する関数ですが、以下のように文字列リテラルを渡した場合でも型としては HTMLElement を返すので、TypeScript 0.8 以前ではいちいち型アサーションを書く必要が多くありました。例えば `createElement` に文字列リテラル `'p'` を渡したとすると、 `createElement` は常に `HTMLParagraphElement` オブジェクトを返すのは明らかです。しかし、ここで作成したオブジェクトを `p: HTMLParagraphElement` という変数に代入するには、
+`&lt;HTMLParagraphElement&gt;` という型アサーションを書く必要がありました。
+
+```js
+var p: HTMLParagraphElement = &lt;HTMLParagraphElement&gt; document.createElement('p');
+```
+
+このような煩わしさを軽減するため、TypeScript 0.9 からは **Overloading on Constants**、すなわち引数の文字列定数に応じた関数のオーバーロードが可能になりました。0.9 では `document.createElement` は次のように定義されています(lib.d.ts を一部抜粋しています)。
+
+```js
+interface Document extends Node, HTMLDocument {
+    createElement(tagName: string): HTMLElement;
+    createElement(tagName: "a"): HTMLAnchorElement;
+    createElement(tagName: "abbr"): HTMLElement;
+    ...
+    createElement(tagName: "p"): HTMLParagraphElement;
+    ...
+}
+```
+
+ここで　`createElement(tagName: "p"): HTMLParagraphElement` は、 `createElement` を呼び出すときに文字列リテラル `"p"` を渡すと、返り値の型は `HTMLParagraphElement` になることを定義しています。このようにコンパイラが引数に応じてその型を決定することができるので、先ほどの例でも型アサーションを省略して次のように書くことができます。
+
+```js
+var p: HTMLParagraphElement = document.createElement('p');
+```
+
+直接文字列リテラルを渡すのではなく変数や関数の返り値を渡す場合は、どのような値が渡されるかを静的に決定することはできませんから、 `createElement(tagName: string): HTMLElement` というこれまでの定義が選択されます。
+
+```js
+var tagName: string = 'p';
+
+var p: HTMLParagraphElement = &lt;HTMLParagraphElement&gt; document.createElement(tagName); // 型アサーションが必要
+```
+
+他にも `addEventListener` や `getElementsByTagName` など多数の関数が Overloading on Constants を使用してオーバーロードされています。JavaScript ではこのようにひとつの関数に機能が集約されていることがよくあるので、とても JavaScript の特性に適した機能だと思います。
+
+* 参考: [Announcing TypeScript 0.9](http://blogs.msdn.com/b/typescript/archive/2013/06/18/announcing-typescript-0-9.aspx) 
+
 #### アロー関数式
 
 アロー関数式 (Arrow Function Expressions) はいわゆる無名関数の構文で、JavaScript の function 式による構文に比べてシンプルに書けるようになっています。
@@ -534,7 +609,7 @@ x => Math.sin(x)
 var seasons : string[] = ["spring", "summer", "fall", "winter"];
 ```            
 
-将来的にはジェネリクスが導入され、`T[]` `Array<T>` の別名になるようです。
+将来的にはジェネリクスが導入され、`T[]` `Array&lt;T&gt;` の別名になるようです。
 現在のところ、コンパイラに同梱された JavaScript の標準ライブラリの定義ファイル lib.d.ts の配列 interface Array の定義では、 _element という型が特別に要素の型として解釈されるようになっています。
 
 
@@ -926,9 +1001,11 @@ TypeScript においても同じです。
 * null, undefined はどんな型の変数にでも代入できる
 * ある型がスーパータイプのすべてのプロパティを持っていればサブタイプになる
 
-ただし、クラスはそれぞれが自分の型を特定するための**ブランド**を持っており、たとえメンバの構成がまったく同じでも
+~~ただし、クラスはそれぞれが自分の型を特定するための**ブランド**を持っており、たとえメンバの構成がまったく同じでも
 ブランドが異なれば互換性はありません。
-たとえば、以下の２つのクラス A と B は(Objectから継承したものを除き)どちらもメンバを持っていないので『AはBのすべてのプロパティを持っている』といえますが、a を b に代入しようとするとエラーになります。
+たとえば、以下の２つのクラス A と B は(Objectから継承したものを除き)どちらもメンバを持っていないので『AはBのすべてのプロパティを持っている』といえますが、a を b に代入しようとするとエラーになります。~~
+
+**TypeScript 0.9 からはブランド関連の記述がすべて削除されており、ブランドの概念はなくなったようです。**
 
 ```js
 class A{
@@ -941,9 +1018,9 @@ var b : B = a; // コンパイルエラー
 
 ```
 
-extends で継承したクラスはスーパークラスのすべてのメンバを持ち、なおかつスーパークラスのブランドも引き継ぐので、そのクラスはそのスーパークラスのサブタイプとなります。
+~~extends で継承したクラスはスーパークラスのすべてのメンバを持ち、なおかつスーパークラスのブランドも引き継ぐので、そのクラスはそのスーパークラスのサブタイプとなります。~~
 
-このとき、インターフェイスを経由するとブランドが取り除かれるので、a を b へと代入することができたりします。インターフェイスにはブランドがありませんから、必要なプロパティさえあればそのインターフェイスのサブタイプになることができます。
+~~このとき、インターフェイスを経由するとブランドが取り除かれるので、a を b へと代入することができたりします。インターフェイスにはブランドがありませんから、必要なプロパティさえあればそのインターフェイスのサブタイプになることができます。~~
 
 ```js
 class A{
@@ -960,8 +1037,7 @@ var b : B = b;
 
 ```
 
-(余談となりますが、Structural Subtyping は『構造的部分型』と訳す例が多いようです。ただ、"static typing" を『静的型付け』と訳すように、この "typing" は『型』ではなく『型付け』を意味しているので、訳すなら『構造的部分型付け』とでもなるようにも思います。さらに、オブジェクト指向界隈では "subtype" は『部分型』とするより『派生型』と訳すのが一般的なので、『構造的派生型付け』とでも訳すほうが正確(？)のように思いますが、まったく一般的でないので
-ここではそのまま Structural Subtyping と呼んでおきます。意味合いとしては、『そのオブジェクトがどんなメンバを持っているかという構造に従った派生型の決定』というような意味になります。
+(余談となりますが、Structural Subtyping は『構造的部分型』と訳す例が多いようです。ただ、"static typing" を『静的型付け』と訳すように、この "typing" は『型』ではなく『型付け』を意味しているので、訳すなら『構造的部分型付け』とでもなるようにも思います。さらに、"subtype" (部分型) にあたるものはオブジェクト指向界隈では "derived type" (派生型) と呼ぶことが一般的で、派生型と呼んだほうが親しみやすいかもしれません。ちょうどいい訳が見つからないので、ここではそのまま Structural Subtyping と呼んでおきます。意味合いとしては、『そのオブジェクトがどんなメンバを持っているかという構造に従った派生型の決定』というような意味になります。
 
 筆者としては『部分型』というと『スーパークラスの一部分だけのメンバで構成された型』みたいに思えてしまうので、なんとなく『部分型』よりは『派生型』という呼び方のほうが好きです。
 もちろん、『型』は『集合』であり、サブクラスのオブジェクトの集合はスーパークラスのオブジェクトの部分集合なので『部分型』という呼び方そのものは正しいですが、『部分型』という訳語を partial type の訳語に割り当てたいという思惑もあったりします。
@@ -1139,7 +1215,26 @@ class className extends superClass implements interface1, ...　{
 
 ```
 
-**クラスの定義の順序には注意する必要があります。例えば、あるクラス A がスーパークラス B を継承するとき、A が読み込まれる前に B を先に読み込んでおかなければなりません。**以下のプログラムのコンパイルは正常に成功してしまいますが、実行するとエラーになります。この振る舞いは JavaScript における変数の巻き上げ(Hoisting) にまつわる問題と同根で、これらのエラーの兆候は TypeScript コンパイラが検出すべきだと筆者は思いますが、TypeScript においてもこの問題は引き続き存在しています。
+**クラスを定義する順序には意味があり、クラスはコンストラクタを呼び出したり、ほかのクラスが継承するより前に定義しておかなくてはなりません。**例えば、クラスの定義より前にそのクラスのコンストラクタを呼び出してもコンパイルは成功しますが、実際に実行するとクラスの定義が完了していないためエラーになります。
+
+```js
+new A(); // TypeError: undefined is not a function 
+
+class A{
+}
+```
+
+このコードは以下の JavaScript へとコンパイルされます。
+
+```js
+new A();
+var A = (function () {
+    function A() { }
+    return A;
+})();
+```
+
+`A` はコンストラクタ、つまり関数なのですが、`A` へは function 式を呼び出した返り値が代入されています。従って `new A()` より以前に `A` の初期化が巻き上げられるようなことはなく、`new A()` のあとに `A` が初期化されることになります。従って `new A()` の時点では `A` は `undefined` であり、実行するとエラーになります。他にも、例えば、あるクラス A がスーパークラス B を継承するとき、A の定義が行われる前に B の定義を終えておかないと、A の定義が行われた時点でエラーになります。
 
 ```js
 class A extends B{
@@ -1152,15 +1247,8 @@ class B{
 
 new A().b(); // TypeError: Cannot read property 'prototype' of undefined
 ```
-もっと単純なケースだと、以下の短いプログラムもコンパイルが成功するにも関わらず実行には失敗します。
 
-```js
-new A(); // TypeError: undefined is not a function 
-
-class A{
-}
-```
-
+この振る舞いは JavaScript における変数の巻き上げ(Hoisting) にまつわる問題と同根で、TypeScript においてもこの問題は引き続き存在しています。このような実行時エラーの兆候は TypeScript コンパイラが検出すべきだと筆者は思いますが、これを解決するには JavaScript の変数のスコープの意味に大きな変更を加える必要があり解決は容易ではないと思われます。**クラスの定義(コンストラクタの定義)はあくまで動的に行われる**ということをよく意識しておく必要があります。型チェックはすべて静的に行われますから、型注釈や型アサーションに関してはどの順序で行ってもまったく問題ありません。
 
 #### アクセス修飾子
 
@@ -1261,20 +1349,44 @@ new Base().write();  // piyo! が出力される
 
 ### 列挙型
 
-列挙型も使用可能なようです。列挙型は **`enum`** というキーワードを使い、中括弧の中にメンバとなる識別子をカンマで区切って列挙します。このメンバには定義した順番で整数が自動的に割り当てられますが、`=` を使って明示的にその値を指定することもできるようです。たとえば、コンパイラに付属する winjs.d.ts では、キーコードを次のように定義しています。
+0.9 で正式に列挙型が導入されました。列挙型の定義は **`enum`** というキーワードで始まり、中括弧の中にメンバとなる識別子をカンマで区切って列挙します。このメンバには定義した順番で整数が自動的に割り当てられますが、`=` を使って明示的にその値を指定することもできます。たとえば、トランプのスーツを列挙型を使って表すと、次のようになります。
 
 ```js
-export enum Key {
-    backspace = 8, 
-    tab = 9, 
-    enter = 13, 
-    shift = 16, 
-    ctrl = 17, 
-    ...
+enum Suit {
+    Spade,
+    Heart,
+    Club,
+    Diamond
 }
 ```
 
-列挙型はまだ実験的な機能なので、今後仕様が大きく変更されるかもしれません。仕様書にもほとんど書かれていません。
+このように定義された列挙型はオブジェクトになっており、そのプロパティを参照することでその列挙型の値を取得することができます。これらの列挙型の値は型チェック時にはそれ独自の型として扱われますが、実際には単なる `number` です。列挙型の値は暗黙に `number` 型へと変換できますので、 `==` で等値性を比較したり `&lt;` で大小関係を比較することができます。
+
+```js
+console.log(Suit.Spade == Suit.Heart);  // false
+
+console.log(Suit.Spade &lt; Suit.Heart); // true
+```
+
+列挙型のオブジェクトは数値をキーとしたプロパティも持っており、これらプロパティにはその値をもつ値の名前が文字列として格納されています。次のようにすれば、列挙型の値からその文字列表現を取得したり、文字列から対応する列挙型の値を取得することが可能です。
+
+```js
+console.log(Suit[0] === 'Spade');  // Suit[0] は 'Spade' なので true
+
+console.log(Suit[Suit.Spade] === 'Spade');  // true
+
+console.log(Suit['Spade'] === Suit.Spade);  // 配列としてアクセスしてももちろん構わない。true
+```
+
+列挙型の値すべてをリストとして取得するような機能はないようです。要素すべてについて繰り返すには、次のように for 文で繰り返すか、[linq.js](http://linqjs.codeplex.com/) の `Enumerable.RangeTo` みたいなのを使うといいかもしれません。
+
+```js
+for(var i: Suit = Suit.Spade; i &lt;= Suit.Diamond; i++){
+    console.log(Suit[i]);
+}
+```
+
+* 参考: [Announcing TypeScript 0.9](http://blogs.msdn.com/b/typescript/archive/2013/06/18/announcing-typescript-0-9.aspx)
 
 ### モジュール
 
@@ -1401,6 +1513,29 @@ var log = require("./log")
 log.message("hello");
 ```
 
+##### Export アサインメント
+
+CommonJS や AMD のようなモジュールに関する仕様では、どんなオブジェクトでもモジュールとしてエクスポートすることが可能になっています。TypeScript の外部モジュールの定義でもエクスポートするオブジェクトを柔軟に定義できるように、TypeScript 0.9 から `export =` というような構文が導入されました(**11.2.4 Export Assignments**)。`export = ` の直後には任意の識別子を書くことができます。例えば、クラス名を書けばそのクラスをモジュールがエクスポートするオブジェクトとすることができます。次のサンプルでは `export =` を使ってクラスをモジュールとしてエクスポートしています(言語仕様からの引用です)。
+
+```js
+export = Point; 
+
+class Point { 
+    constructor(public x: number, public y: number) { } 
+    static origin = new Point(0, 0); 
+}
+```
+
+エクスポートされたオブジェクトは `require` を使ってインポートできます。
+
+```js
+import Pt = require("point.ts"); 
+var p1 = new Pt(10, 20); 
+var p2 = Pt.origin;
+```
+
+* 参考: [Announcing TypeScript 0.9](http://blogs.msdn.com/b/typescript/archive/2013/06/18/announcing-typescript-0-9.aspx)
+
 #### モジュールの別名
 
 モジュールはしばしば `Foo.Bar.Baz` のように深くネストすることがありますが、毎回 `Foo.Bar.Baz.AnyClass` のように書くのは面倒です。このようなときには、**`import`** キーワードでモジュールに別名をつけることができます。
@@ -1433,6 +1568,140 @@ declare interface Bar{
 アンビエント宣言は型チェックの解決に使われるだけなので、実際の JavaScript の実装と必ずしも一致してる必要はありません。筆者は number である変数を列挙型のシンボルとみなして列挙型として定義したり、存在しないクラスを抽象クラスとして追加してしまったりとアンビエント宣言では結構大胆な使いかたをしています。
 
 **宣言ソースファイル**(declaration source files )はアンビエント宣言のみが書かれたファイルです。定義ソースファイルは拡張子を .d.ts にします。通常の .ts ファイルでは declare キーワードをつけたシンボルだけがアンビエント宣言になりますが、定義ソースファイルではすべてのシンボルが自動的に declare をつけたものだとみなされます。既存の JavaScript ライブラリに型注釈を加えて使う TypeScript から使う場合は、その型注釈は宣言ソースファイルに分離しておくほうが使いまわしがしやすくなると思います。
+
+### ジェネリクス
+
+TypeScript 0.9 でついにねんがんのジェネリクスが導入されました。TypeScript のジェネリクスはおおむね Java などの構文によく似たものになっているようで、すでに Java などを使っているかたならまったく違和感なく使えると思います。[Working on TypeScript 0.9: Generics, Overload on Constants and Compiler Performance](http://blogs.msdn.com/b/typescript/archive/2013/03/25/working-on-typescript-0-9-generics-overload-on-constants-and-compiler-performance.aspx) で紹介されている内容や仕様書の記述、筆者が実際にコンパイルを試した結果を簡単にまとめておきます。
+
+試したコンパイラのバージョンは 9868d68c9e98180608f2bb736894f2a7ce85a8dd の develop ブランチです。`typescript/tests/cases/compiler/` あたりのディレクトリにユニットテストのテストケースがたくさん入っていますので、これをのぞくとどんなコードが通るのかある程度わかります。
+
+#### 関数の型パラメータ
+
+引数の括弧の直前で型パラメータを `&lt;` と `&gt;` の間に書くことで型パラメータの宣言ができます。関数の型パラメータは引数から推論できる場合は自動的に推論されますが、それができない場合は明示的に指定する必要があります。
+
+```js
+// 配列の最初の値を取り出す関数。Array&lt;T&gt; は T[] のエイリアス
+function head&lt;T&gt;(array:Array&lt;T&gt;): T {   
+    return array[0];
+}
+
+var num: number = head&lt;number&gt;([10, 20, 30]); // 明示的に型パラメータを与えた場合
+
+var str: string = head(["red", "blue", "yellow"]);  // 引数から推論できるので、型パラメータを省略できる
+```
+
+#### クラスの型パラメータ
+
+クラス名のすぐ後ろに型パラメータを書きます。
+
+```js
+class Tree&lt;T&gt; {
+    left: Tree&lt;T&gt;;
+    value: T;
+    right: Tree&lt;T&gt;;
+}
+```
+
+#### インターフェイスの型パラメータ
+
+インターフェイス名のすぐ後ろに型パラメータを書きます。
+
+```js
+interface Comparable&lt;T&gt; {
+    compare(t: T): boolean;
+}
+
+class Tuple&lt;T,S&gt; implements Comparable&lt;Tuple&lt;T,S&gt;&gt; {
+    constructor(public fst: T, public snd: S){
+    }
+
+    compare(t: Tuple&lt;T,S&gt;): boolean {
+        return this.fst === t.fst && this.snd === t.snd;
+    }
+}
+
+
+// オブジェクト型リテラルには型パラメータを宣言できないようです。
+// 型パラメータを宣言するにはいったんインターフェイスとして定義する必要がありそうです。
+// var hoge: &lt;T&gt;{ t: T; };
+```
+
+#### アロー関数式の型パラメータ
+
+先頭で型パラメータを宣言することで、アロー関数式でも型パラメータを使えます。
+
+```js
+var id = &lt;T&gt;(t: T)=&gt;t;
+```
+
+#### 型パラメータの制約
+
+`extends` でほかの型を指定することで、その型パラメータに制約を加えることができます。
+
+```js
+interface Show {
+    show(): string;
+}
+
+function showArray&lt;T extends Show&gt;(xs: Array&lt;T&gt;){
+    for(var i: number = 0; i &lt; xs.length; i++){
+        var e: T = xs[i];
+        console.log(e.show());  // T は Show を実装しているので show を呼べる
+    }
+}
+
+```
+
+#### 型パラメータと関数のオーバーロード
+
+オーバーロードされた関数の定義でも型パラメータを宣言できます。その場合、各シグニチャは独立しているので、宣言されたそのシグニチャの中だけでその型パラメータを使うことができます。
+
+```js
+function parse&lt;T&gt;(parser: Parser&lt;T&gt;, input: string): State&lt;T&gt;;
+function parse   (parser: string,    input: string): State&lt;string&gt;;   
+function parse   (parser: any,       input: any)   :　any {
+    ...
+}
+```
+
+#### 変な型の型パラメータ
+
+この変なコードのコンパイルが通ってしまうのは、さすがにバグっぽい気がします。
+
+```js
+class Tuple&lt;T,S&gt; {
+    constructor(public fst: T, public snd: S){
+    }
+}
+
+var t: Tuple&lt;void, undefined&gt; = new Tuple&lt;void,undefined&gt;(undefined, undefined);
+
+function foo(): void {
+
+}
+
+t.fst = foo();
+t.snd = 10;
+```
+
+#### バグ
+
+まだかなりバグは多いです。TypeScript 先生の次回作にご期待ください！
+
+```js
+// s の型を間違えてる。二つ以上型パラメータがあると混乱しやすい？
+class A&lt;T,S&gt; {
+    s: S;
+    f(t: A&lt;T,S&gt;): boolean {
+        return this.s === t.s;     // error TS2009: Operator '===' cannot be applied to type 'S' and 'T'.
+    }
+}
+```
+
+```js
+// 関数型リテラルの型パラメータ。パーサは通っているようだけど型チェックに失敗
+var id: &lt;T&gt;(t: T)=&gt;T = &lt;T&gt;(t: T)=&gt;t;  // error TS2095: Could not find symbol 'T'.
+```
 
 ### 他のスクリプトの参照
 
@@ -1594,7 +1863,7 @@ var hoge = "hoge";
 
 hoge.ts が piyo.ts に依存していると誤って指定されたため、hoge.ts が先に出力されています。このため、１行目の時点では hoge は undefined ですから、このプログラムの実行は失敗します。piyo.ts のほうには hoge.ts への依存関係が書かれていないので hoge が見つからないというコンパイルエラーになるのかとおもいきや、コンパイラはすでに hoge.ts を知っているのでコンパイルが通ってしまうわけです。このようなトラブルを確実に回避するためには、コンパイル引数でファイルの順序を正しく指定する方法もありますが、ソースファイルの依存関係はコンパイラが調べてきっちり解決し、問題があるならコンパイラがちゃんと報告するべきで、コンパイル引数やら makefile やらに書くようなものではないと筆者は思っています。
 
-他の解決策として、必要なスクリプトがすべて読み込まれるまで実行を遅延させる方法があります。どんな場合でも使える手というわけではありませんが、たいていはこれでごまかせると思います。
+他の解決策として、必要なスクリプトがすべて読み込まれるまで実行を遅延させる方法があります。どんな場合でも使える手というわけではありませんが、これでごまかせることも多いとは思います。
 
 ```js
 // piyo.ts
@@ -1798,7 +2067,7 @@ Side.Front = Side.Back;
 
 ### Error の継承
 
-Stack Overflow に <a target="_blank" href="http://stackoverflow.com/questions/12915412/how-do-i-extend-a-host-object-e-g-error-in-typescript">Error を継承してカスタムな例外クラスをつくりたいんだけど</a>、という質問があるようですが、JavaScript は Java と違って Error のサブタイプじゃないと例外オブジェクトとして投げられないということはないので、独自の例外クラスを作りたいからといって別に Error を継承する必要はないと思います。とはいえ、Error は確かに存在しているのでこれを継承したい、というケースもあるのかもしれません。ですが現時点の lib.d.ts では Error はインターフェイスと変数として定義されており、これを TypeScript の extends で継承することはできません。
+Stack Overflow に [Error を継承してカスタムな例外クラスをつくりたいんだけど](http://stackoverflow.com/questions/12915412/how-do-i-extend-a-host-object-e-g-error-in-typescript) 、という質問があるようですが、JavaScript は Java と違って Error のサブタイプじゃないと例外オブジェクトとして投げられないということはないので、独自の例外クラスを作りたいからといって別に Error を継承する必要はないと思います。とはいえ、Error は確かに存在しているのでこれを継承したい、というケースもあるのかもしれません。ですが現時点の lib.d.ts では Error はインターフェイスと変数として定義されており、これを TypeScript の extends で継承することはできません。
 
 ただ、根本的なことを言えば JavaScript にクラスはないので、JavaScript のオブジェクトである Error を『継承』をするのはそもそもナンセンスだという考え方もあります。プロトタイプはプロトタイプであって、継承ではないのです。Error はいかにもクラスのように見えますが、これは単なるオブジェクトに過ぎません。クラスは TypeScript で初めて持ち込まれるものなので、TypeScript でクラスとして定義されたもの以外を継承しようというのは意味がないかもしれません。
 
@@ -1979,19 +2248,6 @@ console.log(hoge.color);
 TypeScript は JavaScript でやっていたことを安全にできるようにするものなので enchant.js の『クラス』の扱いは　TypeScript でも JavaScript とまったく同じですが、
 enchant.js の『クラス』や『継承』を TypeScript コンパイラは認識できないので TypeScript コンパイラの型チェックを納得させるためには適切な型注釈が必要になる、ということです。
 
-<!--
-<h4>そもそも継承は必要なのか</h4>
-
-enchant.js を使うときには、実際には enchant.js 組み込みの『クラス』を継承する必要はほとんどないでしょう。でも、自分でクラスのような機構が欲しくなることは頻繁にあるでしょうから、そのために enchant.Class.create を流用するという方法も、enchant.js を JavaScript から使う場合は悪くはありません。しかし、TypeScript から使う場合は、TypeScript に使いやすいクラス定義の方法が用意されているので、わざわざ enchant.Class.create を使う必要はありません。
-
-
-それでも enchant.js 組み込みの enchant.Sprite のような『クラス』を継承したいという要求が生じたなら、TypeScript の継承を使うことはできませんから、これまで説明した方法で解決するのが普通だと思います。ただ、先ほどの例でいえば color をもつスプライトを作りたいというためだけに継承はすべきではありません。上記の例は非常に単純化されているため継承の必要はなくなっていますが、例としてわかりやすくするためにこのようにしています。目安としては、サブクラスの定義がスーパークラスのメソッドのオーバーライドやインターフェイスの実装を伴わないのであれば、その継承は必要ではないことがほとんどです。
-
-
-例えば、マリオのようなアクションゲームで、主人公や敵キャラクターがそれぞれスプライトに表示されるとしましょう。各キャラクターが自身の残りライフポイントのようなパラメータを持っているとき、スプライトのクラスを拡張して残りライフポイントを表すプロパティを追加すべきでしょうか。いかにも直感的なので思わずそのようなことをやってしまいそうになりますが、型安全性を考えるなら原則的には継承すべきではありません。ではどのように設計すべきなのか、というのはこの節の主旨とは外れてしまうので説明しませんが、要は継承はする前にそれが必要なのかよく考えるべき、ということです。もちろん、検討の結果継承が必要だと判断されたのであれば、上記のように型注釈を加えて行えば継承を行ってもまったく構わないと思います。
-
--->
-
 #### まとめ
 
 jsdo.it にも[enchant.js でクラスの継承を行うサンプル](http://jsdo.it/Kon/hyaha)を用意しておいたので、参考までにどうぞ。
@@ -2158,106 +2414,8 @@ interface と var を使ってクラスっぽいものを作ることは lib.d.t
 
 というわけで、現時点では TypeScript でモジュール以外の別名を定義しようと姑息な工夫をするのは控えたほうがいいと思います。安易に別名をつけるといろいろ問題を引き起こします。もしかしたら今後別名が付けられるように言語仕様が変更される可能性もあるでしょうから、そうなるように祈りましょう……。
 
-### 型の異なるオーバーライド
-
-オーバーライドするメンバは、基本的にはサブクラスでも同じ型でなければなりませんが、
-互換性のある型であればサブクラスで型を変更することもできるようです。
-ざっと見た限りではあまり仕様書には詳しく書かれていないようなので、現在のコンパイラ(0.8.2)での挙動を調べた分をメモしておきます。
-この情報はジェネリクス導入後はほとんど役に立たなくなると思いますが、一応説明しておきます
 
 
-
-JavaScript で書かれた２次元のベクトルを表すクラスと３次元のベクトルの表すクラスがあって、
-    それぞれのクラスにベクトルの和を計算するクラス関数 add やスカラ倍する multiplyScalar() があるとします。
-    これらのクラスに環境定義ファイルを書くと、次のようになるかと思います。
-
-```js
-
-class Vector2{
-    add(v:Vector2):Vector2;
-    multiplyScalar(t:number):Vector2;
-}
-
-class Vector3{
-    add(v:Vector3):Vector3;
-    multiplyScalar(t:number):Vector3;
-}
-```
-
-これで一見よさそうなのですが、Vector2 もしくは Vector3 のどちらかをとるような変数があったらどうでしょうか。たとえば、2次元の線分はふたつの Vector2 で表現されますし、3次元の線分はふたつの　Vector3 で表されます。Vector2 でも Vector3 でも使える線分のクラス　Line　を定義することを考えると、これらのクラスに共通する add を呼び出したくなります。従って、これらの二つのクラスを抽象するクラスかインターフェイス Vector が欲しくなります。
-
-```js                    
-class Line{
-    // u, v は両方 Vector2 か 両方 Vector3
-    constructor(private v:Vector, private u:Vector){
-    }
-
-    // 線分の両端の中央の点を返す関数
-    // 両端　u, v を足して2で割る。Vector2 でも Vector3 でも使えるようにしたい
-    getMiddlePoint():Vector{   
-        return this.v.add(this.u).multiplyScalar(0.5);
-   }
-}
-```
-
-JavaScript のコードにこのような抽象的なクラスがない場合は、TypeScript の環境定義ファイルのほうで抽象クラスを勝手に作り出して定義してしまうのはあまり適切とは言えません。そんなクラスは存在しないし、もし抽象的なクラスを定義してしまうと、そのクラスをインスタンス化するようなコードを許してしまうからです。したがって、インターフェイスとして定義するのがよいでしょう。ここで、Vector2 の add と Vector3 の add は型が異なるわけで、単純に Vector の　add を同じ型にするわけにはいきません。この場合インターフェイスで定義する add は、次のように Vector2 の add と Vector3 の add に互換性があれば定義することができるのです。
-
-```js
-interface Vector{
-    add(v:Vector):Vector;
-}
-
-class Vector2 implements Vector{
-    add(v:Vector2):Vector2;
-}
-
-class Vector3 implements Vector{
-    add(v:Vector3):Vector3;
-}
-```
-
-このように、スーパークラスで定義されたメソッドの返り値の型をサブクラスでオーバーライドするときに狭めるのは Java あたりでも可能で、共変戻り値型（covariant return type）と呼ばれています。
-型安全性の観点では、サブクラスでオーバーライドするときに引数の型を広げるぶんには（そして返り値の型を狭めるぶんには）問題ないわけですが、上記の例では引数の型を狭めることができてしまっています。
-これはバグかもしれませんが、ジェネリクスのない現段階では any などでごまかすよりはこの方法が無理のない解決策だと思います。ちなみに、まったく互換性のない型へ変えるようなオーバーライドはコンパイルエラーになります。
-
-```js
-class Vector2 implements Vector{
-    add(v:string):Vector2;  // string と Vector はぜんぜん関係ないのでコンパイルエラー！
-}
-```
-
-ジェネリクス導入後は、これらの定義は次のように型安全なコードに書き換えることができるようになると思います。 
-
-```js
-//////////////////////////////////////////////////////////////////////
-// 注: このサンプルコードは、いつかこう書けるようになるんじゃないかな？という筆者の妄想です
-// もちろんコンパイルとおりません
-//////////////////////////////////////////////////////////////////////
-interface Vector&lt;T&gt;{
-    add(v:T):T;
-    multiplyScalar(t:number):T;
-}
-
-class Vector2 implements Vector&lt;Vector2&gt;{
-    add(v:Vector2):Vector2;
-    multiplyScalar(t:number):Vector2;
-}
-
-class Vector3 implements Vector&lt;Vector3&gt;{
-    add(v:Vector3):Vector3;
-    multiplyScalar(t:number):Vector3;
-}
-
-class Line&lt;T extends Vector&gt;{
-    constructor(private v:T, private u:T){
-    }
-    getMiddlePoint():T{   
-        return this.v.add(this.u).multiplyScalar(0.5);
-    }
-}
-```
-
-現在検討されている将来の仕様については、[Design notes](http://typescript.codeplex.com/wikipage?title=Design%20Notes%3a%20Generics)を見てみると何となく動向がつかめるかもしれません。構文としては Java のジェネリクスと比較的似ているような気がします。
 
 ### 落穂拾い
 
@@ -2265,34 +2423,23 @@ class Line&lt;T extends Vector&gt;{
 
 #### 関数なモジュール
 
-モジュールのアンビエント宣言だけで可能な妙な（？）仕様として、function 文で関数名のない関数を定義することができるというのがあります。
-これで何が定義されるかというと、なぜかそのモジュールが関数として呼び出せることになります。
-たとえば、次のようなコードが可能です。
+JavaScript の関数はただのオブジェクトなのでプロパティを持つことができ、モジュールとして使われているオブジェクトが関数としても呼び出せるというような API をもつライブラリがいくつか存在します。TypeScript 0.8 以前では、このような API を表現するためにモジュールの定義に無名の関数を定義するような妙な仕様が検討されていましたが、TypeScript 0.9 以降は識別子の扱いが整理され、関数として呼び出せるモジュールのような定義もごく自然に定義できるようになりました。TypeScript で関数にプロパティを追加してモジュールのように扱うには、まずその関数を定義したあとに、同名でモジュールの定義を行います。次のサンプルでは、`readInput` という関数と同名で `readInput` というモジュールを定義しています。
 
 ```js
-declare module Hoge{
-    function():void;
+function readInput(separator = readInput.defaultSeparator) {
+    // read input
 }
 
-Hoge(); // Hoge はモジュールかつ関数
-```
-
-これ実際に express のアンビエント宣言で見かけました。たしかに JavaScript は何でもありな言語なので、こういう機能も必要なときがあります。
-
-ちなみに、クラスやインターフェイスでも次のような宣言が可能です。
-
-```js
-
-declare class Hoge{
-    function():void;
-}
-
-interface Piyo{
-    function():void;
+module readInput {
+    export var defaultSeparator = ":";
 }
 ```
+こうすると、上記のコードでやっているように `readInput.defaultSeparator` というようにモジュールのメンバにアクセスできますし、同じオブジェクトを `readInput()` で関数として呼び出すこともできます。
 
-これ、じつは単に function という名前のプロパティを定義しているだけです。モジュールで名前のない関数を定義した時とは全然意味が異なります。
+ちなみに、先にモジュールを定義してから同名の関数を定義することはできません。TypeScript のモジュールの構文は、その名前のオブジェクトが存在すればそのオブジェクトにそのモジュールのメンバが追加するように定義するものですが、存在していなければ新たにモジュールとなるオブジェクトを定義します。先にモジュールが定義されてしまうと、モジュールのオブジェクトと関数のオブジェクトがマージされないので識別子の
+が衝突し、コンパイルエラーになります。
+
+* 参考: [Announcing TypeScript 0.9](http://blogs.msdn.com/b/typescript/archive/2013/06/18/announcing-typescript-0-9.aspx)
 
 #### 引数の数と互換性
 
@@ -2322,6 +2469,8 @@ var hoge:Hoge = new Hoge(); // OK!　わりとどうでもいい
 
 ## おわりに
 
+現在検討されている将来の仕様については、[Design notes](http://typescript.codeplex.com/wikipage?title=Design%20Notes%3a%20Generics)を見てみると何となく動向がつかめるかもしれません。
+
 筆者はすでに TypeScript でいくつかのプロジェクトを始めています。たとえば、動的な言語である JavaScript では本質的に難しいドキュメントジェネレータを TypeScript の環境定義ファイルを使用して出力するようなことを試しています。もし興味があるようならそちらもご覧ください。
 
 * [dtsdoc](https://github.com/kontan/dtsdoc) - *.d.ts を利用したドキュメンテーションジェネレータ。TypeScript の型システムは JavaScript そのままなので、これで出力されたドキュメントは javaScript のユーザにとってもそのまま使えます。
@@ -2333,7 +2482,10 @@ TypeScript の仕様は今後も変更されますので、動向にも注意し
 
 ## 変更履歴
 
-* 2013/05/03 HTML ソースをのぞくとわかるけど、ページのほとんどが Markdown で書き直されてます。表示に不具合がある場合のために、しばらくは[旧版](/typescript_html/)も残しておきます。でもこれって検索エンジンさんが混乱したりしないだろうかという不安もあるのです。もし SEO に大きな悪影響か確認されたら、事前にコンパイルした HTML だけアップロードするようになるかもしれないけど、基本的には全部クライアントサイドでやるのがマイブーム。『型表明』→『型アサーション』と、あと 0.9 対応について少し加筆
+* 2013/06/19 TypeScript 0.9 正式リリース祭り。列挙型と Overloading on COnstants, Declaration Merging, Export Assignments の説明を更新。まだ全体をちゃんと推敲していないので、0.8 以前の古い記述が残っています。そのうち全部見直します。気が向いたら。やばいマジで長くなってきた。でも今更ページ分けも面倒だし。このテキストは 0.8→0.9 のマイグレーションとしてまとめてはいないので、差分だけ知りたいかたは [Known breaking changes between 0.8 and 0.9](https://typescript.codeplex.com/wikipage?title=Known%20breaking%20changes%20between%200.8%20and%200.9) へどうぞ。
+* 2013/05/23 0.9 の仕様へのリンクを貼っておく。すでに release-0.9.0 というブランチも切られているみたいだし、思ったより 0.9 のリリースは早そう。 
+* 2013/05/04 ジェネリクス速報。コンパイラのバグ？いいから `&lt;any&gt;` だ！
+* 2013/05/03 HTML ソースをのぞくとわかるけど、ページのほとんどが Markdown で書き直されてます。~~表示に不具合がある場合のために、しばらくは[旧版](/typescript_html/)も残しておきます。でも　Markdown で書いたりして検索エンジンさんが混乱したりしないだろうかという不安もあるのです。~~もし SEO に大きな悪影響か確認されたら、事前にコンパイルした HTML だけアップロードするようになるかもしれないけど、基本的には全部クライアントサイドでやるのがマイブーム。『型表明』→『型アサーション』と、あと 0.9 対応について少し加筆
 * 2013/04/14 微調整。全体的にサンプルコードに統一感がないので、0.9 のリリースのときにまとめて整理しようと思う。いまどき生 HTML で書いてるというのもちょっと頭がどうかしていると思うので、GitHub Flavored Markdown みたいな記法でページ全体を書き直すという野望。
 * 2013/03/17 enchant.js のクラスの扱いについて。このテキストは『クイックガイド』と名付けられているけど、『短くまとめられているので素早く読めるガイド』という意味ではなく『長いので急いで読まないと日が暮れちゃうガイド』という意味。
 * 2013/03/08 0.8.3 での reference path まわりの変更について。いいから早くジェネリクスだ！はやくしろ！間に合わなくなっても知らんぞー！
@@ -2365,8 +2517,7 @@ TypeScript の仕様は今後も変更されますので、動向にも注意し
             </div>
         </div>
 
-        <script src="../jquery-1.9.0.js"></script>
-        <script src="../bootstrap/js/bootstrap.js"></script>
+        <script src="../assets/bootstrap/js/bootstrap.js"></script>
         <script type="text/javascript" src="markblender.js"></script>
         <script type="text/javascript" src="indexer.js"></script>
         <script type="text/javascript"> $(prettyPrint); </script>
